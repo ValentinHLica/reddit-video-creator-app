@@ -1,5 +1,0 @@
-https://www.remotion.dev/
-
-Create a video using remotion with reddit posts and post them on youtube
-
-Create a program with electronJS where you surf subReddits and check comments for video, when selecting comments it should display approximately time from comments. Also create interface where you create thumbnail just like example, image for the thumbnail i should search manualy and place it.
