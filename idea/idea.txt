@@ -1,9 +1,16 @@
 https://www.remotion.dev/
 https://www.npmjs.com/package/jimp
 
+Software 
+https://mega.nz/folder/6sZFkKII#txYpo7E7cObXsP5OUOuCvg
+
+FFMEG - https://github.com/BtbN/FFmpeg-Builds/releases
+
 Create a video using remotion with reddit posts and post them on youtube
 
 Create a program with electronJS where you surf subReddits and check comments for video, when selecting comments it should display approximately time from comments. Also create interface where you create thumbnail just like example, image for the thumbnail i should search manually and place it, to create thumbnails use jimp package. 
 
 
 To turn text to speech look into
+
+
