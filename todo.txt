@@ -1,8 +1,8 @@
-[]. Post title
+[x]. Post title
     [x]. Create Arrow images
     [x]. Create Voting count
-    []. Implement author
-    []. Implement post rewards
+    [x]. Implement author
+    [x]. Implement post rewards
 
 []. Thumbnail
     []. Create main text

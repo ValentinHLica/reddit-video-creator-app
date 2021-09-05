@@ -30,24 +30,26 @@ export const generateVoting = async (width: number, voteCount: string) => {
 
   const imageHeight = width * 2 + 50;
 
-  return new Jimp(width, imageHeight, async (err, image) => {
-    const font = await Jimp.loadFont(join(fontPath, FontFace.Medium));
+  const image = new Jimp(width, imageHeight);
 
-    const textWidth = Jimp.measureText(font, voteCount);
-    const textHeight = Jimp.measureTextHeight(font, voteCount, width);
+  const font = await Jimp.loadFont(join(fontPath, FontFace.Medium));
 
-    image.print(
-      font,
-      (width - textWidth) / 2,
-      imageHeight / 2 - textHeight,
-      voteCount
-    );
+  const textWidth = Jimp.measureText(font, voteCount);
+  const textHeight = Jimp.measureTextHeight(font, voteCount, width);
 
-    image.composite(arrow, (width - arrowWidth) / 2, 0);
+  image.print(
+    font,
+    (width - textWidth) / 2,
+    imageHeight / 2 - textHeight,
+    voteCount
+  );
 
-    const downArrow = arrow.rotate(180);
-    image.composite(downArrow, (width - arrowWidth) / 2, imageHeight - width);
-  });
+  image.composite(arrow, (width - arrowWidth) / 2, 0);
+
+  const downArrow = arrow.rotate(180);
+  image.composite(downArrow, (width - arrowWidth) / 2, imageHeight - width);
+
+  return image;
 };
 
 /**
@@ -60,18 +62,17 @@ export default async (text: string, path: string) => {
   logger("Generating Image", "action");
 
   try {
-    new Jimp(
+    const image = new Jimp(
       imageDetails.width,
       imageDetails.height,
-      imageDetails.background,
-      async (err, image) => {
-        const font = await Jimp.loadFont(Jimp.FONT_SANS_128_WHITE);
-
-        image.print(font, 10, 10, text);
-
-        await image.writeAsync(path);
-      }
+      imageDetails.background
     );
+
+    const font = await Jimp.loadFont(Jimp.FONT_SANS_128_WHITE);
+
+    image.print(font, 10, 10, text);
+
+    await image.writeAsync(path);
   } catch (err) {
     console.log(err);
     logger("Image couldn't generate successfully", "error");
@@ -101,35 +102,67 @@ export const createPostTitle = async (
   logger("Generating Image", "action");
 
   try {
-    const voting = await generateVoting(80, post.points);
-
-    new Jimp(
+    const image = new Jimp(
       imageDetails.width,
       imageDetails.height,
-      imageDetails.background,
-      async (err, image) => {
-        const font = await Jimp.loadFont(join(fontPath, FontFace.MediumTitle));
-
-        const maxWidth = imageDetails.width - 200;
-        const textHeight = Jimp.measureTextHeight(font, post.title, maxWidth);
-
-        image.print(
-          font,
-          (imageDetails.width - maxWidth) / 2 + 50,
-          (imageDetails.height - textHeight) / 2,
-          post.title,
-          maxWidth
-        );
-
-        image.composite(
-          voting,
-          (imageDetails.width - maxWidth) / 2 - 50,
-          (imageDetails.height - textHeight) / 2 + 10
-        );
-
-        await image.writeAsync(path);
-      }
+      imageDetails.background
     );
+
+    const voting = await generateVoting(80, post.points);
+
+    const font = await Jimp.loadFont(join(fontPath, FontFace.MediumTitle));
+
+    const maxWidth = imageDetails.width - 200;
+    const titleHeight = Jimp.measureTextHeight(font, post.title, maxWidth);
+
+    // Print post title
+    image.print(
+      font,
+      (imageDetails.width - maxWidth) / 2 + 50,
+      (imageDetails.height - titleHeight) / 2,
+      post.title,
+      maxWidth
+    );
+
+    // Print post username
+    const smallFont = await Jimp.loadFont(join(fontPath, FontFace.Medium));
+    const usernameWidth = Jimp.measureText(
+      smallFont,
+      `Posted by /u/${post.userName}`
+    );
+
+    image.print(
+      smallFont,
+      (imageDetails.width - maxWidth) / 2 + 50,
+      (imageDetails.height - titleHeight) / 2 - 50,
+      `Posted by /u/${post.userName}`,
+      maxWidth
+    );
+
+    // Add post award images
+    const awards = ["award1.png", "award2.png", "award3.png", "award4.png"];
+
+    for (let i = 0; i < awards.length; i++) {
+      const award = awards[i];
+
+      const awardImage = await Jimp.read(join(imagePath, award));
+
+      image.composite(
+        awardImage,
+        (imageDetails.width - maxWidth) / 2 + 70 + usernameWidth + i * 40,
+        (imageDetails.height - titleHeight) / 2 - 50 + 5
+      );
+    }
+
+    // Add voting image
+    image.composite(
+      voting,
+      (imageDetails.width - maxWidth) / 2 - 50,
+      (imageDetails.height - titleHeight) / 2 + titleHeight / 2 - 80 * 2 + 50
+    );
+
+    // Write image
+    await image.writeAsync(path);
   } catch (err) {
     console.log(err);
     logger("Image couldn't generate successfully", "error");
