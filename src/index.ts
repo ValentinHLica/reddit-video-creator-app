@@ -1,20 +1,21 @@
 import dotenv from "dotenv";
-
-import generateImage from "@utils/generateImage";
-import generateAudio from "@utils/generateAudio";
-import { generateVideo } from "@utils/createVideo";
+import { join } from "path";
+import { createPostTitle } from "@utils/generateImage";
+import { createRandomString } from "@utils/helpers";
+import { cwd } from "process";
 
 dotenv.config();
 
-const init = async () => {
-  const text = "Hello World";
-  const imagePath = "./src/temp/test.jpg";
-  const audioPath = "./src/temp/test.wav";
+const text =
+  "I stabbed my classmate when I was 13 and was released early 2021 after serving 7 Years in prison AMA.";
 
-  generateImage(text, imagePath);
-  const duration = await generateAudio(text, audioPath);
+const assetsPath = join(cwd(), "src", "temp", createRandomString(5));
 
-  generateVideo(imagePath, audioPath, "./src/temp/test.mp4", duration);
-};
+const imagePath = join(assetsPath, "image.jpg");
 
-init();
+createPostTitle(
+  {
+    title: text,
+  },
+  imagePath
+);

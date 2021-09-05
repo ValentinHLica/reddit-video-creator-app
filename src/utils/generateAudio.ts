@@ -1,9 +1,8 @@
 import { execFile } from "child_process";
-import { readFileSync } from "fs";
 
 import { getAudioDurationInSeconds } from "get-audio-duration";
 
-import logger from "@utils/logger";
+import { logger } from "@utils/helpers";
 
 // Path for balcon cli
 const cliPath = "./src/cli/balcon/balcon.exe";
@@ -17,17 +16,25 @@ const cliPath = "./src/cli/balcon/balcon.exe";
 export default async (text: string, path: string): Promise<number> => {
   logger("Generating Audio", "action");
 
-  execFile(
-    cliPath,
-    ["-t", text, "-w", path, "-n", "ScanSoft"],
-    (error, stdout) => {
-      if (error) {
-        logger("Audio could not generated successfully", "error");
-        throw error;
-      }
-      // console.log(stdout);
-    }
-  );
+  const generateAudio = () => {
+    return new Promise((resolve) => {
+      execFile(
+        cliPath,
+        ["-t", text, "-w", path, "-n", "ScanSoft"],
+        (error, stdout) => {
+          if (error) {
+            logger("Audio couldn't generate successfully", "error");
+            throw error;
+          }
+
+          resolve(null);
+          // console.log(stdout);
+        }
+      );
+    });
+  };
+
+  await generateAudio();
 
   logger("Audio generated successfully", "success");
 
