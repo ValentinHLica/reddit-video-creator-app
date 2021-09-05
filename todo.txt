@@ -1,4 +1,17 @@
 []. Post title
-    []. Complete post title design
+    [x]. Create Arrow images
+    [x]. Create Voting count
+    []. Implement author
+    []. Implement post rewards
+
+[]. Thumbnail
+    []. Create main text
+        []. Implement changing color of text given from ui
+        []. implement changing font size based on text length
+    []. Implement author
+    []. implement thumbnail image
+    []. Implement post rewards
+
+
 []. Comments
     []. Implement new handler for creating nested Comments

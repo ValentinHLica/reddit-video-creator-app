@@ -16,6 +16,8 @@ const imagePath = join(assetsPath, "image.jpg");
 createPostTitle(
   {
     title: text,
+    points: "100",
+    userName: "john",
   },
   imagePath
 );

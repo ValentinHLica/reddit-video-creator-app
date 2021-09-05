@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "rm -rf dist && tsc -p . && tscpaths -p ./tsconfig.json -s ./src -o ./dist"
+    "build": "rm -rf dist && tsc -p . && tscpaths -p ./tsconfig.json -s ./src -o ./dist",
+    "test": "rm -rf src/temp/* && npm start"
   },
   "repository": {
     "type": "git",
