@@ -25,9 +25,10 @@ const imageDetails = {
  */
 export const generateVoting = async (width: number, voteCount: string) => {
   const arrowImage = await Jimp.read(join(imagePath, "arrow.png"));
-  const arrow = arrowImage.resize(width, width);
+  const arrowWidth = width - 30;
+  const arrow = arrowImage.resize(arrowWidth, arrowWidth);
 
-  const imageHeight = width * 2 + 100;
+  const imageHeight = width * 2 + 50;
 
   return new Jimp(width, imageHeight, async (err, image) => {
     const font = await Jimp.loadFont(join(fontPath, FontFace.Medium));
@@ -38,14 +39,14 @@ export const generateVoting = async (width: number, voteCount: string) => {
     image.print(
       font,
       (width - textWidth) / 2,
-      (imageHeight - textHeight) / 2,
+      imageHeight / 2 - textHeight,
       voteCount
     );
 
-    image.composite(arrow, 0, 0);
+    image.composite(arrow, (width - arrowWidth) / 2, 0);
 
     const downArrow = arrow.rotate(180);
-    image.composite(downArrow, 0, imageHeight - width);
+    image.composite(downArrow, (width - arrowWidth) / 2, imageHeight - width);
   });
 };
 
@@ -109,12 +110,12 @@ export const createPostTitle = async (
       async (err, image) => {
         const font = await Jimp.loadFont(join(fontPath, FontFace.MediumTitle));
 
-        const maxWidth = imageDetails.width - 300;
+        const maxWidth = imageDetails.width - 200;
         const textHeight = Jimp.measureTextHeight(font, post.title, maxWidth);
 
         image.print(
           font,
-          (imageDetails.width - maxWidth) / 2 + 100,
+          (imageDetails.width - maxWidth) / 2 + 50,
           (imageDetails.height - textHeight) / 2,
           post.title,
           maxWidth
@@ -122,8 +123,8 @@ export const createPostTitle = async (
 
         image.composite(
           voting,
-          (imageDetails.width - maxWidth) / 2,
-          (imageDetails.height - textHeight) / 2
+          (imageDetails.width - maxWidth) / 2 - 50,
+          (imageDetails.height - textHeight) / 2 + 10
         );
 
         await image.writeAsync(path);
