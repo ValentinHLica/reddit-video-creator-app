@@ -1,5 +1,8 @@
 export interface Comments {
-  text: string;
+  text: string | string[];
+  width?: number;
+  height?: number;
+  indentation?: number;
   subComment: Comments[];
 }
 

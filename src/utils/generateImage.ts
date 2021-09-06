@@ -3,18 +3,30 @@ import { cwd } from "process";
 
 import Jimp from "jimp";
 
-import { logger } from "@utils/helpers";
+import {
+  logger,
+  splitComment,
+  getFolders,
+  createRandomString,
+} from "@utils/helpers";
 
 import { FontFace } from "@interface/image";
+import { Comments } from "@interface/video";
 
 const assetsPath = join(cwd(), "src", "assets");
 const fontPath = join(assetsPath, "font");
 const imagePath = join(assetsPath, "images");
+const tempPath = join(cwd(), "src", "temp");
 
 const imageDetails = {
   width: 1920,
   height: 1080,
   background: "#121112",
+};
+
+const commentDetails = {
+  margin: 30,
+  indentation: 100,
 };
 
 /**
@@ -50,35 +62,6 @@ export const generateVoting = async (width: number, voteCount: string) => {
   image.composite(downArrow, (width - arrowWidth) / 2, imageHeight - width);
 
   return image;
-};
-
-/**
- * Generate Image from text
- *
- * @param {string} text Text to create image
- * @param {string} path Image export path
- */
-export default async (text: string, path: string) => {
-  logger("Generating Image", "action");
-
-  try {
-    const image = new Jimp(
-      imageDetails.width,
-      imageDetails.height,
-      imageDetails.background
-    );
-
-    const font = await Jimp.loadFont(Jimp.FONT_SANS_128_WHITE);
-
-    image.print(font, 10, 10, text);
-
-    await image.writeAsync(path);
-  } catch (err) {
-    console.log(err);
-    logger("Image couldn't generate successfully", "error");
-  }
-
-  logger("Image generated successfully", "success");
 };
 
 /**
@@ -148,6 +131,8 @@ export const createPostTitle = async (
 
       const awardImage = await Jimp.read(join(awardsPath, award));
 
+      awardImage.resize(32, 32);
+
       image.composite(
         awardImage,
         (imageDetails.width - maxWidth) / 2 + 70 + usernameWidth + i * 40,
@@ -172,11 +157,167 @@ export const createPostTitle = async (
   logger("Image generated successfully", "success");
 };
 
-export const generateThumbnail = async (
-  post: {
-    title: string;
-    subreddit: string;
-    awards: string[];
-  },
-  path: string
-) => {};
+// export const generateThumbnail = async (
+//   post: {
+//     title: string;
+//     subreddit: string;
+//     awards: string[];
+//   },
+//   path: string
+// ) => {};
+
+/**
+ * Get Width, Height and Indentation for each comment
+ *
+ * @param comments Post Comment Tree
+ * @returns Post Comment Tree with width, height and indentation for each comment
+ */
+export const measureText = async (comments: Comments) => {
+  let indentation: number = 0;
+  let totalHeight: number = 0;
+  let commentCount: number = 0;
+
+  const font = await Jimp.loadFont(join(fontPath, FontFace.Medium));
+
+  const measure = (comment: Comments) => {
+    const commentWidth =
+      imageDetails.width - 200 - indentation * commentDetails.indentation;
+    const commentHeight = Jimp.measureTextHeight(
+      font,
+      comment.text,
+      commentWidth
+    );
+
+    comment.text = splitComment(comment.text as string);
+    comment.width = commentWidth;
+    comment.height = commentHeight;
+    comment.indentation = indentation;
+
+    totalHeight += commentHeight;
+    commentCount++;
+
+    for (let i = 0; i < comment.subComment.length; i++) {
+      if (i === 0) {
+        indentation++;
+      }
+
+      measure(comment.subComment[i]);
+    }
+
+    if (comment.subComment.length) {
+      indentation--;
+    }
+
+    return comment;
+  };
+
+  measure(comments);
+
+  // Todo
+  // Split comments into two arrays if text overflows screen
+
+  return { comments, totalHeight, commentCount };
+};
+
+export const createCommentImage = async ({
+  comments,
+  totalHeight,
+  commentCount,
+}: {
+  comments: Comments;
+  totalHeight: number;
+  commentCount: number;
+}) => {
+  try {
+    let currentHeight =
+      (imageDetails.height - totalHeight) / 2 -
+      (commentCount - 1) * commentDetails.margin;
+
+    const image = new Jimp(
+      imageDetails.width,
+      imageDetails.height,
+      imageDetails.background
+    );
+
+    const font = await Jimp.loadFont(join(fontPath, FontFace.Medium));
+
+    const writeText = async (comment: Comments, image: Jimp): Promise<Jimp> => {
+      if (typeof comment.text === "string") {
+        image.print(
+          font,
+          (imageDetails.width - (comment.width as number)) / 2 +
+            (comment.indentation as number) * commentDetails.indentation,
+          currentHeight,
+          comment.text,
+          comment.width
+        );
+
+        currentHeight += (comment.height as number) + commentDetails.margin;
+
+        return image;
+      }
+
+      image.print(
+        font,
+        (imageDetails.width - (comment.width as number)) / 2 +
+          (comment.indentation as number) * 100,
+        currentHeight,
+        comment.text[0],
+        comment.width
+      );
+
+      const mergedText = `${comment.text[0]}${
+        comment.text[1] ? ` ${comment.text[1]}` : ""
+      }`;
+
+      comment.text =
+        comment.text.length > 2
+          ? [mergedText, ...comment.text.slice(2)]
+          : mergedText;
+
+      const folders = await getFolders(tempPath);
+
+      const folderPath = join(
+        tempPath,
+        `${folders.length}-${createRandomString(4)}`
+      );
+
+      await image.writeAsync(join(folderPath, "image.jpg"));
+
+      return await writeText(comment, image);
+    };
+
+    const recursion = async (comment: Comments) => {
+      await writeText(comment, image);
+
+      for (let i = 0; i < comment.subComment.length; i++) {
+        await recursion(comment.subComment[i]);
+      }
+    };
+
+    await recursion(comments);
+  } catch (err) {
+    console.log(err);
+    logger("Comment Image couldn't generate successfully", "error");
+  }
+};
+
+/**
+ * Generate single comment tree images
+ *
+ * @param comments Comments Object
+ */
+export const createPostComments = async (comments: Comments) => {
+  logger("Generating Comments Images", "action");
+
+  try {
+    const newComments = await measureText(comments);
+
+    await createCommentImage(newComments);
+  } catch (err) {
+    console.log(err);
+    logger("Images couldn't generate successfully", "error");
+  }
+
+  logger("Images generated successfully", "success");
+};

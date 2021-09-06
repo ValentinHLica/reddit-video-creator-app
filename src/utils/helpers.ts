@@ -1,3 +1,5 @@
+import { readdir } from "fs";
+
 import { black } from "chalk";
 
 /**
@@ -63,4 +65,16 @@ export const splitComment = (text: string): string[] => {
   }
 
   return sentences;
+};
+
+export const getFolders = async (path: string): Promise<string[]> => {
+  return new Promise((resolve, reject) => {
+    readdir(path, function (err, files) {
+      if (err) {
+        reject(null);
+      } else {
+        resolve(files);
+      }
+    });
+  });
 };
