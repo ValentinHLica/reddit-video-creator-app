@@ -88,6 +88,7 @@ export default async (text: string, path: string) => {
  * @param {string} post.title Post title
  * @param {string} post.userName Post Author username
  * @param {number} post.points Post points
+ * @param {Array} post.awards Array with paths to award image
  * @param {string} path Image export path
  * @returns
  */
@@ -96,6 +97,7 @@ export const createPostTitle = async (
     title: string;
     userName: string;
     points: string;
+    awards: string[];
   },
   path: string
 ) => {
@@ -140,12 +142,11 @@ export const createPostTitle = async (
     );
 
     // Add post award images
-    const awards = ["award1.png", "award2.png", "award3.png", "award4.png"];
+    const awardsPath = join(imagePath, "reddit-awards");
+    for (let i = 0; i < post.awards.length; i++) {
+      const award = post.awards[i];
 
-    for (let i = 0; i < awards.length; i++) {
-      const award = awards[i];
-
-      const awardImage = await Jimp.read(join(imagePath, award));
+      const awardImage = await Jimp.read(join(awardsPath, award));
 
       image.composite(
         awardImage,
@@ -170,3 +171,12 @@ export const createPostTitle = async (
 
   logger("Image generated successfully", "success");
 };
+
+export const generateThumbnail = async (
+  post: {
+    title: string;
+    subreddit: string;
+    awards: string[];
+  },
+  path: string
+) => {};
