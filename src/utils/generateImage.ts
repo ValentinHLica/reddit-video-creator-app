@@ -11,7 +11,7 @@ import {
 } from "@utils/helpers";
 
 import { FontFace } from "@interface/image";
-import { Comments } from "@interface/video";
+import { Comment, Comments } from "@interface/video";
 
 const assetsPath = join(cwd(), "src", "assets");
 const fontPath = join(assetsPath, "font");
@@ -173,6 +173,9 @@ export const createPostTitle = async (
  * @returns Post Comment Tree with width, height and indentation for each comment
  */
 export const measureText = async (comments: Comments) => {
+  // Todo
+  // Clean up this mess
+
   let indentation: number = 0;
   let totalHeight: number = 0;
   let commentCount: number = 0;
@@ -213,89 +216,177 @@ export const measureText = async (comments: Comments) => {
 
   measure(comments);
 
-  // Todo
-  // Split comments into two arrays if text overflows screen
+  let transformedComments: Comment[] = [];
 
-  return { comments, totalHeight, commentCount };
+  const transformComments = (comment: Comments) => {
+    transformedComments.push({
+      text: comment.text,
+      width: comment.width,
+      height: comment.height,
+      indentation: comment.indentation,
+    });
+
+    for (let i = 0; i < comment.subComment.length; i++) {
+      const element = comment.subComment[i];
+
+      transformComments(element);
+    }
+  };
+
+  transformComments(comments);
+
+  const cleanUpComments = (comments: Comment[]) => {
+    let commentList: Comment[] = [];
+    let maxHeight = imageDetails.height - 200;
+
+    loop1: for (const comment of comments) {
+      if (maxHeight - (comment.height as number) > 0) {
+        commentList.push(comment);
+        maxHeight -= comment.height as number;
+      } else {
+        let mergedText = [];
+
+        loop2: for (let i = 0; i < comment.text.length; i++) {
+          const text = comment.text[i];
+
+          mergedText.push(text);
+
+          const commentWidth =
+            imageDetails.width -
+            200 -
+            (comment.indentation as number) * commentDetails.indentation;
+          const commentHeight = Jimp.measureTextHeight(
+            font,
+            mergedText.join(" "),
+            commentWidth
+          );
+
+          if (maxHeight - commentHeight < 0) {
+            const unUsedText = (comment.text as string[]).slice(i);
+            const unUsedTextHeight = Jimp.measureTextHeight(
+              font,
+              unUsedText.join(" "),
+              commentWidth
+            );
+
+            mergedText.pop();
+            commentList.push(
+              {
+                ...comment,
+                text: mergedText,
+                height: commentHeight,
+              },
+              {
+                ...comment,
+                text: unUsedText,
+                height: unUsedTextHeight,
+              }
+            );
+
+            maxHeight = imageDetails.height - 200 - unUsedTextHeight;
+
+            break loop2;
+          }
+        }
+      }
+    }
+
+    let newMaxHeight = imageDetails.height - 200;
+    const transformedComments: Comment[][] = [];
+    let newCommentList: Comment[] = [];
+
+    for (const comment of commentList) {
+      if (newMaxHeight - (comment.height as number) > 0) {
+        newCommentList.push(comment);
+        newMaxHeight -= comment.height as number;
+      } else {
+        transformedComments.push(newCommentList);
+        newMaxHeight = imageDetails.height - 200 - (comment.height as number);
+        newCommentList = [comment];
+      }
+    }
+
+    transformedComments.push(newCommentList);
+
+    return transformedComments;
+  };
+
+  return cleanUpComments(transformedComments);
 };
 
-export const createCommentImage = async ({
-  comments,
-  totalHeight,
-  commentCount,
-}: {
-  comments: Comments;
-  totalHeight: number;
-  commentCount: number;
-}) => {
+export const createCommentImage = async (commentsList: Comment[][]) => {
   try {
-    let currentHeight =
-      (imageDetails.height - totalHeight) / 2 -
-      (commentCount - 1) * commentDetails.margin;
-
-    const image = new Jimp(
-      imageDetails.width,
-      imageDetails.height,
-      imageDetails.background
-    );
-
     const font = await Jimp.loadFont(join(fontPath, FontFace.Medium));
 
-    const writeText = async (comment: Comments, image: Jimp): Promise<Jimp> => {
-      if (typeof comment.text === "string") {
-        image.print(
-          font,
-          (imageDetails.width - (comment.width as number)) / 2 +
-            (comment.indentation as number) * commentDetails.indentation,
-          currentHeight,
-          comment.text,
-          comment.width
-        );
-
-        currentHeight += (comment.height as number) + commentDetails.margin;
-
-        return image;
+    for (const comments of commentsList) {
+      let totalHeight = 0;
+      for (const comment of comments) {
+        totalHeight += comment.height as number;
       }
 
-      image.print(
-        font,
-        (imageDetails.width - (comment.width as number)) / 2 +
-          (comment.indentation as number) * 100,
-        currentHeight,
-        comment.text[0],
-        comment.width
+      const image = new Jimp(
+        imageDetails.width,
+        imageDetails.height,
+        imageDetails.background
       );
 
-      const mergedText = `${comment.text[0]}${
-        comment.text[1] ? ` ${comment.text[1]}` : ""
-      }`;
+      let currentHeight =
+        (imageDetails.height - totalHeight) / 2 -
+        (comments.length - 1) * commentDetails.margin;
 
-      comment.text =
-        comment.text.length > 2
-          ? [mergedText, ...comment.text.slice(2)]
-          : mergedText;
+      for (const comment of comments) {
+        const writeText = async (
+          comment: Comment,
+          image: Jimp
+        ): Promise<Jimp> => {
+          if (typeof comment.text === "string") {
+            image.print(
+              font,
+              (imageDetails.width - (comment.width as number)) / 2 +
+                (comment.indentation as number) * commentDetails.indentation,
+              currentHeight,
+              comment.text,
+              comment.width
+            );
 
-      const folders = await getFolders(tempPath);
+            currentHeight += (comment.height as number) + commentDetails.margin;
 
-      const folderPath = join(
-        tempPath,
-        `${folders.length}-${createRandomString(4)}`
-      );
+            return image;
+          }
 
-      await image.writeAsync(join(folderPath, "image.jpg"));
+          image.print(
+            font,
+            (imageDetails.width - (comment.width as number)) / 2 +
+              (comment.indentation as number) * 100,
+            currentHeight,
+            comment.text[0],
+            comment.width
+          );
 
-      return await writeText(comment, image);
-    };
+          const mergedText = `${comment.text[0]}${
+            comment.text[1] ? ` ${comment.text[1]}` : ""
+          }`;
 
-    const recursion = async (comment: Comments) => {
-      await writeText(comment, image);
+          comment.text =
+            comment.text.length > 2
+              ? [mergedText, ...comment.text.slice(2)]
+              : mergedText;
 
-      for (let i = 0; i < comment.subComment.length; i++) {
-        await recursion(comment.subComment[i]);
+          const folders = await getFolders(tempPath);
+
+          const folderPath = join(
+            tempPath,
+            `${folders.length}-${createRandomString(4)}`
+          );
+
+          await image.writeAsync(join(folderPath, "image.jpg"));
+
+          return await writeText(comment, image);
+        };
+
+        await writeText(comment, image);
       }
-    };
-
-    await recursion(comments);
+    }
   } catch (err) {
     console.log(err);
     logger("Comment Image couldn't generate successfully", "error");

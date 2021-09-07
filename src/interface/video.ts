@@ -1,8 +1,11 @@
-export interface Comments {
+export interface Comment {
   text: string | string[];
   width?: number;
   height?: number;
   indentation?: number;
+}
+
+export interface Comments extends Comment {
   subComment: Comments[];
 }
 
