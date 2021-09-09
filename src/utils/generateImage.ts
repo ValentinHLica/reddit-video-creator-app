@@ -9,6 +9,8 @@ import {
   getFolders,
   createRandomString,
 } from "@utils/helpers";
+import generateAudio from "@utils/generateAudio";
+import { generateVideo } from "@utils/createVideo";
 
 import { FontFace } from "@interface/image";
 import { Comment, Comments } from "@interface/video";
@@ -25,8 +27,10 @@ const imageDetails = {
 };
 
 const commentDetails = {
-  margin: 30,
+  margin: 50,
   indentation: 100,
+  heightMargin: 200,
+  widthMargin: 200,
 };
 
 /**
@@ -72,20 +76,14 @@ export const generateVoting = async (width: number, voteCount: string) => {
  * @param {string} post.userName Post Author username
  * @param {number} post.points Post points
  * @param {Array} post.awards Array with paths to award image
- * @param {string} path Image export path
  * @returns
  */
-export const createPostTitle = async (
-  post: {
-    title: string;
-    userName: string;
-    points: string;
-    awards: string[];
-  },
-  path: string
-) => {
-  logger("Generating Image", "action");
-
+export const createPostTitle = async (post: {
+  title: string;
+  userName: string;
+  points: string;
+  awards: string[];
+}) => {
   try {
     const image = new Jimp(
       imageDetails.width,
@@ -97,7 +95,7 @@ export const createPostTitle = async (
 
     const font = await Jimp.loadFont(join(fontPath, FontFace.MediumTitle));
 
-    const maxWidth = imageDetails.width - 200;
+    const maxWidth = imageDetails.width - commentDetails.widthMargin;
     const titleHeight = Jimp.measureTextHeight(font, post.title, maxWidth);
 
     // Print post title
@@ -123,7 +121,7 @@ export const createPostTitle = async (
     );
 
     // Add post award images
-    const awardsPath = join(imagePath, "reddit-awards");
+    const awardsPath = join(cwd(), "src", "assets", "images", "reddit-awards");
     for (let i = 0; i < post.awards.length; i++) {
       const award = post.awards[i];
 
@@ -145,14 +143,26 @@ export const createPostTitle = async (
       (imageDetails.height - titleHeight) / 2 + titleHeight / 2 - 80 * 2 + 50
     );
 
+    // Read text
+    const folders = await getFolders(tempPath);
+
+    const folderPath = join(
+      tempPath,
+      `${folders.length}-${createRandomString(4)}`
+    );
+
+    const imagePath = join(folderPath, "image.jpg");
+    const audioPath = join(folderPath, "audio.wav");
+
     // Write image
-    await image.writeAsync(path);
+    await image.writeAsync(imagePath);
+
+    const duration = await generateAudio(post.title, audioPath);
+
+    await generateVideo(imagePath, audioPath, folderPath, duration);
   } catch (err) {
     console.log(err);
-    logger("Image couldn't generate successfully", "error");
   }
-
-  logger("Image generated successfully", "success");
 };
 
 // export const generateThumbnail = async (
@@ -178,7 +188,9 @@ export const measureText = async (comments: Comments) => {
   // Get Text Width, Height and Indentation
   const measure = (comment: Comments) => {
     const commentWidth =
-      imageDetails.width - 200 - indentation * commentDetails.indentation;
+      imageDetails.width -
+      commentDetails.widthMargin -
+      indentation * commentDetails.indentation;
     const commentHeight = Jimp.measureTextHeight(
       font,
       comment.text,
@@ -215,6 +227,7 @@ export const measureText = async (comments: Comments) => {
       width: comment.width,
       height: comment.height,
       indentation: comment.indentation,
+      userName: comment.userName,
     });
 
     for (let i = 0; i < comment.subComment.length; i++) {
@@ -227,7 +240,7 @@ export const measureText = async (comments: Comments) => {
   transformComments(comments);
 
   const commentList: Comment[] = [];
-  let maxHeight = imageDetails.height - 200;
+  let maxHeight = imageDetails.height - commentDetails.heightMargin;
 
   const splitComments = (comment: Comment) => {
     let mergedText: string[] = [];
@@ -239,7 +252,7 @@ export const measureText = async (comments: Comments) => {
 
       const commentWidth =
         imageDetails.width -
-        200 -
+        commentDetails.widthMargin -
         (comment.indentation as number) * commentDetails.indentation;
       const commentHeight = Jimp.measureTextHeight(
         font,
@@ -263,7 +276,7 @@ export const measureText = async (comments: Comments) => {
 
         mergedText = [];
 
-        maxHeight = imageDetails.height - 200;
+        maxHeight = imageDetails.height - commentDetails.heightMargin;
 
         const unUsedText = comment.text.slice(i) as string[];
         const unUsedComment = Jimp.measureTextHeight(
@@ -277,6 +290,7 @@ export const measureText = async (comments: Comments) => {
           height: unUsedComment,
           width: comment.width,
           indentation: comment.indentation,
+          userName: comment.userName,
         });
       }
     }
@@ -295,7 +309,7 @@ export const measureText = async (comments: Comments) => {
     }
   }
 
-  let newMaxHeight = imageDetails.height - 200;
+  let newMaxHeight = imageDetails.height - commentDetails.heightMargin;
   const newTransformedComments: Comment[][] = [];
   let newCommentList: Comment[] = [];
 
@@ -305,7 +319,10 @@ export const measureText = async (comments: Comments) => {
       newMaxHeight -= comment.height as number;
     } else {
       newTransformedComments.push(newCommentList);
-      newMaxHeight = imageDetails.height - 200 - (comment.height as number);
+      newMaxHeight =
+        imageDetails.height -
+        commentDetails.heightMargin -
+        (comment.height as number);
       newCommentList = [comment];
     }
   }
@@ -318,6 +335,10 @@ export const measureText = async (comments: Comments) => {
 export const createCommentImage = async (commentsList: Comment[][]) => {
   try {
     const font = await Jimp.loadFont(join(fontPath, FontFace.Medium));
+    const fontLight = await Jimp.loadFont(join(fontPath, FontFace.Light));
+    const indentationLine = await Jimp.read(
+      join(imagePath, "comment-line.png")
+    );
 
     for (const comments of commentsList) {
       let totalHeight = 0;
@@ -335,40 +356,73 @@ export const createCommentImage = async (commentsList: Comment[][]) => {
         (imageDetails.height - totalHeight) / 2 -
         (comments.length - 1) * commentDetails.margin;
 
+      let addedText: string;
+
       const writeText = async (
         comment: Comment,
         image: Jimp
       ): Promise<Jimp> => {
+        const textX =
+          (imageDetails.width - (comment.width as number)) / 2 +
+          (comment.indentation as number) * commentDetails.indentation;
+
+        // Write username
+        const userNameText = `/u/${comment.userName}`;
+        const userNameWidth = Jimp.measureText(fontLight, userNameText);
+        const userNameHeight = Jimp.measureTextHeight(
+          fontLight,
+          userNameText,
+          userNameWidth
+        );
+
+        // Print text
+        image.print(
+          fontLight,
+          textX,
+          currentHeight - userNameHeight,
+          userNameText
+        );
+
+        // if (comment.text.length === 1) {
+        //   comment.text = comment.text[0];
+
+        //   return image;
+        // }
+
         if (typeof comment.text === "string") {
-          image.print(
-            font,
-            (imageDetails.width - (comment.width as number)) / 2 +
-              (comment.indentation as number) * commentDetails.indentation,
-            currentHeight,
-            comment.text,
-            comment.width
-          );
+          image.print(font, textX, currentHeight, comment.text, comment.width);
+
+          // Composite indentation line
+          indentationLine.resize(5, comment.height as number);
+          image.composite(indentationLine, textX - 20, currentHeight);
 
           currentHeight += (comment.height as number) + commentDetails.margin;
 
           return image;
         }
 
-        image.print(
-          font,
-          (imageDetails.width - (comment.width as number)) / 2 +
-            (comment.indentation as number) * 100,
-          currentHeight,
+        const writtenText = addedText ? addedText : comment.text[0];
+
+        image.print(font, textX, currentHeight, comment.text[0], comment.width);
+
+        const textHeight = Jimp.measureTextHeight(
+          fontLight,
           comment.text[0],
-          comment.width
+          comment.width as number
         );
+
+        // Composite indentation line
+        indentationLine.resize(5, textHeight);
+        image.composite(indentationLine, textX - 20, currentHeight);
 
         const mergedText = `${comment.text[0]}${
           comment.text[1] ? ` ${comment.text[1]}` : ""
         }`;
 
+        addedText = comment.text[1] ?? undefined;
+
         comment.text =
-          comment.text.length > 2
+          comment.text.length > 1
             ? [mergedText, ...comment.text.slice(2)]
             : mergedText;
 
@@ -379,7 +433,14 @@ export const createCommentImage = async (commentsList: Comment[][]) => {
           `${folders.length}-${createRandomString(4)}`
         );
 
-        await image.writeAsync(join(folderPath, "image.jpg"));
+        const imagePath = join(folderPath, "image.jpg");
+        const audioPath = join(folderPath, "audio.wav");
+
+        await image.writeAsync(imagePath);
+
+        const duration = await generateAudio(writtenText, audioPath);
+
+        await generateVideo(imagePath, audioPath, folderPath, duration);
 
         return await writeText(comment, image);
       };
@@ -390,7 +451,6 @@ export const createCommentImage = async (commentsList: Comment[][]) => {
     }
   } catch (err) {
     console.log(err);
-    logger("Comment Image couldn't generate successfully", "error");
   }
 };
 
@@ -400,16 +460,10 @@ export const createCommentImage = async (commentsList: Comment[][]) => {
  * @param comments Comments Object
  */
 export const createPostComments = async (comments: Comments) => {
-  logger("Generating Comments Images", "action");
-
   try {
     const newComments = await measureText(comments);
-
     await createCommentImage(newComments);
   } catch (err) {
     console.log(err);
-    logger("Images couldn't generate successfully", "error");
   }
-
-  logger("Images generated successfully", "success");
 };

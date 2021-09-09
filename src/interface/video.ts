@@ -3,6 +3,7 @@ export interface Comment {
   width?: number;
   height?: number;
   indentation?: number;
+  userName: string;
 }
 
 export interface Comments extends Comment {

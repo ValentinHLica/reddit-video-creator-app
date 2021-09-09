@@ -13,14 +13,12 @@
     []. Implement post rewards
 
 
-[]. Comments
+[x]. Comments
     [x]. Implement new handler for creating nested Comments
     [x]. Implement creating new image when text overflows screen
-    []. Improve design 
-        []. Implement comment authors
-        []. Points for comment
-        []. Awards for comment
-        []. line to indicate indent
+    [x]. Improve design 
+        [x]. Implement comment authors
+        [x]. line to indicate indent
 
 []. UI
     []. Search subreddits
