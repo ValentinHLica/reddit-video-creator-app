@@ -12,5 +12,8 @@ export interface Comments extends Comment {
 
 export interface VideoDetails {
   title: string;
+  userName: string;
+  points: string;
+  awards: string[];
   comments: Comments[];
 }

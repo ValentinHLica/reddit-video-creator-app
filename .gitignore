@@ -3,3 +3,5 @@ ffmpeg.exe
 src/cli/balcon/*
 src/temp/*
 .env
+dist
+release-builds

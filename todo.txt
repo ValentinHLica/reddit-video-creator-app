@@ -8,6 +8,8 @@
     []. Create main text
         []. Implement changing color of text given from ui
         []. implement changing font size based on text length
+        []. Create folders where you can place different images for dynamically creating thumbnails
+            []. Require login if you like to post to youtube dinamicly and automatike
     []. Implement author
     []. implement thumbnail image
     []. Implement post rewards
@@ -18,9 +20,18 @@
     [x]. Implement creating new image when text overflows screen
     [x]. Improve design 
         [x]. Implement comment authors
-        [x]. line to indicate indent
+        [x]. line to indicate inden
+        []. Look up some designs you may find online and kinda create different themes ??
+    []. Find a way to \n text
+    []. text will overflow from the right side, just add + 200 to every maxWidth for comments with indentation
+    []. censure curse words, by replacing words with a family friendly words but not losing its context
+    []. implement dynamic getting comments by analysing data
+        []. probably create kinda like an ai to dynamicly select data based on most common results
+
 
 []. UI
+    []. Krijo nje design per app ne figma 
+    []. Create ni si tip tutoriali ku shpjego dhe ndrysho settingse per preferencat e tij
     []. Search subreddits
     []. Open post
     []. select post Comments

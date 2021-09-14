@@ -14,29 +14,22 @@ const cliPath = "./src/cli/balcon/balcon.exe";
  * @param {string} path Export path for the wav file
  */
 export default async (text: string, path: string): Promise<number> => {
-  logger("Generating Audio", "action");
+  return new Promise((resolve) => {
+    logger("Generating Audio", "action");
 
-  const generateAudio = () => {
-    return new Promise((resolve) => {
-      execFile(
-        cliPath,
-        ["-t", text, "-w", path, "-n", "ScanSoft"],
-        (error, stdout) => {
-          if (error) {
-            logger("Audio couldn't generate successfully", "error");
-            throw error;
-          }
-
-          resolve(null);
-          // console.log(stdout);
+    execFile(
+      cliPath,
+      ["-t", text, "-w", path, "-n", "ScanSoft"],
+      async (error, stdout) => {
+        if (error) {
+          logger("Audio couldn't generate successfully", "error");
+          throw error;
         }
-      );
-    });
-  };
 
-  await generateAudio();
-
-  logger("Audio generated successfully", "success");
-
-  return await getAudioDurationInSeconds(path);
+        logger("Audio generated successfully", "success");
+        resolve(await getAudioDurationInSeconds(path));
+        // console.log(stdout);
+      }
+    );
+  });
 };

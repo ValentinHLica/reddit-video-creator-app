@@ -1,5 +1,4 @@
 import { join } from "path";
-import { cwd } from "process";
 
 import Jimp from "jimp";
 
@@ -15,10 +14,10 @@ import { generateVideo } from "@utils/createVideo";
 import { FontFace } from "@interface/image";
 import { Comment, Comments } from "@interface/video";
 
-const assetsPath = join(cwd(), "src", "assets");
+const assetsPath = join(__dirname, "../assets");
 const fontPath = join(assetsPath, "font");
 const imagePath = join(assetsPath, "images");
-const tempPath = join(cwd(), "src", "temp");
+const tempPath = join(__dirname, "../temp");
 
 const imageDetails = {
   width: 1920,
@@ -121,7 +120,7 @@ export const createPostTitle = async (post: {
     );
 
     // Add post award images
-    const awardsPath = join(cwd(), "src", "assets", "images", "reddit-awards");
+    const awardsPath = join(__dirname, "../assets", "images", "reddit-awards");
     for (let i = 0; i < post.awards.length; i++) {
       const award = post.awards[i];
 

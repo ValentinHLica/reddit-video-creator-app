@@ -1,6 +1,5 @@
 import { exec, execFile } from "child_process";
 import { join } from "path";
-import { cwd } from "process";
 
 import { logger, getFolders } from "@utils/helpers";
 
@@ -68,7 +67,7 @@ export const generateVideo = async (
 export const mergeVideos = async () => {
   logger("Merging Videos", "action");
 
-  const tempPath = join(cwd(), "src", "temp");
+  const tempPath = join(__dirname, "../temp");
   const folders = await getFolders(tempPath);
   const outPutFilePath = join(tempPath, "output.mp4");
 
