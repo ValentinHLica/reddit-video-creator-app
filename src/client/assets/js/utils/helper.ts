@@ -1,9 +1,10 @@
+import { cwd } from "process";
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
 import { SearchItem } from "@interface/reddit";
 
-const favouritePath = join(__dirname, "../data", "favourite.json");
+const favouritePath = join(cwd(), "data", "favourite.json");
 
 /**
  * Get Favourite Subreddit

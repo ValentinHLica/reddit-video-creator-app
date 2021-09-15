@@ -48,6 +48,7 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "get-audio-duration": "^3.0.0",
-    "jimp": "^0.16.1"
+    "jimp": "^0.16.1",
+    "slugify": "^1.6.0"
   }
 }

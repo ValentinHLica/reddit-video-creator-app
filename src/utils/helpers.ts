@@ -3,7 +3,7 @@ import { readdir } from "fs";
 import { black } from "chalk";
 
 /**
- *
+ * Logger handler for action, success, error
  * @param {string} message Message to display to consol
  * @param {string} type Message type
  */
@@ -35,7 +35,6 @@ export const logger = (message: string, type: LogType) => {
 
 /**
  * Create Random String
- *
  * @param {number} size
  * @returns
  */
@@ -44,7 +43,6 @@ export const createRandomString = (size: number) =>
 
 /**
  * Generate array of sentences from comment
- *
  * @param {string} text Comment text
  */
 export const splitComment = (text: string): string[] => {
@@ -67,6 +65,11 @@ export const splitComment = (text: string): string[] => {
   return sentences;
 };
 
+/**
+ * List all files and folders inside folder
+ * @param path Folder path
+ * @returns List of files and folders inside folder
+ */
 export const getFolders = async (path: string): Promise<string[]> => {
   return new Promise((resolve, reject) => {
     readdir(path, function (err, files) {

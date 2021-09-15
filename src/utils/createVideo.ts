@@ -1,6 +1,8 @@
 import { exec, execFile } from "child_process";
 import { join } from "path";
 
+import slugify from "slugify";
+
 import { logger, getFolders } from "@utils/helpers";
 
 // Path for ffmpeg cli
@@ -20,9 +22,9 @@ export const generateVideo = async (
   path: string,
   duration: number
 ) => {
-  logger("Creating Video", "action");
-
   return new Promise((resolve) => {
+    logger("Creating Video", "action");
+
     execFile(
       cliPath,
       [
@@ -63,13 +65,19 @@ export const generateVideo = async (
 
 /**
  * Merge All Videos together
+ *
+ * @param title Post title
  */
-export const mergeVideos = async () => {
+export const mergeVideos = async (title: string) => {
   logger("Merging Videos", "action");
 
   const tempPath = join(__dirname, "../temp");
   const folders = await getFolders(tempPath);
-  const outPutFilePath = join(tempPath, "output.mp4");
+
+  const postTitle = `${slugify(title, {
+    remove: /[*+~.()'"!:@]/g,
+  })}.mp4`;
+  const outPutFilePath = join(tempPath, postTitle);
 
   const videos = folders.map(
     (folder) => `echo file '${join(tempPath, folder, "video.mp4")}`

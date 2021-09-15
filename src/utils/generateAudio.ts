@@ -28,7 +28,6 @@ export default async (text: string, path: string): Promise<number> => {
 
         logger("Audio generated successfully", "success");
         resolve(await getAudioDurationInSeconds(path));
-        // console.log(stdout);
       }
     );
   });

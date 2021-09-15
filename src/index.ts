@@ -69,6 +69,39 @@ const videoComments = {
         },
       ],
     },
+    {
+      text: "Hi there, welcome back here, guys.",
+      userName: "john",
+      subComment: [
+        {
+          text: "You know, I'd like to have talked about class types, we have created class person so they can create",
+          userName: "tony",
+          subComment: [
+            {
+              text: "They are talking about optional parameters.",
+              userName: "tony",
+              subComment: [],
+            },
+            {
+              text: "So like other things, let's go down here and let's say my personal info function.",
+              userName: "tony",
+              subComment: [],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      text: "So I don't want to provide for any age and expecting that look based on info, they'll have some edge by default already provided. So I can do it in such a case. I believe age, but immediately I will get here. All right. So we can do it.We can go to our. Definition of the function to look personal info actually still on the right cells, I will shortly",
+      userName: "tony",
+      subComment: [
+        {
+          text: "And these I will provide a new line as well like this. OK, and I will specify here the default value for a person, let's say the full value will be, let's. You can see I still see here at our personal info, expected to work, a mathematical model is still Now this this parameter is optional, is marked as optional, so I don't have to provide it. You can see that I'm able to call here and look at personal info only with a name and age will be by. Refresh and they should be the age of the zero, which is a default default value, and that's that's. For example, if I specify here, here I will anchormen this I need to call it differently.",
+          userName: "tony",
+          subComment: [],
+        },
+      ],
+    },
   ],
 };
 
@@ -94,7 +127,7 @@ const init = async () => {
     await createPostComments(comments);
   }
 
-  mergeVideos();
+  await mergeVideos("bruh");
 };
 
 init();
