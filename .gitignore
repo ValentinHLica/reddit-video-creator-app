@@ -5,3 +5,4 @@ src/temp/*
 .env
 dist
 release-builds
+build

@@ -2,12 +2,7 @@ import { join } from "path";
 
 import Jimp from "jimp";
 
-import {
-  logger,
-  splitComment,
-  getFolders,
-  createRandomString,
-} from "@utils/helpers";
+import { splitComment, getFolders, createRandomString } from "@utils/helpers";
 import generateAudio from "@utils/generateAudio";
 import { generateVideo } from "@utils/createVideo";
 

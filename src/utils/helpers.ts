@@ -11,10 +11,6 @@ import { black } from "chalk";
 type LogType = "success" | "action" | "error";
 
 export const logger = (message: string, type: LogType) => {
-  if (process.env.PROD === "yes") {
-    return;
-  }
-
   switch (type) {
     case "action":
       console.log(black.bgBlue(message));

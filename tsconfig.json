@@ -1,21 +1,29 @@
 {
+  "extends": "./tsconfig.paths.json",
   "compilerOptions": {
     "target": "ES5",
-    "module": "CommonJS",
+    "module": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "strict": true,
     "moduleResolution": "node",
     "baseUrl": "src",
     "outDir": "dist",
-    "paths": {
-      "@utils/*": ["utils/*"],
-      "@interface/*": ["interface/*"]
-    },
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
   },
-  "include": ["src"],
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  }
+  "include": [
+    "src"
+  ]
 }

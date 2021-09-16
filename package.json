@@ -1,54 +1,91 @@
 {
   "name": "reddit-recap",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Create Videos with Reddit posts",
+  "main": "public/main.js",
+  "homepage": "./",
   "scripts": {
-    "clear": "rm -rf dist",
-    "copy:main": "cp .env package.json package-lock.json dist",
-    "copy:files": "cp src/client/index.html dist/client",
-    "copy:folders": "cp -R ./src/assets ./src/cli  ./src/data ./src/temp ./dist",
-    "copy": "npm run copy:main && npm run copy:folders && npm run copy:files",
-    "watch:scss": "npm run build:scss && node-sass -w src/client/assets/css/main.scss -o dist/client/assets/css/main.css",
-    "watch:tsc": "tsc -w",
-    "watch": "npm run clear && concurrently \"npm run watch:scss\" \"npm run watch:tsc\"",
-    "build:tsc": "tsc -p .",
-    "build:scss": "node-sass src/client/assets/css/main.scss dist/client/assets/css/main.css",
-    "build": "npm run clear && npm run build:scss && npm run build:tsc && tscpaths -p ./tsconfig.json -s ./src -o ./dist && npm run copy",
-    "start": "npm run clear && npm run build && npm run copy && electron dist/index.js",
-    "start:electron": "npm run copy && electron dist/index.js",
-    "package-win": "electron-packager dist --overwrite --platform=win32 --arch=ia32 --icon=dist/assets/images/logo.ico --prune=false --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Reddit Recap\"",
-    "package": "npm run build && npm run package-win",
-    "gazi": "rm -rf src/temp/* && ts-node src/index.ts"
+    "start:ui": "react-scripts start",
+    "build:ui": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "concurrently -k \"cross-env BROWSER=none npm run start:ui\" \"wait-on tcp:3000 && electron .\"",
+    "build": "npm run build:ui && electron-builder -c.extraMetadata.main=build/main.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ValentinHLica/reddit-recap.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Valentin Lica",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ValentinHLica/reddit-recap/issues"
   },
-  "homepage": "https://github.com/ValentinHLica/reddit-recap#readme",
   "devDependencies": {
     "@types/node": "^16.7.10",
     "chalk": "^4.1.2",
     "concurrently": "^6.2.1",
-    "electron": "^14.0.0",
-    "electron-packager": "^15.4.0",
+    "cross-env": "^7.0.3",
+    "electron": "^14.0.1",
+    "electron-builder": "^22.11.7",
     "node-sass": "^6.0.1",
     "ts-node": "^10.2.1",
     "tsconfig-paths": "^3.11.0",
     "tscpaths": "^0.0.9",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.2"
+    "typescript": "^4.4.2",
+    "wait-on": "^6.0.0"
   },
   "dependencies": {
-    "dotenv": "^10.0.0",
+    "@electron/remote": "^2.0.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^12.20.25",
+    "@types/react": "^17.0.21",
+    "@types/react-dom": "^17.0.9",
+    "electron-is-dev": "^2.0.0",
     "get-audio-duration": "^3.0.0",
     "jimp": "^0.16.1",
-    "slugify": "^1.6.0"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "sass": "^1.41.0",
+    "slugify": "^1.6.0",
+    "typescript": "^4.4.3",
+    "web-vitals": "^1.1.2"
+  },
+  "build": {
+    "extends": null,
+    "appId": "com.example.electron-cra",
+    "files": [
+      "dist/**/*",
+      "build/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

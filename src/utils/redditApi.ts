@@ -1,14 +1,19 @@
-import { Search, Filter, Posts, Comment } from "@interface/reddit.js";
-// import { SearchItem } from "../../../../interface/reddit.js";
+import {
+  Search,
+  Filter,
+  Post,
+  Posts,
+  Comment,
+  SearchItem,
+} from "@interface/reddit";
 
 const redditUrl = "https://www.reddit.com";
 
 /**
  * Search SubReddit
- *
  * @param query Search Query
  */
-export const search = async (query: string) => {
+export const search = async (query: string): Promise<SearchItem[]> => {
   const url = `${redditUrl}/search.json?q=${query}&type=sr%2Cuser`;
   const res = await fetch(url);
   const data = await res.json();
@@ -40,11 +45,13 @@ export const search = async (query: string) => {
 
 /**
  * Get SubReddit Posts
- *
  * @param subReddit Subreddit link
  * @param filter Sort Filter
  */
-export const getPosts = async (subReddit: string, filter: Filter) => {
+export const getPosts = async (
+  subReddit: string,
+  filter: Filter
+): Promise<Post[]> => {
   const url = `${redditUrl}/r/${subReddit}/top.json?t=${filter}`;
 
   const res = await fetch(url);
@@ -89,7 +96,6 @@ export const getPosts = async (subReddit: string, filter: Filter) => {
 
 /**
  * Get Post comments
- *
  * @param permalink SubReddit Post Permalink
  */
 
