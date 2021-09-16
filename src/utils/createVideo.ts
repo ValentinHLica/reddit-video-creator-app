@@ -3,7 +3,7 @@ import { join } from "path";
 
 import slugify from "slugify";
 
-import { logger, getFolders } from "@utils/helpers";
+import { logger, getFolders } from "../utils/helpers";
 
 // Path for ffmpeg cli
 const cliPath = "./src/cli/ffmpeg/ffmpeg.exe";

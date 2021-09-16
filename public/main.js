@@ -12,6 +12,7 @@ function createWindow() {
       nodeIntegration: true,
       enableRemoteModule: true,
     },
+    resizable: false,
   });
 
   remoteMain.enable(win.webContents);

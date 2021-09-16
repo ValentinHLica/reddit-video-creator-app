@@ -2,12 +2,12 @@ import { join } from "path";
 
 import Jimp from "jimp";
 
-import { splitComment, getFolders, createRandomString } from "@utils/helpers";
-import generateAudio from "@utils/generateAudio";
-import { generateVideo } from "@utils/createVideo";
+import { splitComment, getFolders, createRandomString } from "../utils/helpers";
+import generateAudio from "../utils/generateAudio";
+import { generateVideo } from "../utils/createVideo";
 
-import { FontFace } from "@interface/image";
-import { Comment, Comments } from "@interface/video";
+import { FontFace } from "../interface/image";
+import { Comment, Comments } from "../interface/video";
 
 const assetsPath = join(__dirname, "../assets");
 const fontPath = join(assetsPath, "font");
@@ -64,6 +64,7 @@ export const generateVoting = async (
   const downArrow = arrow.rotate(180);
   image.composite(downArrow, (width - arrowWidth) / 2, imageHeight - width);
 
+  await image.writeAsync(join(tempPath, "image.png"));
   return image;
 };
 

@@ -1,11 +1,12 @@
 import { execFile } from "child_process";
+import { join } from "path";
 
 import { getAudioDurationInSeconds } from "get-audio-duration";
 
-import { logger } from "@utils/helpers";
+import { logger } from "../utils/helpers";
 
 // Path for balcon cli
-const cliPath = "./src/cli/balcon/balcon.exe";
+const cliPath = join(__dirname, "..", "cli", "balcon", "balcon.exe");
 
 /**
  * Generate Audio from text
@@ -13,7 +14,8 @@ const cliPath = "./src/cli/balcon/balcon.exe";
  * @param {string} text Word that will be converted to speech
  * @param {string} path Export path for the wav file
  */
-export default async (text: string, path: string): Promise<number> => {
+
+const generateAudio = async (text: string, path: string): Promise<number> => {
   return new Promise((resolve) => {
     logger("Generating Audio", "action");
 
@@ -32,3 +34,5 @@ export default async (text: string, path: string): Promise<number> => {
     );
   });
 };
+
+export default generateAudio;

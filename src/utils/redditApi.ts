@@ -5,7 +5,7 @@ import {
   Posts,
   Comment,
   SearchItem,
-} from "@interface/reddit";
+} from "../interface/reddit";
 
 const redditUrl = "https://www.reddit.com";
 
