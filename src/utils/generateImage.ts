@@ -1,6 +1,5 @@
 import { join } from "path";
-
-import Jimp from "jimp";
+import JimpType from "jimp";
 
 import { splitComment, getFolders, createRandomString } from "../utils/helpers";
 import generateAudio from "../utils/generateAudio";
@@ -9,10 +8,13 @@ import { generateVideo } from "../utils/createVideo";
 import { FontFace } from "../interface/image";
 import { Comment, Comments } from "../interface/video";
 
-const assetsPath = join(__dirname, "../assets");
+const Jimp = window.require("jimp");
+const { app } = window.require("@electron/remote");
+
+const assetsPath = join(app.getAppPath(), "build", "assets");
 const fontPath = join(assetsPath, "font");
 const imagePath = join(assetsPath, "images");
-const tempPath = join(__dirname, "../temp");
+const tempPath = join(app.getAppPath(), "..", "temp");
 
 const imageDetails = {
   width: 1920,
@@ -360,8 +362,8 @@ export const createCommentImage = async (commentsList: Comment[][]) => {
 
       const writeText = async (
         comment: Comment,
-        image: Jimp
-      ): Promise<Jimp> => {
+        image: JimpType
+      ): Promise<JimpType> => {
         const textX =
           (imageDetails.width - (comment.width as number)) / 2 +
           (comment.indentation as number) * commentDetails.indentation;

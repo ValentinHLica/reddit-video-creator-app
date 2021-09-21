@@ -1,6 +1,6 @@
-import { readdir } from "fs";
-
 import { black } from "chalk";
+
+const { readdir } = window.require("fs");
 
 /**
  * Logger handler for action, success, error
@@ -68,7 +68,7 @@ export const splitComment = (text: string): string[] => {
  */
 export const getFolders = async (path: string): Promise<string[]> => {
   return new Promise((resolve, reject) => {
-    readdir(path, function (err, files) {
+    readdir(path, function (err: any, files: string[]) {
       if (err) {
         reject(null);
       } else {

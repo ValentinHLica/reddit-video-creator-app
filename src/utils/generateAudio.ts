@@ -1,12 +1,46 @@
-import { execFile } from "child_process";
-import { join } from "path";
-
-import { getAudioDurationInSeconds } from "get-audio-duration";
-
 import { logger } from "../utils/helpers";
 
+const { execFile } = window.require("child_process");
+const { join } = window.require("path");
+
+const { app } = window.require("@electron/remote");
+
 // Path for balcon cli
-const cliPath = join(__dirname, "..", "cli", "balcon", "balcon.exe");
+const cliPath = join(app.getAppPath(), "build", "cli");
+const balconPath = join(cliPath, "balcon", "balcon.exe");
+const ffprobePath = join(cliPath, "ffmpeg", "ffprobe.exe");
+
+const getAudioDuration = async (path: string): Promise<number> => {
+  return new Promise((resolve) => {
+    logger("Generating Audio", "action");
+
+    const params = [
+      "-v",
+      "error",
+      "-select_streams",
+      "a:0",
+      "-show_format",
+      "-show_streams",
+    ];
+
+    execFile(
+      ffprobePath,
+      [...params, path],
+      async (error: any, stdout: any) => {
+        if (error) {
+          logger("Audio couldn't generate successfully", "error");
+          throw error;
+        }
+
+        const matched = stdout.match(/duration="?(\d*\.\d*)"?/);
+
+        logger("Audio generated successfully", "success");
+
+        if (matched && matched[1]) resolve(parseFloat(matched[1]));
+      }
+    );
+  });
+};
 
 /**
  * Generate Audio from text
@@ -20,16 +54,17 @@ const generateAudio = async (text: string, path: string): Promise<number> => {
     logger("Generating Audio", "action");
 
     execFile(
-      cliPath,
+      balconPath,
       ["-t", text, "-w", path, "-n", "ScanSoft"],
-      async (error, stdout) => {
+      async (error: any, stdout: any) => {
         if (error) {
           logger("Audio couldn't generate successfully", "error");
           throw error;
         }
 
         logger("Audio generated successfully", "success");
-        resolve(await getAudioDurationInSeconds(path));
+
+        resolve(await getAudioDuration(path));
       }
     );
   });

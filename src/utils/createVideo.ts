@@ -1,12 +1,15 @@
-import { exec, execFile } from "child_process";
-import { join } from "path";
-
-import slugify from "slugify";
-
 import { logger, getFolders } from "../utils/helpers";
 
+const { exec, execFile } = window.require("child_process");
+const { join } = window.require("path");
+
+const { slugify } = window.require("slugify");
+
+const { app } = window.require("@electron/remote");
+
 // Path for ffmpeg cli
-const cliPath = "./src/cli/ffmpeg/ffmpeg.exe";
+const cliPath = join(app.getAppPath(), "build", "cli");
+const ffmpegPath = join(cliPath, "ffmpeg", "ffmpeg.exe");
 
 /**
  * Generate Video from image and audio
@@ -26,7 +29,7 @@ export const generateVideo = async (
     logger("Creating Video", "action");
 
     execFile(
-      cliPath,
+      ffmpegPath,
       [
         "-loop",
         "1",
@@ -49,7 +52,7 @@ export const generateVideo = async (
         duration.toString(),
         join(path, `video.mp4`),
       ],
-      (error, stdout) => {
+      (error: any, stdout: any) => {
         if (error) {
           logger("Video couldn't create successfully", "error");
           throw error;
@@ -87,7 +90,7 @@ export const mergeVideos = async (title: string) => {
 
   const createFileList = async () => {
     return new Promise((resolve) => {
-      exec(`(${videos.join(" & ")})>${listPath}`, (error, stdout) => {
+      exec(`(${videos.join(" & ")})>${listPath}`, (error: any, stdout: any) => {
         if (error) {
           throw error;
         }
@@ -101,7 +104,7 @@ export const mergeVideos = async (title: string) => {
 
   return new Promise((resolve) => {
     execFile(
-      cliPath,
+      ffmpegPath,
       [
         "-safe",
         "0",
@@ -113,7 +116,7 @@ export const mergeVideos = async (title: string) => {
         "copy",
         outPutFilePath,
       ],
-      (error, stdout) => {
+      (error: any, stdout: any) => {
         if (error) {
           logger("Videos couldn't merge successfully", "error");
           throw error;
