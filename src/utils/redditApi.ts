@@ -31,6 +31,8 @@ export const search = async (query: string): Promise<SearchItem[]> => {
       },
     } = item;
 
+    // todo check export also how may comments in post
+
     return {
       display_name,
       title,

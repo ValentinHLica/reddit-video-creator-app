@@ -1,14 +1,13 @@
 {
   "name": "reddit-recap",
   "version": "1.0.0",
-  "description": "Create Videos with Reddit posts",
+  "description": "Create videos from reddit posts",
+  "private": true,
   "main": "public/main.js",
   "homepage": "./",
   "scripts": {
     "start:ui": "react-scripts start",
     "build:ui": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "dev": "concurrently -k \"cross-env BROWSER=none npm run start:ui\" \"wait-on tcp:3000 && electron .\"",
     "build": "npm run build:ui && electron-builder -c.extraMetadata.main=build/main.js"
   },
@@ -17,60 +16,13 @@
     "url": "git+https://github.com/ValentinHLica/reddit-recap.git"
   },
   "keywords": [],
-  "author": "Valentin Lica",
+  "author": {
+    "email": "licavalentinh@gmail.com",
+    "name": "Valentin Lica"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ValentinHLica/reddit-recap/issues"
-  },
-  "devDependencies": {
-    "@types/node": "^16.7.10",
-    "@types/react-router-dom": "^5.1.9",
-    "chalk": "^4.1.2",
-    "concurrently": "^6.2.1",
-    "cross-env": "^7.0.3",
-    "electron": "^14.0.1",
-    "electron-builder": "^22.11.7",
-    "node-sass": "^6.0.1",
-    "ts-node": "^10.2.1",
-    "tsconfig-paths": "^3.11.0",
-    "tscpaths": "^0.0.9",
-    "tslib": "^2.3.1",
-    "typescript": "^4.4.2",
-    "wait-on": "^6.0.0"
-  },
-  "dependencies": {
-    "@electron/remote": "^2.0.0",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "@types/jest": "^26.0.24",
-    "@types/node": "^12.20.25",
-    "@types/react": "^17.0.21",
-    "@types/react-dom": "^17.0.9",
-    "electron-is-dev": "^2.0.0",
-    "get-audio-duration": "^3.0.0",
-    "jimp": "^0.16.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^5.3.0",
-    "react-scripts": "4.0.3",
-    "sass": "^1.41.0",
-    "slugify": "^1.6.0",
-    "typescript": "^4.4.3",
-    "web-vitals": "^1.1.2"
-  },
-  "build": {
-    "extends": null,
-    "appId": "com.example.electron-cra",
-    "files": [
-      "dist/**/*",
-      "build/**/*",
-      "node_modules/**/*",
-      "package.json"
-    ],
-    "directories": {
-      "buildResources": "assets"
-    }
   },
   "eslintConfig": {
     "extends": [
@@ -89,5 +41,49 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "build": {
+    "extends": null,
+    "appId": "com.example.electron-cra",
+    "files": [
+      "dist/**/*",
+      "build/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "icon": "build/logo.ico"
+    }
+  },
+  "dependencies": {
+    "@electron/remote": "^2.0.1",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^12.20.25",
+    "@types/react": "^17.0.22",
+    "@types/react-dom": "^17.0.9",
+    "chalk": "^4.1.2",
+    "electron-is-dev": "^2.0.0",
+    "get-audio-duration": "^3.0.0",
+    "jimp": "^0.16.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "sass": "^1.42.0",
+    "slugify": "^1.6.0",
+    "typescript": "^4.4.3",
+    "web-vitals": "^1.1.2"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.1",
+    "cross-env": "^7.0.3",
+    "electron": "11.2.1",
+    "electron-builder": "^22.11.7",
+    "wait-on": "^6.0.0"
   }
 }
