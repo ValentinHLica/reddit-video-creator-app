@@ -2,7 +2,7 @@ import React from "react";
 
 import { Size, Type } from "../../interface/UI/button";
 
-import styles from "../../styles/components/Footer/index.module.scss";
+import styles from "../../styles/components/UI/button.module.scss";
 
 type Props = {
   url?: string;
@@ -22,7 +22,7 @@ const Button: React.FC<Props> = ({
 }) => {
   const attributes = {
     className: `${styles.container} ${className} ${
-      styles[`container__${size} `]
+      styles[`container__${size}`]
     } ${styles[`container__${type}`]}`,
   };
 

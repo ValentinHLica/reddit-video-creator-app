@@ -1,23 +1,28 @@
 import React from "react";
 
-import { CardProps } from "../../interface/UI/card";
+import { ArrowDownIcon, ArrowUpIcon } from "../CustomIcons";
+
+import { CardProps, ActionProps } from "../../interface/UI/card";
 
 import styles from "../../styles/components/UI/card.module.scss";
 
-type FooterProps = {
-  icon?: JSX.Element;
-};
-
-const CardFooterItem: React.FC<FooterProps> = ({ icon, children }) => {
+const CardActions: React.FC<ActionProps> = ({ icon, text, onClick }) => {
   return (
-    <li className={styles.footer__item}>
+    <li className={styles.footer__item} onClick={onClick}>
       {icon}
-      <p className={styles.item__content}>{children}</p>
+      <p className={styles.item__content}>{text}</p>
     </li>
   );
 };
 
-const Card: React.FC<CardProps> = ({ title, desc, route, score, author }) => {
+const Card: React.FC<CardProps> = ({
+  title,
+  desc,
+  route,
+  score,
+  author,
+  actions,
+}) => {
   return (
     <div className={styles.container}>
       <div className={styles.container__card}>
@@ -33,10 +38,27 @@ const Card: React.FC<CardProps> = ({ title, desc, route, score, author }) => {
           {desc && <h4 className={styles.content__desc}>{desc}</h4>}
         </div>
 
-        <div className="card__actions">
-          <p className="card__comments"></p>
-        </div>
+        {actions && (
+          <ul className={styles.card__actions}>
+            {actions.map((action, index) => (
+              <CardActions
+                key={index}
+                text={action.text}
+                icon={action.icon}
+                onClick={action.onClick}
+              />
+            ))}
+          </ul>
+        )}
       </div>
+
+      {score && (
+        <div className={styles.card__score}>
+          <ArrowUpIcon />
+          <p>{score}</p>
+          <ArrowDownIcon />
+        </div>
+      )}
     </div>
   );
 };

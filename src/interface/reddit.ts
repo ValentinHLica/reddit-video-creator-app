@@ -6,6 +6,7 @@ export interface SearchItem {
   public_description: string;
   id: string;
   url: string;
+  added?: boolean;
 }
 
 export interface Search {
