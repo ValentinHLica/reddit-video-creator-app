@@ -23,7 +23,7 @@ const Button: React.FC<Props> = ({
   const attributes = {
     className: `${styles.container} ${className} ${
       styles[`container__${size}`]
-    } ${styles[`container__${type}`]}`,
+    } ${styles[`container__${type}`]} ${!url ? styles.container__btn : ""}`,
   };
 
   if (url) {

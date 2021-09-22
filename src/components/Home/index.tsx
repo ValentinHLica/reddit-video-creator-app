@@ -1,10 +1,14 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import CardWrapper from "../UI/CardWrapper";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import Modal from "../UI/Modal";
 import AddFavourite from "./AddFavourite";
+import { AddIcon, PostIcon, HeartIcon, UserIcon } from "../CustomIcons";
+
+import { roundUp } from "../../utils/helpers";
 
 import { SearchItem } from "../../interface/reddit";
 
@@ -22,12 +26,14 @@ const favDataPath = join(
 );
 
 const HomePage: React.FC = () => {
+  const history = useHistory();
+
   const [subreddits, setSubreddits] = useState<SearchItem[]>([]);
   const [modal, setModal] = useState<boolean>(false);
 
   const dataPath = join(app.getAppPath(), "..", "data");
 
-  const fetchFav = async () => {
+  const fetchFav = () => {
     if (!existsSync(dataPath)) {
       mkdirSync(dataPath);
     }
@@ -38,19 +44,26 @@ const HomePage: React.FC = () => {
 
     const data = JSON.parse(readFileSync(favDataPath).toString());
 
-    setSubreddits(data);
+    setSubreddits(data.map((item: SearchItem) => ({ ...item, added: true })));
+  };
+
+  const removeSubreddit = (item: SearchItem) => {
+    const newFav = subreddits.filter((subreddit) => subreddit.url !== item.url);
+
+    setSubreddits(newFav);
+
+    writeFileSync(favDataPath, JSON.stringify(newFav));
   };
 
   useEffect(() => {
     fetchFav();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Fragment>
       <div className={styles.container}>
-        <h1 className={styles.container__title}>
-          Welcome Please Select a subreddit
-        </h1>
+        <h1 className={styles.container__title}>Please Select a subreddit</h1>
 
         {subreddits.length !== 0 ? (
           <Fragment>
@@ -63,15 +76,45 @@ const HomePage: React.FC = () => {
                     author={item.display_name}
                     route="/r"
                     desc={item.public_description}
+                    actions={[
+                      {
+                        text: "Favourite",
+                        icon: <HeartIcon added={item.added ?? false} />,
+                        onClick: () => {
+                          removeSubreddit(item);
+                        },
+                      },
+                      {
+                        text: "Posts",
+                        icon: <PostIcon />,
+                        onClick: () => {
+                          history.push(item.display_name_prefixed);
+                        },
+                      },
+                      {
+                        text: `Users ${roundUp(item.subscribers)}`,
+                        icon: <UserIcon />,
+                        className: "user--item",
+                      },
+                    ]}
                   />
                 );
               })}
             </CardWrapper>
 
-            <Button onClick={setModal.bind(this, true)}>Add Subreddit</Button>
+            <Button
+              className={styles.container__add}
+              onClick={setModal.bind(this, true)}
+            >
+              <AddIcon />
+            </Button>
           </Fragment>
         ) : (
-          <Button onClick={setModal.bind(this, true)}>Add Subreddit</Button>
+          <div className={styles.container__empty}>
+            <Button onClick={setModal.bind(this, true)}>
+              <AddIcon /> Add New Favourite
+            </Button>
+          </div>
         )}
       </div>
 

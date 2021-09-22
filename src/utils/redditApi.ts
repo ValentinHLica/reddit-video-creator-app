@@ -1,10 +1,11 @@
 import {
   Search,
-  Filter,
+  TopFilter,
   Post,
   Posts,
   Comment,
   SearchItem,
+  Filter,
 } from "../interface/reddit";
 
 const redditUrl = "https://www.reddit.com";
@@ -48,13 +49,16 @@ export const search = async (query: string): Promise<SearchItem[]> => {
 /**
  * Get SubReddit Posts
  * @param subReddit Subreddit link
- * @param filter Sort Filter
+ * @param topFilter Sort Filter
  */
 export const getPosts = async (
   subReddit: string,
-  filter: Filter
+  filter: Filter,
+  topFilter?: TopFilter
 ): Promise<Post[]> => {
-  const url = `${redditUrl}/r/${subReddit}/top.json?t=${filter}`;
+  const url = `${redditUrl}/r/${subReddit}/${filter}.json${
+    filter === "top" ? `?t=${topFilter}` : ""
+  }`;
 
   const res = await fetch(url);
   const data = await res.json();

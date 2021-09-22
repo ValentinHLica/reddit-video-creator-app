@@ -77,3 +77,17 @@ export const getFolders = async (path: string): Promise<string[]> => {
     });
   });
 };
+
+/**
+ * Roundup number to 1k, 1M ...
+ * @param number Number to Roundup
+ * @returns Rounded number
+ */
+export const roundUp = (number: number): string => {
+  let x = ("" + number).length;
+  x -= x % 3;
+
+  const d = Math.pow(10, 2);
+
+  return Math.round((number * d) / Math.pow(10, x)) / d + " kMGTPE"[x / 3];
+};

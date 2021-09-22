@@ -5,15 +5,17 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
+import { useHistory } from "react-router-dom";
 
 import Button from "../UI/Button";
 import Input from "../UI/Input";
 import CardWrapper from "../UI/CardWrapper";
 import Card from "../UI/Card";
 import Spinner from "../UI/Spinner";
-import { HeartIcon } from "../CustomIcons";
+import { HeartIcon, PostIcon, UserIcon } from "../CustomIcons";
 
 import { search } from "../../utils/redditApi";
+import { roundUp } from "../../utils/helpers";
 import { SearchItem } from "../../interface/reddit";
 
 import styles from "../../styles/components/Home/add-favourite.module.scss";
@@ -34,6 +36,8 @@ type Props = {
 };
 
 const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
+  const history = useHistory();
+
   const [subreddits, setSubreddits] = useState<SearchItem[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -78,6 +82,19 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
   const addSubreddit = (item: SearchItem) => {
     const isFav = favourite.filter((subreddit) => subreddit.url === item.url);
 
+    const saveSubreddits = (state: boolean) => {
+      return (subreddits as SearchItem[]).map((subreddit) => {
+        if (subreddit.url === item.url) {
+          return {
+            ...subreddit,
+            added: state,
+          };
+        }
+
+        return subreddit;
+      });
+    };
+
     if (isFav.length !== 0) {
       const newFav = favourite.filter(
         (subreddit) => subreddit.url !== item.url
@@ -87,34 +104,14 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
 
       writeFileSync(favDataPath, JSON.stringify(newFav));
 
-      setSubreddits(
-        (subreddits as SearchItem[]).map((subreddit) => {
-          if (subreddit.url === item.url) {
-            return {
-              ...subreddit,
-              added: false,
-            };
-          }
-
-          return subreddit;
-        })
-      );
+      setSubreddits(saveSubreddits(false));
 
       return;
     }
 
-    setSubreddits(
-      (subreddits as SearchItem[]).map((subreddit) => {
-        if (subreddit.url === item.url) {
-          return {
-            ...subreddit,
-            added: true,
-          };
-        }
+    setSubreddits(saveSubreddits(true));
 
-        return subreddit;
-      })
-    );
+    item.added = true;
 
     const newFav = [...favourite, item];
 
@@ -141,9 +138,13 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
 
       {loading && <Spinner size="xl" />}
 
-      {!loading && !error && subreddits && (
+      {!loading && !error && subreddits && subreddits.length !== 0 && (
         <CardWrapper className={styles.container__items}>
           {subreddits.map((item, index) => {
+            if (!item.subscribers) {
+              return null;
+            }
+
             return (
               <Card
                 key={index}
@@ -159,6 +160,18 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
                       addSubreddit(item);
                     },
                   },
+                  {
+                    text: "Posts",
+                    icon: <PostIcon />,
+                    onClick: () => {
+                      history.push(item.display_name_prefixed);
+                    },
+                  },
+                  {
+                    text: `Users ${roundUp(item.subscribers)}`,
+                    icon: <UserIcon />,
+                    className: "user--item",
+                  },
                 ]}
               />
             );
@@ -166,8 +179,16 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
         </CardWrapper>
       )}
 
+      {subreddits && subreddits.length === 0 && (
+        <h3 style={{ marginTop: "24px", textAlign: "center" }}>
+          Nothing was found
+        </h3>
+      )}
+
       {error && (
-        <h3 style={{ marginTop: "24px" }}>Please provide a valid Query</h3>
+        <h3 style={{ marginTop: "24px", textAlign: "center" }}>
+          Please provide a valid Query
+        </h3>
       )}
     </div>
   );

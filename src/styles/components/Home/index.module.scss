@@ -1,4 +1,23 @@
 .container {
+  .container__add {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    margin-left: auto;
+    border-radius: 50%;
+    padding: 10px;
+
+    svg {
+      margin: 0;
+    }
+  }
+
+  .container__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .container__title {
     text-align: center;
     margin: 24px 0;

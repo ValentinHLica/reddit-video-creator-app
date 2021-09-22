@@ -6,9 +6,14 @@ import { CardProps, ActionProps } from "../../interface/UI/card";
 
 import styles from "../../styles/components/UI/card.module.scss";
 
-const CardActions: React.FC<ActionProps> = ({ icon, text, onClick }) => {
+const CardActions: React.FC<ActionProps> = ({
+  icon,
+  text,
+  onClick,
+  className = "",
+}) => {
   return (
-    <li className={styles.footer__item} onClick={onClick}>
+    <li className={`${styles.footer__item} ${className}`} onClick={onClick}>
       {icon}
       <p className={styles.item__content}>{text}</p>
     </li>
@@ -46,6 +51,7 @@ const Card: React.FC<CardProps> = ({
                 text={action.text}
                 icon={action.icon}
                 onClick={action.onClick}
+                className={action.className}
               />
             ))}
           </ul>

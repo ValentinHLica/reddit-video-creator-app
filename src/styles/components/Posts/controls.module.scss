@@ -1,0 +1,9 @@
+.posts__controls {
+  display: flex;
+  align-items: center;
+
+  .controls__item {
+    margin-right: 5px;
+    box-shadow: 0 0 1px var(--gray-400);
+  }
+}

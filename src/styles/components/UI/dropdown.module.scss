@@ -1,0 +1,32 @@
+.dropdown {
+  position: relative;
+
+  .posts__controls {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translateY(calc(100% + 5px));
+    background-color: var(--gray-100);
+    border: 1px solid var(--gray-400);
+    border-radius: 4px;
+    width: 100%;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.2s ease, opacity 0.2s ease;
+
+    &__visible {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .controls__item {
+      padding: 6px;
+      border-bottom: 1px solid var(--gray-300);
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--gray-200);
+      }
+    }
+  }
+}

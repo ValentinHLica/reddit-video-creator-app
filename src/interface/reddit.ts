@@ -40,7 +40,26 @@ export interface Posts {
   data: Post;
 }
 
-export type Filter = "day" | "week" | "month" | "year" | "all";
+export type Filter = "hot" | "new" | "top" | "rising";
+
+export type TopFilter = "day" | "week" | "month" | "year" | "all";
+
+export type Controls = {
+  filter: Filter;
+  topFilter?: TopFilter;
+};
+
+export type ControlsListItem = {
+  icon?: JSX.Element;
+  text: string;
+  onClick: () => void;
+};
+
+export type ControlsList = {
+  icon: JSX.Element;
+  text: Filter;
+  items?: ControlsListItem[];
+};
 
 export interface Comment {
   data: {

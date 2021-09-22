@@ -8,6 +8,7 @@ export type ActionProps = {
   icon?: JSX.Element;
   text: string;
   onClick?: () => void;
+  className?: string;
 };
 
 export type CardProps = {

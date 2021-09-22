@@ -1,0 +1,35 @@
+.posts {
+  .posts__info {
+    .posts__navigation {
+      .nav__wrapper {
+        display: flex;
+        align-items: center;
+
+        .nav__item {
+          font-size: 13px;
+          margin: 0 2px;
+          position: relative;
+
+          &:first-child {
+            margin-left: 0;
+            cursor: pointer;
+          }
+
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+
+    .info__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .posts_title {
+        margin: 16px 0;
+      }
+    }
+  }
+}
