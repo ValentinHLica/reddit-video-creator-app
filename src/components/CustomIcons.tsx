@@ -225,3 +225,200 @@ export const TopIcon = () => (
     <path d="M17 18L12 13 7 18"></path>
   </svg>
 );
+
+export const AlertTriangleIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+    <path d="M12 9L12 13"></path>
+    <path d="M12 17L12.01 17"></path>
+  </svg>
+);
+
+export const AlertOctagonIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <path d="M7.86 2L16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2z"></path>
+    <path d="M12 8L12 12"></path>
+    <path d="M12 16L12.01 16"></path>
+  </svg>
+);
+
+export const AlertCircleIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M12 8L12 12"></path>
+    <path d="M12 16L12.01 16"></path>
+  </svg>
+);
+
+export const WifiIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <path d="M4 11a9 9 0 019 9M4 4a16 16 0 0116 16"></path>
+    <circle cx="5" cy="19" r="1"></circle>
+  </svg>
+);
+
+export const MoonIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+  </svg>
+);
+
+export const ThumbUpIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"></path>
+  </svg>
+);
+
+export const ClockIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M12 6L12 12 16 14"></path>
+  </svg>
+);
+
+export const SquareIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+  </svg>
+);
+
+export const SquareCheckIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="feather feather-check-square"
+    viewBox="0 0 24 24"
+  >
+    <path d="M9 11L12 14 22 4"></path>
+    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+  </svg>
+);
+
+export const ArrowRightIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <path d="M5 12L19 12"></path>
+    <path d="M12 5L19 12 12 19"></path>
+  </svg>
+);
+
+export const SimpleArrowRightIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <path d="M9 18L15 12 9 6"></path>
+  </svg>
+);

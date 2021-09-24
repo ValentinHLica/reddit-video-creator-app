@@ -1,0 +1,85 @@
+{
+  "postDetails": {
+    "all_awardings": [
+      {
+        "count": 1,
+        "name": "All-Seeing Upvote"
+      },
+      {
+        "count": 1,
+        "name": "Platinum"
+      },
+      {
+        "count": 2,
+        "name": "Gold"
+      },
+      {
+        "count": 1,
+        "name": "Wholesome"
+      },
+      {
+        "count": 1,
+        "name": "Silver"
+      },
+      {
+        "count": 1,
+        "name": "I am disappoint"
+      },
+      {
+        "count": 1,
+        "name": "Hugz"
+      },
+      {
+        "count": 2,
+        "name": "Snek"
+      },
+      {
+        "count": 1,
+        "name": "Facepalm"
+      },
+      {
+        "count": 1,
+        "name": "Nothing To Do"
+      }
+    ],
+    "id": "hl7j7x",
+    "title": "I'm going to do an AMA that will only have me, so myself, AMA!",
+    "author": "[deleted]",
+    "num_comments": 1022,
+    "permalink": "/r/AMA/comments/hl7j7x/im_going_to_do_an_ama_that_will_only_have_me_so/",
+    "score": 11509,
+    "subreddit": "AMA",
+    "subreddit_name_prefixed": "r/AMA",
+    "total_awards_received": 12,
+    "ups": 11509
+  },
+  "comments": [
+    {
+      "author": "[deleted]",
+      "ups": 1236,
+      "id": "fwx8roo",
+      "body": "Hey me, how old are you?",
+      "all_awardings": [
+        {
+          "count": 1,
+          "name": "Silver"
+        }
+      ],
+      "created_utc": 1593885321,
+      "depth": 0,
+      "parent_id": "t3_hl7j7x",
+      "score": 1236
+    },
+    {
+      "author": "[deleted]",
+      "ups": 1084,
+      "id": "fwx8saz",
+      "body": "C'mon... you know that",
+      "all_awardings": [],
+      "created_utc": 1593885329,
+      "depth": 1,
+      "parent_id": "t1_fwx8roo",
+      "score": 1084
+    }
+  ]
+}

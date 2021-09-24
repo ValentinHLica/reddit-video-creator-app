@@ -84,10 +84,22 @@ export const getFolders = async (path: string): Promise<string[]> => {
  * @returns Rounded number
  */
 export const roundUp = (number: number): string => {
-  let x = ("" + number).length;
-  x -= x % 3;
+  const newStr = ("" + number)
+    .split("")
+    .reverse()
+    .join("")
+    .match(/.{1,3}/g) as string[];
 
-  const d = Math.pow(10, 2);
+  return `${newStr[newStr.length - 1].split("").reverse().join("")}${
+    " kMGTPE"[newStr.length - 1]
+  }`;
+};
 
-  return Math.round((number * d) / Math.pow(10, x)) / d + " kMGTPE"[x / 3];
+/**
+ * Convert sentence to time
+ * @param sentence Sentence to convert number
+ */
+export const countWords = (sentence: string): number => {
+  const words = sentence.split(" ");
+  return parseFloat((words.length / 130).toFixed(1).replace(".0", ""));
 };

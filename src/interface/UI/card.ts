@@ -19,4 +19,5 @@ export type CardProps = {
   score?: number;
   author?: string;
   actions?: ActionProps[];
+  comment?: boolean;
 };

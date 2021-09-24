@@ -16,7 +16,7 @@ import { HeartIcon, PostIcon, UserIcon } from "../CustomIcons";
 
 import { search } from "../../utils/redditApi";
 import { roundUp } from "../../utils/helpers";
-import { SearchItem } from "../../interface/reddit";
+import { SearchItem, Pagination } from "../../interface/reddit";
 
 import styles from "../../styles/components/Home/add-favourite.module.scss";
 
@@ -39,8 +39,13 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
   const history = useHistory();
 
   const [subreddits, setSubreddits] = useState<SearchItem[] | null>(null);
+  const [pagination, setPagination] = useState<Pagination>({
+    next: null,
+    before: null,
+  });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+
   const query = useRef<HTMLInputElement>(null);
 
   const submit: FormEventHandler = async (e) => {
@@ -51,7 +56,7 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
     setLoading(true);
 
     try {
-      const data = await search(query.current?.value as string);
+      const { data, pagination } = await search(query.current?.value as string);
 
       const addedFilter = data.map((subreddit) => {
         let isAdded = false;
@@ -69,6 +74,7 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
         };
       });
 
+      setPagination(pagination);
       setSubreddits(addedFilter);
     } catch (err) {
       console.log(err);
@@ -120,6 +126,42 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
     favouriteSubreddit(newFav);
   };
 
+  const loadMore = async () => {
+    setError(false);
+
+    try {
+      const { data, pagination: resultsPagination } = await search(
+        query.current?.value as string,
+        pagination.next as unknown as string
+      );
+
+      const addedFilter = data.map((subreddit) => {
+        let isAdded = false;
+
+        for (const item of favourite) {
+          if (item.url === subreddit.url) {
+            isAdded = true;
+            break;
+          }
+        }
+
+        return {
+          ...subreddit,
+          added: isAdded,
+        };
+      });
+
+      setPagination(resultsPagination);
+      setSubreddits((prevState) => {
+        return [...(prevState as SearchItem[]), ...addedFilter];
+      });
+    } catch (err) {
+      console.log(err);
+
+      setError(true);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.container__wrapper}>
@@ -139,7 +181,10 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
       {loading && <Spinner size="xl" />}
 
       {!loading && !error && subreddits && subreddits.length !== 0 && (
-        <CardWrapper className={styles.container__items}>
+        <CardWrapper
+          className={styles.container__items}
+          loadMore={pagination.next ? loadMore : undefined}
+        >
           {subreddits.map((item, index) => {
             if (!item.subscribers) {
               return null;

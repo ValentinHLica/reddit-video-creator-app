@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: rotating 1s linear infinite;
+
   margin: 24px 0;
 
   &__xs {
@@ -23,6 +23,10 @@
 
   &__xl {
     font-size: 24px;
+  }
+
+  svg {
+    animation: rotating 1s linear infinite;
   }
 }
 

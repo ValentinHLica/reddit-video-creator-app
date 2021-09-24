@@ -5,6 +5,7 @@
   margin: 0;
   padding: 0;
   -webkit-appearance: none;
+  scroll-behavior: smooth;
   font-family: "Open Sans";
 }
 
@@ -19,8 +20,43 @@ body {
 
   @include light-theme();
 
+  .card__container {
+    @include light-theme();
+    background-color: white;
+    border-bottom: 1px solid var(--gray-400);
+  }
+
+  .card__wrapper {
+    @include light-theme();
+    box-shadow: 0px 0 2px var(--gray-600);
+  }
+
+  .modal__container {
+    @include light-theme();
+  }
+
   &[data-theme="dark"] {
     @include dark-theme();
+
+    .card__container {
+      @include dark-theme();
+      border-bottom: 1px solid var(--gray-900);
+    }
+
+    .card__wrapper {
+      @include dark-theme();
+      box-shadow: 0px 0 5px var(--gray-900);
+    }
+
+    .modal__container {
+      @include dark-theme();
+
+      box-shadow: 0px 0 2px var(--gray-900);
+    }
+
+    .modal__background {
+      background-color: var(--gray-900);
+    }
   }
 }
 
@@ -43,7 +79,7 @@ ul {
 /* ScrollBard */
 /* width */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 2px;
 }
 
 /* Track */
@@ -68,6 +104,7 @@ ul {
 .isFav {
   fill: var(--red-500);
   color: var(--red-500);
+  box-shadow: 0 0;
 }
 
 .user--item {

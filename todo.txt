@@ -30,13 +30,16 @@
 
 
 []. UI
-    []. use ReactJS for front end and maybe use a framework
-    []. Krijo nje design per app ne figma 
+    [x]. use ReactJS for front end and maybe use a framework
+    [x]. Krijo nje design per app ne figma 
     []. Create ni si tip tutoriali ku shpjego dhe ndrysho settingse per preferencat e tij
-    []. Search subreddits
-    []. Open post
+    []x. Search subreddits
+    [x]. Open post
     []. select post Comments
     []. count word in minutes
+    []. Kill switch
+        []. krijo serverin dhe hostoji diku qe eshte live 24/7
+        []. npm i hddserial   -  merr id e hdd dhe ruje ne server
 
 
 []. Bugs

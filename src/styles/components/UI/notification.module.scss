@@ -1,0 +1,25 @@
+@import "../utils/background";
+
+.container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 11;
+  padding: 5px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+
+  @include background-theme();
+
+  &__visible {
+    transform: translateY(0);
+  }
+
+  svg {
+    margin-right: 5px;
+  }
+}

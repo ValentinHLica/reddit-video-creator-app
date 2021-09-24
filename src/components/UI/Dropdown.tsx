@@ -23,8 +23,15 @@ const Dropdown: React.FC<Props> = ({
   type = "primary",
   items,
 }) => {
-  const [visible, setVisible] = useState<boolean>(false);
   const container = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [itemIndex, setItemIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (type === "light") {
+      setItemIndex(null);
+    }
+  }, [type]);
 
   useEffect(() => {
     const handleVisibility = (event: any) => {
@@ -33,9 +40,9 @@ const Dropdown: React.FC<Props> = ({
       }
     };
 
-    window.addEventListener("mousedown", handleVisibility);
+    window.addEventListener("click", handleVisibility);
     return () => {
-      window.removeEventListener("mousedown", handleVisibility);
+      window.removeEventListener("click", handleVisibility);
     };
   }, []);
 
@@ -59,8 +66,19 @@ const Dropdown: React.FC<Props> = ({
         {items.map((item, index) => {
           const { text, icon, onClick } = item;
 
+          const indexing = itemIndex !== null && itemIndex === index;
+
           return (
-            <li className={styles.controls__item} onClick={onClick} key={index}>
+            <li
+              className={`${styles.controls__item} ${
+                indexing ? styles.controls__item__selected : ""
+              } ${styles[`controls__item__${size}`]}`}
+              onClick={() => {
+                setItemIndex(index);
+                onClick();
+              }}
+              key={index}
+            >
               {icon} {text}
             </li>
           );

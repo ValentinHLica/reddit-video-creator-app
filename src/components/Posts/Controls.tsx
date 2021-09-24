@@ -18,14 +18,21 @@ import Button from "../UI/Button";
 type Props = {
   subredditId: string;
   setPosts: (posts: Post[]) => void;
+  setLoading: (state: boolean) => void;
+  setError: (state: boolean) => void;
 };
 
-const Controls: React.FC<Props> = ({ subredditId, setPosts }) => {
+const Controls: React.FC<Props> = ({
+  subredditId,
+  setPosts,
+  setLoading,
+  setError,
+}) => {
   const [controls, setControls] = useState<ControlsType>({
     filter: "hot",
   });
 
-  const [controlsList, setControlsList] = useState<ControlsList[]>([
+  const controlsList: ControlsList[] = [
     {
       icon: <HotIcon />,
       text: "hot",
@@ -51,22 +58,30 @@ const Controls: React.FC<Props> = ({ subredditId, setPosts }) => {
       icon: <RissingIcon />,
       text: "rising",
     },
-  ]);
+  ];
 
   const getPostsLoad = async () => {
+    setLoading(true);
     setPosts([]);
 
-    const data = await getPosts(
-      subredditId,
-      controls.filter,
-      controls.topFilter
-    );
+    try {
+      const { data } = await getPosts(
+        subredditId,
+        controls.filter,
+        controls.topFilter
+      );
 
-    setPosts(data);
+      setPosts(data);
+    } catch (error) {
+      setError(true);
+    }
+
+    setLoading(false);
   };
 
   useEffect(() => {
     getPostsLoad();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [controls]);
 
   return (
@@ -77,7 +92,17 @@ const Controls: React.FC<Props> = ({ subredditId, setPosts }) => {
         const type = controls.filter === control.text ? "primary" : "light";
 
         if (items) {
-          return <Dropdown text={text} icon={icon} items={items} type={type} />;
+          return (
+            <div className={styles.controls__item} key={index}>
+              <Dropdown
+                text={text}
+                icon={icon}
+                items={items}
+                type={type}
+                size="xs"
+              />
+            </div>
+          );
         }
 
         return (
@@ -86,11 +111,12 @@ const Controls: React.FC<Props> = ({ subredditId, setPosts }) => {
             onClick={() => {
               setControls({
                 filter: control.text,
+                topFilter: undefined,
               });
             }}
             key={index}
           >
-            <Button type={type}>
+            <Button type={type} size="xs">
               {icon} {text}
             </Button>
           </li>

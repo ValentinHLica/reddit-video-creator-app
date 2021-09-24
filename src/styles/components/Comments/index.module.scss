@@ -1,0 +1,72 @@
+.container {
+  .container__header {
+    .top__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+
+      .container__timer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .timer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-right: 10px;
+
+          svg {
+            margin-right: 5px;
+          }
+        }
+
+        button {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          svg {
+            margin-right: 0;
+            margin-left: 5px;
+          }
+        }
+      }
+    }
+
+    .header__title {
+      margin: 16px 0 5px 0;
+    }
+
+    .header__stats {
+      .stat {
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+        opacity: 0.9;
+
+        svg {
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+
+  .container__comments {
+    margin-top: 16px;
+  }
+
+  .timer__btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.3s ease, opacity 0.3s ease;
+
+    &__visible {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}

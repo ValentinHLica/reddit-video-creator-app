@@ -27,9 +27,10 @@ const Card: React.FC<CardProps> = ({
   score,
   author,
   actions,
+  comment,
 }) => {
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} card__container`}>
       <div className={styles.container__card}>
         <div className={styles.card__info}>
           <p className={styles.card__route}>
@@ -40,7 +41,11 @@ const Card: React.FC<CardProps> = ({
         <div className={styles.card__content}>
           <h3 className={styles.content__title}>{title}</h3>
 
-          {desc && <h4 className={styles.content__desc}>{desc}</h4>}
+          {desc && (
+            <h4 className={styles[`content__${comment ? "comment" : "desc"}`]}>
+              {desc}
+            </h4>
+          )}
         </div>
 
         {actions && (

@@ -6,6 +6,9 @@ import {
   Comment,
   SearchItem,
   Filter,
+  Pagination,
+  CommentWrapper,
+  Replies,
 } from "../interface/reddit";
 
 const redditUrl = "https://www.reddit.com";
@@ -14,12 +17,17 @@ const redditUrl = "https://www.reddit.com";
  * Search SubReddit
  * @param query Search Query
  */
-export const search = async (query: string): Promise<SearchItem[]> => {
-  const url = `${redditUrl}/search.json?q=${query}&type=sr%2Cuser`;
+export const search = async (
+  query: string,
+  page?: string
+): Promise<{ pagination: Pagination; data: SearchItem[] }> => {
+  const url = `${redditUrl}/search.json?q=${query}&type=sr%2Cuser${
+    page ? `&after=${page}` : ""
+  }`;
   const res = await fetch(url);
   const data = await res.json();
 
-  return data.data.children.map((item: Search) => {
+  const fileredData = data.data.children.map((item: Search) => {
     const {
       data: {
         display_name,
@@ -44,6 +52,14 @@ export const search = async (query: string): Promise<SearchItem[]> => {
       url,
     };
   });
+
+  return {
+    pagination: {
+      next: data.data.after,
+      before: data.data.before,
+    },
+    data: fileredData,
+  };
 };
 
 /**
@@ -54,16 +70,20 @@ export const search = async (query: string): Promise<SearchItem[]> => {
 export const getPosts = async (
   subReddit: string,
   filter: Filter,
-  topFilter?: TopFilter
-): Promise<Post[]> => {
+  topFilter?: TopFilter,
+  page?: string
+): Promise<{
+  pagination: Pagination;
+  data: Post[];
+}> => {
   const url = `${redditUrl}/r/${subReddit}/${filter}.json${
     filter === "top" ? `?t=${topFilter}` : ""
-  }`;
+  }${page ? `${filter !== "top" ? "?" : "&"}after=${page}` : ""}`;
 
   const res = await fetch(url);
   const data = await res.json();
 
-  return data.data.children.map((item: Posts) => {
+  const fileredData = data.data.children.map((item: Posts) => {
     const {
       data: {
         all_awardings,
@@ -82,9 +102,8 @@ export const getPosts = async (
 
     return {
       all_awardings: all_awardings.map((awards) => {
-        const { award_sub_type, count, icon_url, name } = awards;
-
-        return { award_sub_type, count, icon_url, name };
+        const { count, name } = awards;
+        return { count, name };
       }),
       id,
       title,
@@ -98,25 +117,135 @@ export const getPosts = async (
       ups,
     };
   });
+
+  return {
+    pagination: {
+      next: data.data.after,
+      before: data.data.before,
+    },
+    data: fileredData,
+  };
+};
+
+/**
+ * Check if reddit is online
+ */
+export const redditCheckup = async () => {
+  // const url = `https://reddit-online-status.herokuapp.com/`;
+  // const res = await fetch(url);
+  // const data = await res.json();
 };
 
 /**
  * Get Post comments
- * @param permalink SubReddit Post Permalink
+ * @param subredditId SubReddit Id
+ * @param commentId Comment Id
+ * @param commentSlug Comment Slug
  */
 
 // todo clean up content to match desired input for creating video
-export const getComments = async (permalink: string) => {
-  const url = `${redditUrl}${permalink}.json?sort=top`;
+export const getComments = async (
+  subredditId: string,
+  commentId: string,
+  commentSlug: string
+) => {
+  const url = `${redditUrl}/r/${subredditId}/comments/${commentId}/${commentSlug}.json?sort=top`;
 
   const res = await fetch(url);
   const data = await res.json();
 
-  return data[1].data.children.map((item: Comment) => {
+  const getPostDetails = (): Post => {
     const {
-      data: { author, ups, id, body, replies },
-    } = item;
+      all_awardings,
+      id,
+      title,
+      author,
+      num_comments,
+      permalink,
+      score,
+      subreddit,
+      subreddit_name_prefixed,
+      total_awards_received,
+      ups,
+    } = data[0].data.children[0].data as Post;
 
-    return {};
-  });
+    return {
+      all_awardings: all_awardings.map((awards) => {
+        const { count, name } = awards;
+
+        return { count, name };
+      }),
+      id,
+      title,
+      author,
+      num_comments,
+      permalink,
+      score,
+      subreddit,
+      subreddit_name_prefixed,
+      total_awards_received,
+      ups,
+    };
+  };
+
+  const postDetails = getPostDetails();
+
+  const comments: Comment[] = [];
+
+  for (const commentTree of data[1].data.children) {
+    if (commentTree.kind === "more") {
+      break;
+    }
+
+    const cleanUpComment = (commentDetails: CommentWrapper) => {
+      const {
+        data: {
+          author,
+          ups,
+          id,
+          body,
+          replies,
+          all_awardings,
+          created_utc,
+          depth,
+          parent_id,
+          score,
+        },
+      } = commentDetails;
+
+      comments.push({
+        author,
+        ups,
+        id,
+        body,
+        all_awardings: all_awardings.map((awards) => {
+          const { count, name } = awards;
+          return { count, name };
+        }),
+        created_utc,
+        depth,
+        parent_id,
+        score,
+      });
+
+      if (replies !== "") {
+        for (let i = 0; i < (replies as Replies).data.children.length; i++) {
+          const element = (replies as Replies).data.children[
+            i
+          ] as CommentWrapper;
+
+          if (element.kind !== "more") {
+            cleanUpComment(element);
+          }
+        }
+      }
+    };
+
+    cleanUpComment(commentTree);
+  }
+
+  return {
+    postDetails,
+    comments,
+  };
 };

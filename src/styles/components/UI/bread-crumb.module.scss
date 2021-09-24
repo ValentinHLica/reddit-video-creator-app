@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .container__list {
+    display: flex;
+    align-items: center;
+
+    .list__item {
+      font-size: 13px;
+      margin: 0 1px;
+      position: relative;
+      cursor: pointer;
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &:last-child {
+        margin-right: 0;
+        cursor: unset;
+        max-width: 200px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+    }
+  }
+
+  .nav__actions {
+    svg {
+      cursor: pointer;
+    }
+  }
+}

@@ -1,5 +1,7 @@
 import React from "react";
 
+import Spinner from "./Spinner";
+
 import { Size, Type } from "../../interface/UI/button";
 
 import styles from "../../styles/components/UI/button.module.scss";
@@ -10,6 +12,7 @@ type Props = {
   size?: Size;
   type?: Type;
   onClick?: () => void;
+  loading?: boolean;
 };
 
 const Button: React.FC<Props> = ({
@@ -19,6 +22,7 @@ const Button: React.FC<Props> = ({
   size = "md",
   type = "primary",
   onClick,
+  loading,
 }) => {
   const attributes = {
     className: `${styles.container} ${className} ${
@@ -36,6 +40,7 @@ const Button: React.FC<Props> = ({
 
   return (
     <button {...attributes} onClick={onClick}>
+      {loading && <Spinner size="xs" className={styles.container__loading} />}
       {children}
     </button>
   );

@@ -14,9 +14,12 @@ export interface Search {
   data: SearchItem;
 }
 
+export interface Pagination {
+  next: null;
+  before: null;
+}
+
 export interface Award {
-  award_sub_type: string;
-  icon_url: string;
   count: number;
   name: string;
 }
@@ -62,18 +65,29 @@ export type ControlsList = {
 };
 
 export interface Comment {
-  data: {
-    ups: number;
-    id: string;
-    author: string;
-    body: string;
-    replies: Replies;
-  };
+  ups: number;
+  id: string;
+  author: string;
+  body: string;
+  replies?: Replies | "";
+  parent_id: string;
+  score: number;
+  all_awardings: Award[];
+  created_utc: number;
+  depth: number;
+  selected?: boolean;
+}
+
+export interface CommentWrapper {
+  kind: string | "more";
+  data: Comment;
 }
 
 export interface Replies {
   kind: string;
   data: {
-    children: Comment[];
+    after: string;
+    children: CommentWrapper[] | string[];
+    before: string;
   };
 }

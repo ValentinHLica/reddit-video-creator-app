@@ -13,6 +13,7 @@ import { roundUp } from "../../utils/helpers";
 import { SearchItem } from "../../interface/reddit";
 
 import styles from "../../styles/components/Home/index.module.scss";
+import BreadCrumb from "../UI/BreadCrumb";
 
 const { app } = window.require("@electron/remote");
 const { readFileSync, existsSync, mkdirSync, writeFileSync } =
@@ -63,7 +64,16 @@ const HomePage: React.FC = () => {
   return (
     <Fragment>
       <div className={styles.container}>
-        <h1 className={styles.container__title}>Please Select a subreddit</h1>
+        <BreadCrumb />
+
+        <h1
+          className={styles.container__title}
+          onClick={() => {
+            history.push("/r/asda/comments/12/sadasd");
+          }}
+        >
+          Please Select a subreddit
+        </h1>
 
         {subreddits.length !== 0 ? (
           <Fragment>
