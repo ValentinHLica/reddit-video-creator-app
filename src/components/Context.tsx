@@ -1,22 +1,36 @@
-import { createContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
 
-import { Theme } from "../interface/UI/theme";
+import { Theme } from "@interface/UI/theme";
+import { SearchItem } from "@interface/reddit";
 
 interface State {
   theme: Theme;
   changeTheme: () => void;
   offline: boolean;
+  searchSubreddit: SearchItem[] | null;
+  setSearchSubreddit: Dispatch<SetStateAction<SearchItem[] | null>>;
 }
 
 const Context = createContext<State>({
   theme: "dark",
   changeTheme: () => null,
   offline: false,
+  searchSubreddit: null,
+  setSearchSubreddit: () => null,
 });
 
 export const ContextProvider: React.FC = ({ children }) => {
   const [offline, setOffline] = useState<boolean>(false);
   const [theme, setTheme] = useState<Theme>("light");
+  const [searchSubreddit, setSearchSubreddit] = useState<SearchItem[] | null>(
+    null
+  );
 
   const changeTheme = () => {
     const selectedTheme = theme === "light" ? "dark" : "light";
@@ -24,6 +38,10 @@ export const ContextProvider: React.FC = ({ children }) => {
     localStorage.setItem("theme", selectedTheme);
 
     setTheme(selectedTheme);
+  };
+
+  const conamiCode = () => {
+    // todo
   };
 
   useEffect(() => {
@@ -60,6 +78,8 @@ export const ContextProvider: React.FC = ({ children }) => {
     theme,
     changeTheme,
     offline,
+    searchSubreddit,
+    setSearchSubreddit,
   };
 
   return <Context.Provider value={context}>{children}</Context.Provider>;

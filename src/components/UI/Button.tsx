@@ -1,10 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import Spinner from "./Spinner";
 
-import { Size, Type } from "../../interface/UI/button";
+import { Size, Type } from "@interface/UI/button";
 
-import styles from "../../styles/components/UI/button.module.scss";
+import styles from "@styles/UI/button.module.scss";
 
 type Props = {
   url?: string;
@@ -32,9 +33,9 @@ const Button: React.FC<Props> = ({
 
   if (url) {
     return (
-      <a href={url} {...attributes}>
+      <Link to={url} {...attributes}>
         {children}
-      </a>
+      </Link>
     );
   }
 

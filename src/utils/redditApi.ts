@@ -9,7 +9,7 @@ import {
   Pagination,
   CommentWrapper,
   Replies,
-} from "../interface/reddit";
+} from "@interface/reddit";
 
 const redditUrl = "https://www.reddit.com";
 
@@ -226,6 +226,13 @@ export const getComments = async (
         depth,
         parent_id,
         score,
+        selected: false,
+        collapse:
+          replies !== "" &&
+          replies?.data.children.length !== 1 &&
+          typeof replies?.data.children[0] !== "string" &&
+          replies?.data.children[0].kind !== "more",
+        visible: true,
       });
 
       if (replies !== "") {

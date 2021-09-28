@@ -1,0 +1,11 @@
+.container {
+  .container__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .container__title {
+    margin: 16px 0 5px 0;
+  }
+}

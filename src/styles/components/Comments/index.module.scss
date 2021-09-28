@@ -9,6 +9,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        height: 30px;
 
         .timer {
           display: flex;
@@ -67,6 +68,20 @@
     &__visible {
       visibility: visible;
       opacity: 1;
+    }
+  }
+
+  .modal__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: fit-content;
+
+    h1 {
+      text-align: left;
+      width: 100%;
+      margin-bottom: 10px;
     }
   }
 }

@@ -1,35 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
+import { CardWrapper, Card, Spinner, BreadCrumb } from "@ui";
 import Controls from "./Controls";
-import CardWrapper from "../UI/CardWrapper";
-import Card from "../UI/Card";
-import Spinner from "../UI/Spinner";
-import BreadCrumb from "../UI/BreadCrumb";
 import {
   AlertOctagonIcon,
   CommentsIcon,
   HeartIcon,
   ThumbUpIcon,
   UserIcon,
-} from "../CustomIcons";
+} from "@icon";
 
-import { getPosts, search } from "../../utils/redditApi";
-import { roundUp } from "../../utils/helpers";
+import { getPosts, search } from "@utils/redditApi";
+import { logger, roundUp } from "@utils/helpers";
 
-import { Post, SearchItem, Pagination } from "../../interface/reddit";
+import { Post, SearchItem, Pagination } from "@interface/reddit";
 
-import styles from "../../styles/components/Posts/index.module.scss";
-
-const { app } = window.require("@electron/remote");
-const { writeFileSync, readFileSync } = window.require("fs");
-const { join } = window.require("path");
-const favDataPath = join(
-  app.getAppPath(),
-  "..",
-  "data",
-  "favoriteSubreddit.json"
-);
+import styles from "@styles/Posts/index.module.scss";
 
 const PostsPage: React.FC = () => {
   const history = useHistory();
@@ -43,10 +30,7 @@ const PostsPage: React.FC = () => {
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
-
-  const favourite: SearchItem[] = JSON.parse(
-    readFileSync(favDataPath).toString()
-  );
+  const [favourite, setFavourite] = useState<SearchItem[]>([]);
 
   const getPostsLoad = async () => {
     try {
@@ -99,10 +83,10 @@ const PostsPage: React.FC = () => {
 
     if (added) {
       const newFav = favourite.filter((fav) => fav.url !== subreddit?.url);
-      writeFileSync(favDataPath, JSON.stringify(newFav));
+      localStorage.setItem("favourite", JSON.stringify(newFav));
     } else {
       const newFav = [...favourite, subreddit];
-      writeFileSync(favDataPath, JSON.stringify(newFav));
+      localStorage.setItem("favourite", JSON.stringify(newFav));
     }
 
     setSubreddit({ ...(subreddit as SearchItem), added: !added });
@@ -131,7 +115,24 @@ const PostsPage: React.FC = () => {
   };
 
   useEffect(() => {
+    const fetchFav = () => {
+      const data = localStorage.getItem("favourite");
+
+      if (data) {
+        try {
+          const favourite = JSON.parse(data) as SearchItem[];
+
+          setFavourite(
+            favourite.map((item: SearchItem) => ({ ...item, added: true }))
+          );
+        } catch (err) {
+          logger("Data saved in localStorage is corrupted!", "error");
+        }
+      }
+    };
+
     const onLoad = async () => {
+      fetchFav();
       await fetchSubreddit();
       await getPostsLoad();
 
@@ -209,8 +210,6 @@ const PostsPage: React.FC = () => {
                           .replace("/", "");
 
                         const url = `/r/${subredditId}/comments/${item.id}/${commentSlug}`;
-
-                        console.log(url);
 
                         history.push(url);
                       },

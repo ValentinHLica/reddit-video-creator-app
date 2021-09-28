@@ -1,19 +1,19 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
-import Spinner from "../UI/Spinner";
-import BreadCrumb from "../UI/BreadCrumb";
-import GoTop from "../UI/GoTop";
-import Button from "../UI/Button";
+import { Spinner, BreadCrumb, GoTop, Button, Modal } from "@ui";
 import CommentCard from "./CommentCard";
-import { ClockIcon, SimpleArrowRightIcon, ThumbUpIcon } from "../CustomIcons";
+import OutputVideo from "@components/Settings/OutputVideo";
+import { ClockIcon, SimpleArrowRightIcon, ThumbUpIcon } from "@icon";
 
-import { getComments } from "../../utils/redditApi";
-import { countWords } from "../../utils/helpers";
+import { getComments } from "@utils/redditApi";
+import { countWords, roundUp } from "@utils/helpers";
 
-import { Comment, Post } from "../../interface/reddit";
+import { Comment, Post } from "@interface/reddit";
 
-import styles from "../../styles/components/Comments/index.module.scss";
+import styles from "@styles/Comments/index.module.scss";
+
+const { existsSync } = window.require("fs");
 
 const CommentsPage: React.FC = () => {
   const {
@@ -22,10 +22,12 @@ const CommentsPage: React.FC = () => {
     commentSlug,
   }: { subredditId: string; commentId: string; commentSlug: string } =
     useParams();
+  const history = useHistory();
 
   const [post, setPost] = useState<Post>();
   const [comments, setComments] = useState<Comment[]>([]);
   const [fixedTimer, setFixedTimer] = useState<boolean>(false);
+  const [outputPathModal, setOutputPathModal] = useState<boolean>(false);
 
   const fetchComments = async () => {
     const { comments, postDetails } = await getComments(
@@ -34,14 +36,8 @@ const CommentsPage: React.FC = () => {
       commentSlug
     );
 
-    setComments(comments.map((comment) => ({ ...comment, selected: false })));
+    setComments(comments);
     setPost(postDetails);
-
-    // const res = await fetch("/data/response.json");
-    // const data = await res.json();
-
-    // setComments(data.comments);
-    // setPost(data.postDetails);
   };
 
   const onCheck = (index: number) => {
@@ -49,6 +45,7 @@ const CommentsPage: React.FC = () => {
 
     let count = index;
     const selected = commentsCopy[index].selected;
+    const depth = commentsCopy[index].depth;
 
     while (true) {
       if (selected) {
@@ -56,7 +53,12 @@ const CommentsPage: React.FC = () => {
 
         count++;
 
-        if (!commentsCopy[count] || commentsCopy[count].depth === 0) {
+        if (
+          !commentsCopy[count] ||
+          commentsCopy[count].depth === 0 ||
+          commentsCopy[count].depth === depth ||
+          commentsCopy[count].depth < depth
+        ) {
           break;
         }
       } else {
@@ -65,7 +67,9 @@ const CommentsPage: React.FC = () => {
           break;
         }
 
-        commentsCopy[count].selected = !selected;
+        if (commentsCopy[count].depth < depth || count === index) {
+          commentsCopy[count].selected = !selected;
+        }
 
         count--;
       }
@@ -74,8 +78,42 @@ const CommentsPage: React.FC = () => {
     setComments(commentsCopy);
   };
 
+  const onCollapse = (index: number) => {
+    const commentsCopy = [...comments];
+
+    const visible = commentsCopy[index + 1]
+      ? !commentsCopy[index + 1].visible
+      : false;
+    const depth = commentsCopy[index].depth;
+
+    for (let i = index + 1; i < commentsCopy.length; i++) {
+      if (commentsCopy[i].depth > depth) {
+        commentsCopy[i].visible = visible;
+      } else {
+        break;
+      }
+    }
+
+    setComments(commentsCopy);
+  };
+
   const createVideo = () => {
-    console.log("Creating Video");
+    const outputPath = localStorage.getItem("output-path");
+
+    if (!outputPath) {
+      if (!existsSync(outputPath)) {
+        setOutputPathModal(true);
+      }
+      return;
+    }
+
+    history.push({
+      pathname: "/create-video",
+      state: {
+        comments: comments.filter((comment) => comment.selected),
+        post,
+      },
+    });
   };
 
   useEffect(() => {
@@ -104,6 +142,7 @@ const CommentsPage: React.FC = () => {
       .map((c) => c.body)
       .join("")
   );
+
   const timerContent = (
     <Fragment>
       <ClockIcon /> {timerMinutes} minutes
@@ -129,8 +168,12 @@ const CommentsPage: React.FC = () => {
           <div className={styles.container__timer}>
             <div className={styles.timer}>{timerContent}</div>
 
-            {timerMinutes > 10 && (
-              <Button type="success" onClick={createVideo} size="xs">
+            {timerMinutes > 0 && (
+              <Button
+                type={timerMinutes > 10 ? "success" : "primary"}
+                onClick={createVideo}
+                size="xs"
+              >
                 Done <SimpleArrowRightIcon />
               </Button>
             )}
@@ -141,19 +184,26 @@ const CommentsPage: React.FC = () => {
 
         <ul className={styles.header__stats}>
           <li className={styles.stat}>
-            <ThumbUpIcon /> {post.ups} Ups
+            <ThumbUpIcon /> {roundUp(post.ups)} Ups
           </li>
         </ul>
       </div>
 
       <div className={styles.container__comments}>
-        {comments.map((comment, index) => (
-          <CommentCard
-            key={index}
-            onCheck={onCheck.bind(this, index)}
-            {...comment}
-          />
-        ))}
+        {comments.map((comment, index) => {
+          if (!comment.visible) {
+            return null;
+          }
+
+          return (
+            <CommentCard
+              key={index}
+              onCollapse={onCollapse.bind(this, index)}
+              onCheck={onCheck.bind(this, index)}
+              {...comment}
+            />
+          );
+        })}
       </div>
 
       <Button
@@ -167,6 +217,16 @@ const CommentsPage: React.FC = () => {
       </Button>
 
       <GoTop />
+
+      <Modal
+        visible={outputPathModal}
+        setModal={setOutputPathModal}
+        className={styles.modal__content}
+      >
+        <h1>Please Select Outpath</h1>
+
+        <OutputVideo />
+      </Modal>
     </div>
   );
 };

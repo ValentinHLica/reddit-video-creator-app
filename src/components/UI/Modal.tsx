@@ -1,19 +1,25 @@
 import React, { Fragment } from "react";
 
-import styles from "../../styles/components/UI/modal.module.scss";
+import styles from "@styles/UI/modal.module.scss";
 
 type Props = {
   visible: boolean;
   setModal: (state: boolean) => void;
+  className?: string;
 };
 
-const Modal: React.FC<Props> = ({ visible, setModal, children }) => {
+const Modal: React.FC<Props> = ({
+  visible,
+  setModal,
+  className = "",
+  children,
+}) => {
   return (
     <Fragment>
       <div
         className={`${styles.modal} ${
           visible && styles.modal__visible
-        } modal__container`}
+        } modal__container ${className}`}
       >
         {children}
       </div>

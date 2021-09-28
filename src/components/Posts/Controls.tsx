@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-import { HotIcon, SunIcon, RissingIcon, TopIcon } from "../CustomIcons";
-import Dropdown from "../UI/Dropdown";
+import { Dropdown, Button } from "@ui";
+import { HotIcon, SunIcon, RissingIcon, TopIcon } from "@icon";
 
-import { getPosts } from "../../utils/redditApi";
+import { getPosts } from "@utils/redditApi";
 
 import {
   Controls as ControlsType,
   ControlsList,
   Post,
   TopFilter,
-} from "../../interface/reddit";
+} from "@interface/reddit";
 
-import styles from "../../styles/components/Posts/controls.module.scss";
-import Button from "../UI/Button";
+import styles from "@styles/Posts/controls.module.scss";
 
 type Props = {
   subredditId: string;
@@ -61,6 +60,7 @@ const Controls: React.FC<Props> = ({
   ];
 
   const getPostsLoad = async () => {
+    setError(false);
     setLoading(true);
     setPosts([]);
 

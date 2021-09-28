@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import Context from "../Context";
-import { AlertCircleIcon, WifiIcon } from "../CustomIcons";
+import Context from "@context";
+import { AlertCircleIcon, WifiIcon } from "@icon";
 
-import { Type } from "../../interface/UI/button";
+import { Type } from "@interface/UI/button";
 
-import styles from "../../styles/components/UI/notification.module.scss";
+import styles from "@styles/UI/notification.module.scss";
 
 type Props = {
   className?: string;

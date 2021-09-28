@@ -1,6 +1,6 @@
 export enum FontFace {
-  Light = "public-sans-light.fnt",
-  Medium = "public-sans-medium.fnt",
-  Regular = "public-sans-regular.fnt",
-  MediumTitle = "public-sans-medium-title.fnt",
+  Light = "open-sans-light.fnt",
+  Medium = "open-sans-medium.fnt",
+  Regular = "open-sans-regular.fnt",
+  MediumTitle = "open-sans-medium-post-title.fnt",
 }

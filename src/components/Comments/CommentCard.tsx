@@ -1,20 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   ClockIcon,
+  CollapseIcon,
+  ExpandIcon,
   SquareCheckIcon,
   SquareIcon,
   ThumbUpIcon,
-} from "../CustomIcons";
+} from "@icon";
 
-import { roundUp } from "../../utils/helpers";
+import { roundUp } from "@utils/helpers";
 
-import { Comment } from "../../interface/reddit";
+import { Comment } from "@interface/reddit";
 
-import styles from "../../styles/components/Comments/comment-card.module.scss";
+import styles from "@styles/Comments/comment-card.module.scss";
 
 interface Props extends Comment {
   onCheck: () => void;
+  onCollapse?: () => void;
 }
 
 const CommentCard: React.FC<Props> = ({
@@ -25,22 +28,51 @@ const CommentCard: React.FC<Props> = ({
   ups,
   selected,
   onCheck,
+  onCollapse,
+  collapse,
+  visible,
 }) => {
-  const stats = [
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+
+  const stats: {
+    text: string;
+    icon: JSX.Element;
+    className?: string;
+    onClick?: () => void;
+  }[] = [
     {
       icon: <ThumbUpIcon />,
       text: `${roundUp(ups)} Ups`,
     },
     {
       icon: <ClockIcon />,
-      text: new Date(created_utc).toLocaleDateString("en-US"),
+      text: new Date(created_utc * 1000).toLocaleDateString("en-US"),
     },
     {
       icon: selected ? <SquareCheckIcon /> : <SquareIcon />,
-      text: `Select Comment`,
+      text: "Select Comment",
       onClick: onCheck,
       className: selected ? styles.stat__selected : "",
     },
+    ...(() => {
+      if (collapse) {
+        return [
+          {
+            icon: collapsed ? <ExpandIcon /> : <CollapseIcon />,
+            text: collapsed ? "Expand" : "Collapse",
+            onClick: () => {
+              if (onCollapse) {
+                onCollapse();
+
+                setCollapsed(!collapsed);
+              }
+            },
+          },
+        ];
+      }
+
+      return [];
+    })(),
   ];
 
   return (
@@ -51,6 +83,7 @@ const CommentCard: React.FC<Props> = ({
       style={{
         marginLeft: `${depth * 40}px`,
         marginTop: depth === 0 ? "24px" : "",
+        backgroundColor: visible ? "white" : "red",
       }}
     >
       <div className={styles.comment__details}>

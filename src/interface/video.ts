@@ -2,12 +2,8 @@ export interface Comment {
   text: string | string[];
   width?: number;
   height?: number;
-  indentation?: number;
+  indentation: number;
   userName: string;
-}
-
-export interface Comments extends Comment {
-  subComment: Comments[];
 }
 
 export interface VideoDetails {
@@ -15,5 +11,5 @@ export interface VideoDetails {
   userName: string;
   points: string;
   awards: string[];
-  comments: Comments[];
+  comments: Comment[];
 }

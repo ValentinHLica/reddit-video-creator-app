@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 
-import Context from "../Context";
-import { MoonIcon, SunIcon } from "../CustomIcons";
+import Context from "@context";
+import { MoonIcon, SunIcon } from "@icon";
 
-import styles from "../../styles/components/UI/theme-switcher.module.scss";
+import styles from "@styles/UI/theme-switcher.module.scss";
 
 const ThemeSwitcher: React.FC = () => {
   const { theme, changeTheme } = useContext(Context);

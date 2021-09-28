@@ -1,30 +1,15 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
-import CardWrapper from "../UI/CardWrapper";
-import Card from "../UI/Card";
-import Button from "../UI/Button";
-import Modal from "../UI/Modal";
+import { BreadCrumb, CardWrapper, Card, Button, Modal } from "@ui";
 import AddFavourite from "./AddFavourite";
-import { AddIcon, PostIcon, HeartIcon, UserIcon } from "../CustomIcons";
+import { AddIcon, PostIcon, HeartIcon, UserIcon, SettingsIcon } from "@icon";
 
-import { roundUp } from "../../utils/helpers";
+import { logger, roundUp } from "@utils/helpers";
 
-import { SearchItem } from "../../interface/reddit";
+import { SearchItem } from "@interface/reddit";
 
-import styles from "../../styles/components/Home/index.module.scss";
-import BreadCrumb from "../UI/BreadCrumb";
-
-const { app } = window.require("@electron/remote");
-const { readFileSync, existsSync, mkdirSync, writeFileSync } =
-  window.require("fs");
-const { join } = window.require("path");
-const favDataPath = join(
-  app.getAppPath(),
-  "..",
-  "data",
-  "favoriteSubreddit.json"
-);
+import styles from "@styles/Home/index.module.scss";
 
 const HomePage: React.FC = () => {
   const history = useHistory();
@@ -32,20 +17,20 @@ const HomePage: React.FC = () => {
   const [subreddits, setSubreddits] = useState<SearchItem[]>([]);
   const [modal, setModal] = useState<boolean>(false);
 
-  const dataPath = join(app.getAppPath(), "..", "data");
-
   const fetchFav = () => {
-    if (!existsSync(dataPath)) {
-      mkdirSync(dataPath);
+    const data = localStorage.getItem("favourite");
+
+    if (data) {
+      try {
+        const favourite = JSON.parse(data) as SearchItem[];
+
+        setSubreddits(
+          favourite.map((item: SearchItem) => ({ ...item, added: true }))
+        );
+      } catch (err) {
+        logger("Data saved in localStorage is corrupted!", "error");
+      }
     }
-
-    if (!existsSync(favDataPath)) {
-      writeFileSync(favDataPath, JSON.stringify([]));
-    }
-
-    const data = JSON.parse(readFileSync(favDataPath).toString());
-
-    setSubreddits(data.map((item: SearchItem) => ({ ...item, added: true })));
   };
 
   const removeSubreddit = (item: SearchItem) => {
@@ -53,7 +38,11 @@ const HomePage: React.FC = () => {
 
     setSubreddits(newFav);
 
-    writeFileSync(favDataPath, JSON.stringify(newFav));
+    try {
+      localStorage.setItem("favourite", JSON.stringify(newFav));
+    } catch (error) {
+      logger("Data saved in localStorage is corrupted!", "error");
+    }
   };
 
   useEffect(() => {
@@ -64,16 +53,15 @@ const HomePage: React.FC = () => {
   return (
     <Fragment>
       <div className={styles.container}>
-        <BreadCrumb />
+        <div className={styles.container__header}>
+          <BreadCrumb />
 
-        <h1
-          className={styles.container__title}
-          onClick={() => {
-            history.push("/r/asda/comments/12/sadasd");
-          }}
-        >
-          Please Select a subreddit
-        </h1>
+          <Button url="/settings" size="xs" type="secondary">
+            <SettingsIcon />
+          </Button>
+        </div>
+
+        <h1 className={styles.container__title}>Please Select a subreddit</h1>
 
         {subreddits.length !== 0 ? (
           <Fragment>
@@ -127,6 +115,8 @@ const HomePage: React.FC = () => {
           </div>
         )}
       </div>
+
+      <Link to="/test">Test</Link>
 
       <Modal visible={modal} setModal={setModal}>
         <AddFavourite

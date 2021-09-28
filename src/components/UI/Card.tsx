@@ -1,10 +1,10 @@
 import React from "react";
 
-import { ArrowDownIcon, ArrowUpIcon } from "../CustomIcons";
+import { ArrowDownIcon, ArrowUpIcon } from "@icon";
 
-import { CardProps, ActionProps } from "../../interface/UI/card";
+import { CardProps, ActionProps } from "@interface/UI/card";
 
-import styles from "../../styles/components/UI/card.module.scss";
+import styles from "@styles/UI/card.module.scss";
 
 const CardActions: React.FC<ActionProps> = ({
   icon,

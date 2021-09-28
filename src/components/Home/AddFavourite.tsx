@@ -4,31 +4,19 @@ import React, {
   useState,
   Dispatch,
   SetStateAction,
+  useContext,
 } from "react";
 import { useHistory } from "react-router-dom";
 
-import Button from "../UI/Button";
-import Input from "../UI/Input";
-import CardWrapper from "../UI/CardWrapper";
-import Card from "../UI/Card";
-import Spinner from "../UI/Spinner";
-import { HeartIcon, PostIcon, UserIcon } from "../CustomIcons";
+import { Spinner, Card, CardWrapper, Input, Button } from "@ui";
+import Context from "@context";
+import { HeartIcon, PostIcon, UserIcon } from "@icon";
 
-import { search } from "../../utils/redditApi";
-import { roundUp } from "../../utils/helpers";
-import { SearchItem, Pagination } from "../../interface/reddit";
+import { search } from "@utils/redditApi";
+import { roundUp } from "@utils/helpers";
+import { SearchItem, Pagination } from "@interface/reddit";
 
-import styles from "../../styles/components/Home/add-favourite.module.scss";
-
-const { app } = window.require("@electron/remote");
-const { writeFileSync } = window.require("fs");
-const { join } = window.require("path");
-const favDataPath = join(
-  app.getAppPath(),
-  "..",
-  "data",
-  "favoriteSubreddit.json"
-);
+import styles from "@styles/Home/add-favourite.module.scss";
 
 type Props = {
   favourite: SearchItem[];
@@ -37,8 +25,8 @@ type Props = {
 
 const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
   const history = useHistory();
+  const { searchSubreddit, setSearchSubreddit } = useContext(Context);
 
-  const [subreddits, setSubreddits] = useState<SearchItem[] | null>(null);
   const [pagination, setPagination] = useState<Pagination>({
     next: null,
     before: null,
@@ -52,7 +40,7 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
     e.preventDefault();
 
     setError(false);
-    setSubreddits(null);
+    setSearchSubreddit(null);
     setLoading(true);
 
     try {
@@ -75,7 +63,7 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
       });
 
       setPagination(pagination);
-      setSubreddits(addedFilter);
+      setSearchSubreddit(addedFilter);
     } catch (err) {
       console.log(err);
 
@@ -89,7 +77,7 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
     const isFav = favourite.filter((subreddit) => subreddit.url === item.url);
 
     const saveSubreddits = (state: boolean) => {
-      return (subreddits as SearchItem[]).map((subreddit) => {
+      return (searchSubreddit as SearchItem[]).map((subreddit) => {
         if (subreddit.url === item.url) {
           return {
             ...subreddit,
@@ -101,29 +89,18 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
       });
     };
 
+    let newFav: SearchItem[] = [];
+
     if (isFav.length !== 0) {
-      const newFav = favourite.filter(
-        (subreddit) => subreddit.url !== item.url
-      );
-
-      favouriteSubreddit(newFav);
-
-      writeFileSync(favDataPath, JSON.stringify(newFav));
-
-      setSubreddits(saveSubreddits(false));
-
-      return;
+      newFav = favourite.filter((subreddit) => subreddit.url !== item.url);
+    } else {
+      item.added = true;
+      newFav = [...favourite, item];
     }
 
-    setSubreddits(saveSubreddits(true));
-
-    item.added = true;
-
-    const newFav = [...favourite, item];
-
-    writeFileSync(favDataPath, JSON.stringify(newFav));
-
+    localStorage.setItem("favourite", JSON.stringify(newFav));
     favouriteSubreddit(newFav);
+    setSearchSubreddit(saveSubreddits(true));
   };
 
   const loadMore = async () => {
@@ -152,7 +129,7 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
       });
 
       setPagination(resultsPagination);
-      setSubreddits((prevState) => {
+      setSearchSubreddit((prevState) => {
         return [...(prevState as SearchItem[]), ...addedFilter];
       });
     } catch (err) {
@@ -180,12 +157,12 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
 
       {loading && <Spinner size="xl" />}
 
-      {!loading && !error && subreddits && subreddits.length !== 0 && (
+      {!loading && !error && searchSubreddit && searchSubreddit.length !== 0 && (
         <CardWrapper
           className={styles.container__items}
           loadMore={pagination.next ? loadMore : undefined}
         >
-          {subreddits.map((item, index) => {
+          {searchSubreddit.map((item, index) => {
             if (!item.subscribers) {
               return null;
             }
@@ -224,7 +201,7 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
         </CardWrapper>
       )}
 
-      {subreddits && subreddits.length === 0 && (
+      {searchSubreddit && searchSubreddit.length === 0 && (
         <h3 style={{ marginTop: "24px", textAlign: "center" }}>
           Nothing was found
         </h3>

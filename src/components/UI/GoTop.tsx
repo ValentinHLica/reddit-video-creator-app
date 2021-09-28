@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import Button from "./Button";
-import { ArrowUpIcon } from "../CustomIcons";
+import { ArrowUpIcon } from "@icon";
 
-import styles from "../../styles/components/UI/go-top.module.scss";
+import styles from "@styles/UI/go-top.module.scss";
 
 const GoTop: React.FC = () => {
   const [visible, setVisible] = useState<boolean>(false);

@@ -2,11 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 
 import Button from "./Button";
 
-import { Size, Type } from "../../interface/UI/button";
+import { Size, Type } from "@interface/UI/button";
+import { ControlsListItem } from "@interface/reddit";
 
-import { ControlsListItem } from "../../interface/reddit";
-
-import styles from "../../styles/components/UI/dropdown.module.scss";
+import styles from "@styles/UI/dropdown.module.scss";
 
 type Props = {
   icon?: JSX.Element;

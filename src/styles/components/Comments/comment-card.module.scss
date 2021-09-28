@@ -16,6 +16,7 @@
   .comment__details {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 
     .comment__author {
       font-size: small;
@@ -58,5 +59,6 @@
     font-size: 13px;
     opacity: 0.8;
     margin-top: 5px;
+    word-break: break-all;
   }
 }

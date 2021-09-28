@@ -20,7 +20,8 @@ body {
 
   @include light-theme();
 
-  .card__container {
+  .card__container,
+  .settings__card {
     @include light-theme();
     background-color: white;
     border-bottom: 1px solid var(--gray-400);
@@ -38,7 +39,8 @@ body {
   &[data-theme="dark"] {
     @include dark-theme();
 
-    .card__container {
+    .card__container,
+    .settings__card {
       @include dark-theme();
       border-bottom: 1px solid var(--gray-900);
     }

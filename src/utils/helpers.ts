@@ -1,6 +1,15 @@
-import { black } from "chalk";
+import { tempPath } from "@config/paths";
 
-const { readdir } = window.require("fs");
+const {
+  mkdirSync,
+  existsSync,
+  readdirSync,
+  rmdirSync,
+  unlinkSync,
+  lstatSync,
+  statSync,
+} = window.require("fs");
+const { join } = window.require("path");
 
 /**
  * Logger handler for action, success, error
@@ -11,22 +20,14 @@ const { readdir } = window.require("fs");
 type LogType = "success" | "action" | "error";
 
 export const logger = (message: string, type: LogType) => {
-  switch (type) {
-    case "action":
-      console.log(black.bgBlue(message));
-      break;
+  const selectedColor = {
+    success: "10b981",
+    action: "3b82f6",
+    error: "ef4444",
+    fallback: "6b7280",
+  };
 
-    case "success":
-      console.log(black.bgGreen(message));
-      break;
-
-    case "error":
-      console.log(black.bgRed(message));
-      break;
-
-    default:
-      console.log(black.bgGray(message));
-  }
+  console.log(`%c${message}`, `color: #${selectedColor[type]}`);
 };
 
 /**
@@ -38,44 +39,21 @@ export const createRandomString = (size: number) =>
   (Math.random() + 1).toString(36).substring(size || 7);
 
 /**
- * Generate array of sentences from comment
- * @param {string} text Comment text
- */
-export const splitComment = (text: string): string[] => {
-  const words = text.split(" ");
-
-  const sentences: string[] = [];
-
-  let sentence: string = "";
-  for (const word of words) {
-    sentence += `${word} `;
-
-    const chars = [",", ".", "!", "?"];
-
-    if (chars.some((char) => word.includes(char)) || sentence.length > 100) {
-      sentences.push(sentence.trim());
-      sentence = "";
-    }
-  }
-
-  return sentences;
-};
-
-/**
  * List all files and folders inside folder
  * @param path Folder path
  * @returns List of files and folders inside folder
  */
-export const getFolders = async (path: string): Promise<string[]> => {
-  return new Promise((resolve, reject) => {
-    readdir(path, function (err: any, files: string[]) {
-      if (err) {
-        reject(null);
-      } else {
-        resolve(files);
-      }
-    });
+export const getFolders = (path: string | null): string[] => {
+  const files = readdirSync(path) ?? [];
+
+  files.sort(function (a: string, b: string) {
+    return (
+      statSync(join(path, a)).mtime.getTime() -
+      statSync(join(path, b)).mtime.getTime()
+    );
   });
+
+  return files;
 };
 
 /**
@@ -102,4 +80,30 @@ export const roundUp = (number: number): string => {
 export const countWords = (sentence: string): number => {
   const words = sentence.split(" ");
   return parseFloat((words.length / 130).toFixed(1).replace(".0", ""));
+};
+
+/**
+ * Delete Folder with its contents
+ * @param path Folder path
+ */
+export const deleteFolder = (path: string) => {
+  if (existsSync(path)) {
+    readdirSync(path).forEach((file: string) => {
+      const curPath = join(path, file);
+      if (lstatSync(curPath).isDirectory()) {
+        deleteFolder(curPath);
+      } else {
+        unlinkSync(curPath);
+      }
+    });
+    rmdirSync(path);
+  }
+};
+
+/**
+ * Reset Temp folder for new process
+ */
+export const resetTemp = async () => {
+  deleteFolder(tempPath);
+  mkdirSync(tempPath);
 };

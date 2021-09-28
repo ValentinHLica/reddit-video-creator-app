@@ -1,0 +1,14 @@
+.container__card {
+  width: 100%;
+  padding: 16px 24px;
+
+  .card__title {
+    font-size: small;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+
+  .card__content {
+    margin-top: 10px;
+  }
+}

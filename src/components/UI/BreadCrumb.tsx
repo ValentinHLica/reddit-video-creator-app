@@ -1,12 +1,13 @@
 import React, { Fragment } from "react";
 import { useHistory } from "react-router-dom";
 
-import styles from "../../styles/components/UI/bread-crumb.module.scss";
+import styles from "@styles/UI/bread-crumb.module.scss";
 
 type Props = {
   nav?: {
     text: string;
     url?: string;
+    onClick?: () => void;
   }[];
 };
 
@@ -29,7 +30,7 @@ const BreadCrumb: React.FC<Props> = ({ nav }) => {
 
         {nav &&
           nav.map((item, index) => {
-            const { text, url } = item;
+            const { text, url, onClick } = item;
 
             return (
               <Fragment key={index}>
@@ -39,6 +40,10 @@ const BreadCrumb: React.FC<Props> = ({ nav }) => {
                   onClick={() => {
                     if (url) {
                       history.push(url);
+                    } else {
+                      if (onClick) {
+                        onClick();
+                      }
                     }
                   }}
                 >

@@ -23,7 +23,7 @@
         [x]. line to indicate inden
         []. Look up some designs you may find online and kinda create different themes ??
     []. Find a way to \n text
-    []. text will overflow from the right side, just add + 200 to every maxWidth for comments with indentation
+    [x]. text will overflow from the right side, just add + 200 to every maxWidth for comments with indentation
     []. censure curse words, by replacing words with a family friendly words but not losing its context
     []. implement dynamic getting comments by analysing data
         []. probably create kinda like an ai to dynamicly select data based on most common results
@@ -35,8 +35,8 @@
     []. Create ni si tip tutoriali ku shpjego dhe ndrysho settingse per preferencat e tij
     []x. Search subreddits
     [x]. Open post
-    []. select post Comments
-    []. count word in minutes
+    [x]. select post Comments
+    [x]. count word in minutes
     []. Kill switch
         []. krijo serverin dhe hostoji diku qe eshte live 24/7
         []. npm i hddserial   -  merr id e hdd dhe ruje ne server
@@ -44,3 +44,4 @@
 
 []. Bugs
     []. Rregullo ate qe te mos krijoje nje imaz kur te overflow posht
+

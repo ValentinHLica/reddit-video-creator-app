@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu } = require("electron");
+const { app, BrowserWindow, Menu, protocol } = require("electron");
 
 const path = require("path");
 const isDev = require("electron-is-dev");
@@ -6,20 +6,27 @@ const isDev = require("electron-is-dev");
 require("@electron/remote/main").initialize();
 
 function createWindow() {
+  protocol.registerFileProtocol("file", (request, callback) => {
+    const pathname = request.url.replace("file:///", "");
+    callback(pathname);
+  });
+
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
       nodeIntegration: true,
+      nodeIntegrationInWorker: true,
       enableRemoteModule: true,
+      webSecurity: false,
     },
     resizable: false,
   });
 
-  if (!isDev) {
-    const mainMenu = Menu.buildFromTemplate([]);
-    Menu.setApplicationMenu(mainMenu);
-  }
+  // if (!isDev) {
+  //   const mainMenu = Menu.buildFromTemplate([]);
+  //   Menu.setApplicationMenu(mainMenu);
+  // }
 
   win.loadURL(
     isDev

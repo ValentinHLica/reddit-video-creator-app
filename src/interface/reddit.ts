@@ -76,6 +76,8 @@ export interface Comment {
   created_utc: number;
   depth: number;
   selected?: boolean;
+  collapse?: boolean;
+  visible?: boolean;
 }
 
 export interface CommentWrapper {
@@ -84,7 +86,7 @@ export interface CommentWrapper {
 }
 
 export interface Replies {
-  kind: string;
+  kind: string | "more";
   data: {
     after: string;
     children: CommentWrapper[] | string[];

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import Button from "./Button";
 
-import styles from "../../styles/components/UI/card-wrapper.module.scss";
+import styles from "@styles/UI/card-wrapper.module.scss";
 
 type Props = {
   className?: string;

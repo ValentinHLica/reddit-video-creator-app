@@ -1,10 +1,10 @@
 import React from "react";
 
-import { SpinnerIcon } from "../CustomIcons";
+import { SpinnerIcon } from "@icon";
 
-import { Size } from "../../interface/UI/button";
+import { Size } from "@interface/UI/button";
 
-import styles from "../../styles/components/UI/spinner.module.scss";
+import styles from "@styles/UI/spinner.module.scss";
 
 type Props = {
   size?: Size;
