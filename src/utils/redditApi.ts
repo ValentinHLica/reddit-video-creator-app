@@ -217,7 +217,7 @@ export const getComments = async (
         author,
         ups,
         id,
-        body,
+        body: body.replace(/(?:https?|ftp):\/\/[\n\S]+/g, ""),
         all_awardings: all_awardings.map((awards) => {
           const { count, name } = awards;
           return { count, name };

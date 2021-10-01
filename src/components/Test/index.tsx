@@ -16,8 +16,6 @@ const TestPage: React.FC = () => {
   return (
     <div>
       <Button onClick={createVideo}>Create Video</Button>
-
-      <Button onClick={() => {}}>Run Script</Button>
     </div>
   );
 };

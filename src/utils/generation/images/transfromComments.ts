@@ -7,7 +7,13 @@ import { imageDetails, commentDetails } from "@config/image";
 import { FontFace } from "@interface/image";
 import { Comment } from "@interface/video";
 
+/**
+ * Fit comments to screen size
+ * @param comments List of comments
+ * @returns New list of comments
+ */
 export const transformComments = async (comments: Comment[]) => {
+  // Load font
   const font = await Jimp.loadFont(join(fontPath, FontFace.Medium));
 
   let maxHeight = imageDetails.height - commentDetails.heightMargin;
@@ -78,6 +84,10 @@ export const transformComments = async (comments: Comment[]) => {
 
   for (const comment of comments) {
     if (comment.indentation === 0) {
+      if (commentsTree.length !== 0) {
+        finalComments.push(commentsTree);
+      }
+
       commentsTree = [];
       maxHeight = imageDetails.height - commentDetails.heightMargin;
     }

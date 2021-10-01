@@ -44,7 +44,7 @@ export const measureComments = async (comments: Comment[]) => {
   try {
     const font = await Jimp.loadFont(join(fontPath, FontFace.Medium));
 
-    const newComments: Comment[] = comments.map((comment) => {
+    return comments.map((comment) => {
       const commentWidth =
         imageDetails.width -
         commentDetails.widthMargin -
@@ -65,8 +65,6 @@ export const measureComments = async (comments: Comment[]) => {
         height: commentHeight,
       };
     });
-
-    return newComments;
   } catch (error) {
     throw error;
   }

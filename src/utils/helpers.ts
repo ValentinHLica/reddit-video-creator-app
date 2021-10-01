@@ -107,3 +107,31 @@ export const resetTemp = async () => {
   deleteFolder(tempPath);
   mkdirSync(tempPath);
 };
+
+/**
+ * Generate array of sentences from comment
+ * @param {string} text Comment text
+ */
+export const splitText = (text: string): string[] => {
+  const words = text.split(" ");
+
+  const sentences: string[] = [];
+
+  let sentence: string = "";
+  for (const word of words) {
+    sentence += `${word} `;
+
+    const chars = [",", ".", "!", "?"];
+
+    if (chars.some((char) => word.includes(char)) || sentence.length > 90) {
+      sentences.push(sentence.trim());
+      sentence = "";
+    }
+  }
+
+  if (sentence !== "") {
+    sentences.push(sentence);
+  }
+
+  return sentences;
+};
