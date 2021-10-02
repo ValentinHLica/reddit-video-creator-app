@@ -110,8 +110,8 @@ ul {
 }
 
 .isBookmark {
-  fill: var(--yellow-500);
-  color: var(--yellow-500);
+  fill: var(--red-500);
+  color: var(--red-500);
 }
 
 .isCreated {
@@ -125,7 +125,53 @@ ul {
   cursor: unset !important;
 }
 
-svg {
-  fill: transparent;
-  transition: color 0.5s ease, fill 0.5s ease;
+.zap-icon {
+  fill: var(--yellow-500);
+  color: var(--yellow-500);
+}
+
+.user-icon {
+  fill: var(--indigo-500);
+  color: var(--indigo-500);
+}
+
+.comment-icon {
+  fill: var(--yellow-500);
+  color: var(--yellow-500);
+}
+
+.st0 {
+  fill: var(--indigo-500);
+  stroke: var(--indigo-500);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.st1 {
+  fill: var(--indigo-500);
+  stroke: var(--indigo-500);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.clock-icon {
+  circle {
+    color: var(--yellow-500);
+    fill: var(--yellow-500);
+  }
+
+  path {
+    color: white;
+    fill: white;
+  }
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.reddit-icon {
+  fill: var(--red-500);
 }

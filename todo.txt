@@ -43,4 +43,10 @@
 
 
 []. implemento qe postin qe mund ta kemi bo video ta trregoje dhe komentet qe jan sgjedh ne fillim
-
+[]. konvertoje te gjith logjiken e projektit ne exe me pkg
+    []. ke me te leht te implementosh authurization
+        []. ruaj noj file diku online ku te listosh user qe kan appin dhe emrin
+        []. nje file tjtr ku poston kerkes per me u shtu
+        []. per auth perdor hhd id dhe kjo do crytohet me ni kod dhe e qo ne server qe nese dikush e shikon ne network request nuk do kuptoje dote request 
+        https://workers.cloudflare.com/
+        

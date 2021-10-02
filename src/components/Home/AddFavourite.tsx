@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 
 import { Spinner, Card, CardWrapper, Input, Button } from "@ui";
 import Context from "@context";
-import { HeartIcon, PostIcon, UserIcon } from "@icon";
+import { HeartIcon, PostIcon, UserIcon, ZapIcon } from "@icon";
 
 import { search } from "@utils/redditApi";
 import { roundUp } from "@utils/helpers";
@@ -184,7 +184,7 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
                   },
                   {
                     text: "Posts",
-                    icon: <PostIcon />,
+                    icon: <ZapIcon />,
                     onClick: () => {
                       history.push(item.display_name_prefixed);
                     },

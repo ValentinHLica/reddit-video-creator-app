@@ -6,7 +6,7 @@ import {
   ExpandIcon,
   SquareCheckIcon,
   SquareIcon,
-  ThumbUpIcon,
+  UpsIcon,
 } from "@icon";
 
 import { roundUp } from "@utils/helpers";
@@ -41,7 +41,7 @@ const CommentCard: React.FC<Props> = ({
     onClick?: () => void;
   }[] = [
     {
-      icon: <ThumbUpIcon />,
+      icon: <UpsIcon />,
       text: `${roundUp(ups)} Ups`,
     },
     {

@@ -23,9 +23,11 @@ const OutputVideo: React.FC = () => {
   const updatePath = async () => {
     const path = await getPath();
 
-    setOutputPath(path);
+    if (path) {
+      setOutputPath(path);
 
-    localStorage.setItem("output-path", path);
+      localStorage.setItem("output-path", path);
+    }
   };
 
   useEffect(() => {

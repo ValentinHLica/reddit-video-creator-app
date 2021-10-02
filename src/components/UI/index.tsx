@@ -10,6 +10,7 @@ import OfflineNotification from "./OfflineNotification";
 import Spinner from "./Spinner";
 import ThemeSwitcher from "./ThemeSwitcher";
 import Tabs from "./Tabs";
+import Drawer from "./Drawer";
 
 export {
   BreadCrumb,
@@ -24,4 +25,5 @@ export {
   Spinner,
   ThemeSwitcher,
   Tabs,
+  Drawer,
 };

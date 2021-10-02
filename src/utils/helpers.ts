@@ -71,7 +71,7 @@ export const roundUp = (number: number): string => {
     .match(/.{1,3}/g) as string[];
 
   return `${newStr[newStr.length - 1].split("").reverse().join("")}${
-    " kMGTPE"[newStr.length - 1]
+    " kmgtpe"[newStr.length - 1]
   }`;
 };
 

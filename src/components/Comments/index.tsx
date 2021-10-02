@@ -1,16 +1,11 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
+import Layout from "@components/Layout";
 import { Spinner, BreadCrumb, GoTop, Button, Modal } from "@ui";
 import CommentCard from "./CommentCard";
 import OutputVideo from "@components/Settings/OutputVideo";
-import {
-  BookmarkIcon,
-  CircleIcon,
-  ClockIcon,
-  SimpleArrowRightIcon,
-  ThumbUpIcon,
-} from "@icon";
+import { BookmarkIcon, CircleIcon, ClockIcon, PlayIcon, UpsIcon } from "@icon";
 
 import { getComments } from "@utils/redditApi";
 import { countWords, logger, roundUp } from "@utils/helpers";
@@ -265,107 +260,129 @@ const CommentsPage: React.FC = () => {
     return <Spinner size="xl" />;
   }
 
-  const timerContent = (
-    <Fragment>
-      <ClockIcon /> {timerMinutes} minutes
-    </Fragment>
-  );
+  const stats: {
+    text: string;
+    icon: JSX.Element;
+    onClick?: () => void | null;
+    className?: string;
+  }[] = [
+    {
+      text: `${roundUp(post.ups)} Ups`,
+      icon: <UpsIcon />,
+    },
+    {
+      text: "Bookmark",
+      icon: <BookmarkIcon added={isBookmarked} />,
+      onClick: onBookmark,
+      className: styles.stat__bookmark,
+    },
+    ...(() => {
+      if (isCreated) {
+        return [
+          {
+            text: "Use previous comments",
+            icon: <CircleIcon />,
+            onClick: onUsePrevComments,
+            className: styles.stat__created,
+          },
+        ];
+      }
+
+      return [];
+    })(),
+    {
+      text: `${timerMinutes} Minutes`,
+      icon: <ClockIcon />,
+    },
+    ...(() => {
+      if (timerMinutes > 0) {
+        return [
+          {
+            text: "Create",
+            icon: <PlayIcon />,
+            onClick: createVideo,
+            className: `${styles.stat__create} pointer`,
+          },
+        ];
+      }
+
+      return [];
+    })(),
+  ];
 
   return (
-    <div className={styles.container}>
-      <div className={styles.container__header}>
-        <div className={styles.top__header}>
-          <BreadCrumb
-            nav={[
-              {
-                text: post.subreddit,
-                url: `/r/${post.subreddit}`,
-              },
-              {
-                text: post.title,
-              },
-            ]}
-          />
+    <Layout
+      nav={[
+        {
+          text: post.subreddit,
+          url: `/r/${post.subreddit}`,
+        },
+        {
+          text: post.title,
+        },
+      ]}
+    >
+      <div className={styles.container}>
+        <div className={styles.container__header}>
+          <h3 className={styles.header__title}>{post.title}</h3>
 
-          <div className={styles.container__timer}>
-            <div className={styles.timer}>{timerContent}</div>
+          <ul className={styles.header__stats}>
+            {stats.map((stat, index) => {
+              const { text, icon, className, onClick } = stat;
 
-            {timerMinutes > 0 && (
-              <Button
-                type={timerMinutes > 10 ? "success" : "primary"}
-                onClick={createVideo}
-                size="xs"
-                text="Done"
-                icon={<SimpleArrowRightIcon />}
-              />
-            )}
-          </div>
+              return (
+                <li
+                  className={`${styles.stat} ${className ?? ""}`}
+                  onClick={onClick}
+                  key={index}
+                >
+                  {icon} {text}
+                </li>
+              );
+            })}
+          </ul>
         </div>
 
-        <h3 className={styles.header__title}>{post.title}</h3>
+        <div className={styles.container__comments}>
+          {comments.map((comment, index) => {
+            if (!comment.visible) {
+              return null;
+            }
 
-        <ul className={styles.header__stats}>
-          <li className={styles.stat}>
-            <ThumbUpIcon /> {roundUp(post.ups)} Ups
-          </li>
+            return (
+              <CommentCard
+                key={index}
+                onCollapse={onCollapse.bind(this, index)}
+                onCheck={onCheck.bind(this, index)}
+                {...comment}
+              />
+            );
+          })}
+        </div>
 
-          <li
-            className={`${styles.stat} ${styles.stat__bookmark}`}
-            onClick={onBookmark}
-          >
-            <BookmarkIcon added={isBookmarked} /> Bookmark
-          </li>
+        <Button
+          className={`${styles.timer__btn} ${
+            fixedTimer ? styles.timer__btn__visible : ""
+          }`}
+          type={timerMinutes > 10 ? "success" : "light"}
+          onClick={timerMinutes ? createVideo : undefined}
+          text={`${timerMinutes} minutes`}
+          icon={<ClockIcon />}
+        />
 
-          {isCreated && (
-            <li
-              className={`${styles.stat} ${styles.stat__created}`}
-              onClick={onUsePrevComments}
-            >
-              <CircleIcon /> Use previous comments
-            </li>
-          )}
-        </ul>
+        <GoTop />
+
+        <Modal
+          visible={outputPathModal}
+          setModal={setOutputPathModal}
+          className={styles.modal__content}
+        >
+          <h1>Please Select Outpath</h1>
+
+          <OutputVideo />
+        </Modal>
       </div>
-
-      <div className={styles.container__comments}>
-        {comments.map((comment, index) => {
-          if (!comment.visible) {
-            return null;
-          }
-
-          return (
-            <CommentCard
-              key={index}
-              onCollapse={onCollapse.bind(this, index)}
-              onCheck={onCheck.bind(this, index)}
-              {...comment}
-            />
-          );
-        })}
-      </div>
-
-      <Button
-        className={`${styles.timer__btn} ${
-          fixedTimer ? styles.timer__btn__visible : ""
-        }`}
-        type={timerMinutes > 10 ? "success" : "primary"}
-        onClick={timerMinutes ? createVideo : undefined}
-        text={`${timerMinutes} minutes`}
-        icon={<ClockIcon />}
-      />
-
-      <GoTop />
-
-      <Modal
-        visible={outputPathModal}
-        setModal={setOutputPathModal}
-        className={styles.modal__content}
-      >
-        <h1>Please Select Outpath</h1>
-
-        <OutputVideo />
-      </Modal>
-    </div>
+    </Layout>
   );
 };
 

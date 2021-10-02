@@ -15,6 +15,8 @@ interface State {
   offline: boolean;
   searchSubreddit: SearchItem[] | null;
   setSearchSubreddit: Dispatch<SetStateAction<SearchItem[] | null>>;
+  drawer: boolean;
+  setDrawer: (state: boolean) => void;
 }
 
 const Context = createContext<State>({
@@ -23,9 +25,12 @@ const Context = createContext<State>({
   offline: false,
   searchSubreddit: null,
   setSearchSubreddit: () => null,
+  drawer: false,
+  setDrawer: () => null,
 });
 
 export const ContextProvider: React.FC = ({ children }) => {
+  const [drawer, setDrawer] = useState<boolean>(false);
   const [offline, setOffline] = useState<boolean>(false);
   const [theme, setTheme] = useState<Theme>("light");
   const [searchSubreddit, setSearchSubreddit] = useState<SearchItem[] | null>(
@@ -76,6 +81,8 @@ export const ContextProvider: React.FC = ({ children }) => {
     offline,
     searchSubreddit,
     setSearchSubreddit,
+    drawer,
+    setDrawer,
   };
 
   return <Context.Provider value={context}>{children}</Context.Provider>;

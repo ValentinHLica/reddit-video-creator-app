@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
+import Layout from "@components/Layout";
 import {
   BreadCrumb,
   CardWrapper,
@@ -13,15 +14,15 @@ import {
 import AddFavourite from "./AddFavourite";
 import {
   AddIcon,
-  PostIcon,
   HeartIcon,
   UserIcon,
-  ThumbUpIcon,
+  UpsIcon,
   CommentsIcon,
   BookmarkIcon,
   MenuIcon,
   SettingsIcon,
   CircleIcon,
+  ZapIcon,
 } from "@icon";
 
 import { logger, roundUp } from "@utils/helpers";
@@ -117,26 +118,8 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <Fragment>
+    <Layout>
       <div className={styles.container}>
-        <div className={styles.container__header}>
-          <BreadCrumb />
-
-          <Dropdown
-            size="xs"
-            icon={<MenuIcon />}
-            items={[
-              {
-                text: "Settings",
-                icon: <SettingsIcon />,
-                onClick: () => {
-                  history.push("/settings");
-                },
-              },
-            ]}
-          />
-        </div>
-
         <Tabs
           tabs={[
             {
@@ -163,7 +146,7 @@ const HomePage: React.FC = () => {
                               },
                               {
                                 text: "Posts",
-                                icon: <PostIcon />,
+                                icon: <ZapIcon />,
                                 onClick: () => {
                                   history.push(item.display_name_prefixed);
                                 },
@@ -209,8 +192,11 @@ const HomePage: React.FC = () => {
                           route="/r"
                           actions={[
                             {
-                              text: `${roundUp(item.ups)} Ups`,
-                              icon: <ThumbUpIcon />,
+                              text: `Bookmark`,
+                              icon: <BookmarkIcon added={true} />,
+                              onClick: () => {
+                                onChangeBookmark(item, index);
+                              },
                             },
                             {
                               text: `${roundUp(item.num_comments)} Comments`,
@@ -226,11 +212,8 @@ const HomePage: React.FC = () => {
                               },
                             },
                             {
-                              text: `Bookmark`,
-                              icon: <BookmarkIcon added={true} />,
-                              onClick: () => {
-                                onChangeBookmark(item, index);
-                              },
+                              text: `${roundUp(item.ups)} Ups`,
+                              icon: <UpsIcon />,
                             },
 
                             ...(() => {
@@ -267,7 +250,7 @@ const HomePage: React.FC = () => {
           favouriteSubreddit={setSubreddits}
         />
       </Modal>
-    </Fragment>
+    </Layout>
   );
 };
 

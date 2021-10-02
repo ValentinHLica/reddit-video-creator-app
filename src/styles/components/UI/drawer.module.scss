@@ -1,0 +1,50 @@
+.drawer {
+  width: 200px;
+  background-color: var(--gray-200);
+  box-shadow: -2px 0px 5px var(--gray-600);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateX(100%);
+  visibility: hidden;
+  opacity: 0;
+  z-index: 1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0.3s ease,
+    opacity 0.3s ease;
+  padding: 10px 15px;
+
+  &__visible {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .drawer__header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    p {
+      font-size: small;
+      margin-left: 10px;
+    }
+  }
+
+  .drawer__content {
+    .content__list {
+      margin-top: 15px;
+
+      .list__item {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        font-size: small;
+
+        svg {
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+}

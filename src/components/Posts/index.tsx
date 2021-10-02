@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
-import { CardWrapper, Card, Spinner, BreadCrumb } from "@ui";
+import { CardWrapper, Card, Spinner, BreadCrumb, GoTop } from "@ui";
 import Controls from "./Controls";
 import {
   AlertOctagonIcon,
@@ -9,7 +9,7 @@ import {
   CircleIcon,
   CommentsIcon,
   HeartIcon,
-  ThumbUpIcon,
+  UpsIcon,
   UserIcon,
 } from "@icon";
 
@@ -19,6 +19,7 @@ import { logger, roundUp } from "@utils/helpers";
 import { Post, SearchItem, Pagination, BookmarkPost } from "@interface/reddit";
 
 import styles from "@styles/Posts/index.module.scss";
+import Layout from "@components/Layout";
 
 const PostsPage: React.FC = () => {
   const history = useHistory();
@@ -68,6 +69,8 @@ const PostsPage: React.FC = () => {
     } catch (error) {
       setError(true);
     }
+
+    setLoading(false);
   };
 
   const fetchFav = () => {
@@ -237,8 +240,6 @@ const PostsPage: React.FC = () => {
     const onLoad = async () => {
       await fetchSubreddit();
       await getPostsLoad();
-
-      setLoading(false);
     };
 
     onLoad();
@@ -246,114 +247,119 @@ const PostsPage: React.FC = () => {
   }, []);
 
   return (
-    <div className={styles.posts}>
-      <div className={styles.posts__info}>
-        <div className={styles.posts__navigation}>
-          <BreadCrumb
-            nav={[
-              {
-                text: subredditId,
-              },
-            ]}
-          />
+    <Layout
+      nav={[
+        {
+          text: subredditId,
+        },
+      ]}
+    >
+      <div className={styles.posts}>
+        <div className={styles.posts__info}>
+          <div className={styles.info__header}>
+            <div className={styles.details__wrapper}>
+              <h1 className={styles.posts_title}>{subredditId}</h1>
 
-          <div className={styles.nav__actions} onClick={onChangeFav}>
-            <HeartIcon added={subreddit !== null && !!subreddit.added} />
+              <p className={styles.posts__desc}>
+                {subreddit?.public_description ??
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro, facere!"}
+              </p>
+
+              <ul className={styles.details__list}>
+                <li
+                  className={`${styles.list__item} pointer`}
+                  onClick={onChangeFav}
+                >
+                  <HeartIcon added={subreddit !== null && !!subreddit.added} />
+                  Favourite
+                </li>
+
+                <li className={styles.list__item}>
+                  {<UserIcon />}
+                  {subreddit ? roundUp(subreddit.subscribers) : "0"}
+                </li>
+              </ul>
+            </div>
+
+            <Controls
+              subredditId={subredditId}
+              setPosts={setPosts}
+              setLoading={setLoading}
+              setError={setError}
+              checkIsCreated={checkIsCreated}
+            />
           </div>
+
+          {!error && posts.length !== 0 && (
+            <CardWrapper
+              className={styles.container__items}
+              loadMore={pagination.next ? loadMore : undefined}
+            >
+              {posts.map((item, index) => {
+                return (
+                  <Card
+                    key={index}
+                    title={item.title}
+                    author={item.author}
+                    route="/r"
+                    actions={[
+                      {
+                        text: `Bookmark`,
+                        icon: <BookmarkIcon added={item.added ?? false} />,
+                        onClick: () => {
+                          onChangeBookmark(item, index);
+                        },
+                      },
+                      {
+                        text: `${roundUp(item.num_comments)} Comments`,
+                        icon: <CommentsIcon />,
+                        onClick: async () => {
+                          const commentSlug = item.permalink
+                            .split(`${item.id}/`)[1]
+                            .replace("/", "");
+
+                          const url = `/r/${subredditId}/comments/${item.id}/${commentSlug}`;
+
+                          history.push(url);
+                        },
+                      },
+                      {
+                        text: `${roundUp(item.ups)} Ups`,
+                        icon: <UpsIcon />,
+                      },
+                      ...(() => {
+                        if (item.created) {
+                          return [
+                            {
+                              text: `Created`,
+                              icon: <CircleIcon />,
+                              className: "isCreated",
+                            },
+                          ];
+                        }
+
+                        return [];
+                      })(),
+                    ]}
+                  />
+                );
+              })}
+            </CardWrapper>
+          )}
+
+          {loading && <Spinner size="xl" />}
+
+          {error && (
+            <h3 className={styles.posts__error}>
+              <AlertOctagonIcon />
+              Failed to fetch
+            </h3>
+          )}
         </div>
 
-        <div className={styles.info__header}>
-          <div className={styles.details__wrapper}>
-            <h1 className={styles.posts_title}>{subredditId}</h1>
-
-            <p className={styles.posts__desc}>
-              {subreddit?.public_description}
-            </p>
-
-            <ul className={styles.details__list}>
-              <li className={styles.list__item}>
-                {<UserIcon />}{" "}
-                {subreddit ? roundUp(subreddit.subscribers) : "0"}
-              </li>
-            </ul>
-          </div>
-
-          <Controls
-            subredditId={subredditId}
-            setPosts={setPosts}
-            setLoading={setLoading}
-            setError={setError}
-            checkIsCreated={checkIsCreated}
-          />
-        </div>
-
-        {!error && posts.length !== 0 && (
-          <CardWrapper
-            className={styles.container__items}
-            loadMore={pagination.next ? loadMore : undefined}
-          >
-            {posts.map((item, index) => {
-              return (
-                <Card
-                  key={index}
-                  title={item.title}
-                  author={item.author}
-                  route="/r"
-                  actions={[
-                    {
-                      text: `${roundUp(item.ups)} Ups`,
-                      icon: <ThumbUpIcon />,
-                    },
-                    {
-                      text: `${roundUp(item.num_comments)} Comments`,
-                      icon: <CommentsIcon />,
-                      onClick: async () => {
-                        const commentSlug = item.permalink
-                          .split(`${item.id}/`)[1]
-                          .replace("/", "");
-
-                        const url = `/r/${subredditId}/comments/${item.id}/${commentSlug}`;
-
-                        history.push(url);
-                      },
-                    },
-                    {
-                      text: `Bookmark`,
-                      icon: <BookmarkIcon added={item.added ?? false} />,
-                      onClick: () => {
-                        onChangeBookmark(item, index);
-                      },
-                    },
-                    ...(() => {
-                      if (item.created) {
-                        return [
-                          {
-                            text: `Created`,
-                            icon: <CircleIcon />,
-                            className: "isCreated",
-                          },
-                        ];
-                      }
-
-                      return [];
-                    })(),
-                  ]}
-                />
-              );
-            })}
-          </CardWrapper>
-        )}
-
-        {loading && <Spinner size="xl" />}
-
-        {error && (
-          <h3 className={styles.posts__error}>
-            <AlertOctagonIcon />
-            Failed to fetch
-          </h3>
-        )}
+        <GoTop />
       </div>
-    </div>
+    </Layout>
   );
 };
 

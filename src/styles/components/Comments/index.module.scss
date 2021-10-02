@@ -1,40 +1,5 @@
 .container {
   .container__header {
-    .top__header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-
-      .container__timer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 30px;
-
-        .timer {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-right: 10px;
-
-          svg {
-            margin-right: 5px;
-          }
-        }
-
-        button {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-
-          svg {
-            margin-right: 0;
-            margin-left: 5px;
-          }
-        }
-      }
-    }
-
     .header__title {
       margin: 16px 0 5px 0;
     }
@@ -65,6 +30,15 @@
             svg {
               color: var(--pink-500);
               fill: var(--pink-500);
+            }
+          }
+        }
+
+        &.stat__create {
+          &:hover {
+            svg {
+              color: var(--green-500);
+              fill: var(--green-500);
             }
           }
         }

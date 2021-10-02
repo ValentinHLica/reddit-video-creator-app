@@ -1,27 +1,16 @@
 .posts {
   .posts__info {
-    .posts__navigation {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-
-      .nav__actions {
-        svg {
-          cursor: pointer;
-        }
-      }
-    }
-
     .info__header {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
+      margin-bottom: 15px;
 
       .details__wrapper {
         margin-right: 10px;
 
         .posts_title {
-          margin: 16px 0 5px 0;
+          margin-bottom: 5px;
         }
 
         .posts__desc {
@@ -29,15 +18,24 @@
           line-height: 16px;
           font-size: 14px;
           opacity: 0.9;
-          margin-bottom: 5px;
+          margin-bottom: 15px;
         }
 
         .details__list {
+          display: flex;
+          align-items: center;
+
           .list__item {
             display: flex;
             align-items: center;
             font-size: 13px;
             opacity: 0.9;
+
+            margin-right: 10px;
+
+            &:last-child {
+              margin-right: none;
+            }
 
             svg {
               margin-right: 5px;

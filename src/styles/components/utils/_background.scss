@@ -1,4 +1,10 @@
 @mixin background-theme {
+  &__empty {
+    background: transparent;
+    color: var(--gray-900);
+    box-shadow: none;
+  }
+
   &__primary {
     background: linear-gradient(180deg, var(--blue-500), var(--blue-600));
 
