@@ -40,10 +40,6 @@ export const ContextProvider: React.FC = ({ children }) => {
     setTheme(selectedTheme);
   };
 
-  const conamiCode = () => {
-    // todo
-  };
-
   useEffect(() => {
     const body = document.querySelector("body") as HTMLBodyElement;
     body.dataset.theme = theme;

@@ -7,12 +7,13 @@ const assetsPath = join(buildPath, "assets");
 const fontPath = join(assetsPath, "font");
 const imagePath = join(assetsPath, "images");
 const tempPath = join(app.getPath("temp"), "reddit-video-creator");
+const renderDir = join(tempPath, "render");
 
 const cliPath = join(buildPath, "cli");
 const balconPath = join(cliPath, "balcon", "balcon.exe");
 const ffprobePath = join(cliPath, "ffmpeg", "ffprobe.exe");
 const ffmpegPath = join(cliPath, "ffmpeg", "ffmpeg.exe");
-const nodeJsPath = join(cliPath, "nodejs");
+const renderPath = join(cliPath, "render", "render.exe");
 
 export {
   assetsPath,
@@ -23,5 +24,7 @@ export {
   balconPath,
   ffprobePath,
   ffmpegPath,
-  nodeJsPath,
+  renderPath,
+  renderDir,
+  cliPath,
 };

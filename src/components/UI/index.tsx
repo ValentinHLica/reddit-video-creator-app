@@ -9,6 +9,7 @@ import Modal from "./Modal";
 import OfflineNotification from "./OfflineNotification";
 import Spinner from "./Spinner";
 import ThemeSwitcher from "./ThemeSwitcher";
+import Tabs from "./Tabs";
 
 export {
   BreadCrumb,
@@ -22,4 +23,5 @@ export {
   OfflineNotification,
   Spinner,
   ThemeSwitcher,
+  Tabs,
 };

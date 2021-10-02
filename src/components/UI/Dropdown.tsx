@@ -9,7 +9,7 @@ import styles from "@styles/UI/dropdown.module.scss";
 
 type Props = {
   icon?: JSX.Element;
-  text: string;
+  text?: string;
   size?: Size;
   type?: Type;
   items: ControlsListItem[];
@@ -53,9 +53,9 @@ const Dropdown: React.FC<Props> = ({
         onClick={() => {
           setVisible(true);
         }}
-      >
-        {icon} {text}
-      </Button>
+        icon={icon}
+        text={text}
+      />
 
       <ul
         className={`${styles.posts__controls} ${

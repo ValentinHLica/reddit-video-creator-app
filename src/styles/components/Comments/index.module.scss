@@ -40,11 +40,23 @@
     }
 
     .header__stats {
+      display: flex;
+      align-items: center;
+
       .stat {
         display: flex;
         align-items: center;
         font-size: 13px;
         opacity: 0.9;
+        margin-right: 10px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        &.stat__bookmark {
+          cursor: pointer;
+        }
 
         svg {
           margin-right: 5px;

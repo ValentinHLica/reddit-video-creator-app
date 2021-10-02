@@ -43,9 +43,12 @@ const OutputVideo: React.FC = () => {
       <div className={styles.container}>
         <Input readOnly placeholder={outputPath ?? ".."} size="xs" />
 
-        <Button onClick={updatePath} size="xs">
-          <FolderIcon /> Change Folder
-        </Button>
+        <Button
+          onClick={updatePath}
+          size="xs"
+          text="Change Folder"
+          icon={<FolderIcon />}
+        />
       </div>
     </Card>
   );

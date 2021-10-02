@@ -6,9 +6,11 @@
   "main": "public/main.js",
   "homepage": "./",
   "scripts": {
+    "copy:exe": "cp ./public/cli/render/render.exe ./build/cli/render",
     "clear:build": "rm -rf dist build",
     "start:ui": "react-app-rewired start",
     "build:ui": "react-app-rewired build",
+    "build:exe": "pkg --targets=node16-win-x64 --output=./public/cli/render/render.exe ./public/cli/render/render.js && npm run copy:exe",
     "dev": "concurrently -k \"cross-env BROWSER=none npm run start:ui\" \"wait-on tcp:3000 && electron .\"",
     "build": "npm run clear:build && npm run build:ui && electron-builder -c.extraMetadata.main=build/main.js"
   },
@@ -89,6 +91,7 @@
     "cross-env": "^7.0.3",
     "electron": "11.2.1",
     "electron-builder": "^22.11.7",
+    "pkg": "^5.3.3",
     "react-app-rewire-alias": "^1.0.3",
     "react-app-rewired": "^2.1.8",
     "wait-on": "^6.0.0"

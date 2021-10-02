@@ -151,7 +151,7 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
             placeholder="Search subreddits..."
             size="sm"
           />
-          <Button size="sm">Search</Button>
+          <Button size="sm" text="Search" />
         </form>
       </div>
 

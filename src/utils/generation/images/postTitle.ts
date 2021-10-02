@@ -2,13 +2,13 @@ import { join } from "path";
 
 import Jimp from "jimp";
 
-import { assetsPath, dataPath, fontPath, tempPath } from "@config/paths";
+import { assetsPath, dataPath, fontPath, renderDir } from "@config/paths";
 import { commentDetails, imageDetails } from "@config/image";
 import { FontFace } from "@interface/image";
 import { generateVoting } from "./voting";
 import { getFolders, createRandomString, logger } from "@utils/helpers";
-import generateAudio from "@utils/generation/audio";
-import { generateVideo } from "@utils/generation/video";
+// import generateAudio from "@utils/generation/audio";
+// import { generateVideo } from "@utils/generation/video";
 
 const { writeFileSync, existsSync, mkdirSync, readFileSync } =
   window.require("fs");
@@ -120,10 +120,10 @@ export const createPostTitle = async ({
     );
 
     // Read text
-    const folders = getFolders(tempPath);
+    const folders = getFolders(renderDir);
 
     const folderPath = join(
-      tempPath,
+      renderDir,
       `${folders.length}-${createRandomString(4)}`
     );
 
@@ -133,7 +133,6 @@ export const createPostTitle = async ({
 
     const imagePath = join(folderPath, "image.jpg");
     const textPath = join(folderPath, "text.txt");
-    const audioPath = join(folderPath, "audio.wav");
 
     // Write image
     logger("Creating post title image", "action");
@@ -144,9 +143,11 @@ export const createPostTitle = async ({
 
     writeFileSync(textPath, title);
 
-    const duration = await generateAudio(textPath, audioPath);
+    // const audioPath = join(folderPath, "audio.wav");
 
-    await generateVideo(imagePath, audioPath, folderPath, duration);
+    // const duration = await generateAudio(textPath, audioPath);
+
+    // await generateVideo(imagePath, audioPath, folderPath, duration);
   } catch (err) {
     console.log(err);
   }

@@ -22,8 +22,10 @@
     align-items: center;
     justify-content: space-between;
 
-    svg {
-      margin-right: 10px;
+    .text {
+      &.text_with_icon {
+        margin-left: 10px;
+      }
     }
   }
 

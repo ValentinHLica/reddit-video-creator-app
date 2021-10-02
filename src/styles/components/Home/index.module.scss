@@ -22,10 +22,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 20px;
   }
 
   .container__title {
     text-align: center;
     margin: 24px 0;
+  }
+
+  .no_bookmarks {
+    text-align: center;
+    margin-top: 30px;
   }
 }

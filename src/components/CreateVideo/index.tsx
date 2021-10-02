@@ -77,7 +77,7 @@ const CreateVideoPage: React.FC = () => {
         <span>
           <AlertTriangleIcon /> <h1>You have not selected any comments</h1>
         </span>
-        <Button url="/">Go Back</Button>
+        <Button url="/" text="Go Back" />
       </div>
     );
   }
@@ -88,6 +88,12 @@ const CreateVideoPage: React.FC = () => {
     <div className={styles.container}>
       <BreadCrumb
         nav={[
+          {
+            text: location.state.post.subreddit,
+            onClick: () => {
+              history.push(`/r/${location.state.post.subreddit}`);
+            },
+          },
           {
             text: location.state.post.title,
             onClick: () => {

@@ -500,18 +500,18 @@ export const StarIcon = () => (
   </svg>
 );
 
-export const BookmarkIcon = () => (
+export const BookmarkIcon = ({ added }: { added: boolean }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
+    width="1em"
+    height="1em"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="icon"
+    className={`icon ${added ? "isBookmark" : ""}`}
   >
     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
   </svg>
@@ -807,5 +807,24 @@ export const SlashIcon = () => (
   >
     <circle cx="12" cy="12" r="10"></circle>
     <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+  </svg>
+);
+
+export const MenuIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="icon"
+  >
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
   </svg>
 );

@@ -4,12 +4,17 @@ import { useParams, useHistory } from "react-router-dom";
 import { Spinner, BreadCrumb, GoTop, Button, Modal } from "@ui";
 import CommentCard from "./CommentCard";
 import OutputVideo from "@components/Settings/OutputVideo";
-import { ClockIcon, SimpleArrowRightIcon, ThumbUpIcon } from "@icon";
+import {
+  BookmarkIcon,
+  ClockIcon,
+  SimpleArrowRightIcon,
+  ThumbUpIcon,
+} from "@icon";
 
 import { getComments } from "@utils/redditApi";
-import { countWords, roundUp } from "@utils/helpers";
+import { countWords, logger, roundUp } from "@utils/helpers";
 
-import { Comment, Post } from "@interface/reddit";
+import { BookmarkPost, Comment, Post } from "@interface/reddit";
 
 import styles from "@styles/Comments/index.module.scss";
 
@@ -28,6 +33,7 @@ const CommentsPage: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [fixedTimer, setFixedTimer] = useState<boolean>(false);
   const [outputPathModal, setOutputPathModal] = useState<boolean>(false);
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
   const fetchComments = async () => {
     const { comments, postDetails } = await getComments(
@@ -116,8 +122,47 @@ const CommentsPage: React.FC = () => {
     });
   };
 
+  const checkBookmark = () => {
+    let bookmark: BookmarkPost = {};
+
+    try {
+      bookmark = JSON.parse(localStorage.getItem("bookmark") ?? "{}");
+    } catch (error) {
+      logger("Data saved in localStorage is corrupted!", "error");
+    }
+
+    setIsBookmarked(!!bookmark[subredditId][commentSlug]);
+  };
+
+  const onBookmark = () => {
+    let bookmark: BookmarkPost = {};
+
+    try {
+      bookmark = JSON.parse(localStorage.getItem("bookmark") ?? "{}");
+    } catch (error) {
+      logger("Data saved in localStorage is corrupted!", "error");
+    }
+
+    if (isBookmarked) {
+      delete bookmark[subredditId][commentSlug];
+    } else {
+      if (bookmark[subredditId]) {
+        bookmark[subredditId][commentSlug] = { post: post as Post };
+      } else {
+        bookmark[subredditId] = {
+          [commentSlug]: { post: post as Post },
+        };
+      }
+    }
+
+    localStorage.setItem("bookmark", JSON.stringify(bookmark));
+
+    setIsBookmarked(!isBookmarked);
+  };
+
   useEffect(() => {
     fetchComments();
+    checkBookmark();
 
     const handleScroll = () => {
       setFixedTimer(window.pageYOffset > 30);
@@ -173,9 +218,9 @@ const CommentsPage: React.FC = () => {
                 type={timerMinutes > 10 ? "success" : "primary"}
                 onClick={createVideo}
                 size="xs"
-              >
-                Done <SimpleArrowRightIcon />
-              </Button>
+                text="Done"
+                icon={<SimpleArrowRightIcon />}
+              />
             )}
           </div>
         </div>
@@ -185,6 +230,13 @@ const CommentsPage: React.FC = () => {
         <ul className={styles.header__stats}>
           <li className={styles.stat}>
             <ThumbUpIcon /> {roundUp(post.ups)} Ups
+          </li>
+
+          <li
+            className={`${styles.stat} ${styles.stat__bookmark}`}
+            onClick={onBookmark}
+          >
+            <BookmarkIcon added={isBookmarked} /> Bookmark
           </li>
         </ul>
       </div>
@@ -212,9 +264,9 @@ const CommentsPage: React.FC = () => {
         }`}
         type={timerMinutes > 10 ? "success" : "primary"}
         onClick={timerMinutes ? createVideo : undefined}
-      >
-        {timerContent}
-      </Button>
+        text={`${timerMinutes} minutes`}
+        icon={<ClockIcon />}
+      />
 
       <GoTop />
 

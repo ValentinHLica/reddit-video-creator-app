@@ -33,9 +33,8 @@ const GoTop: React.FC = () => {
         visible ? styles.container__visible : ""
       }`}
       onClick={goToTop}
-    >
-      <ArrowUpIcon />
-    </Button>
+      icon={<ArrowUpIcon />}
+    />
   );
 };
 

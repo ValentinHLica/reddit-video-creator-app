@@ -2,14 +2,14 @@ import { join } from "path";
 
 import Jimp from "jimp";
 
-import { fontPath, imagePath, tempPath } from "@config/paths";
+import { fontPath, imagePath, renderDir } from "@config/paths";
 import { imageDetails, commentDetails } from "@config/image";
 import { FontFace } from "@interface/image";
 import { Comment } from "@interface/video";
 
 import { getFolders, createRandomString, logger } from "@utils/helpers";
-import generateAudio from "@utils/generation/audio";
-import { generateVideo } from "@utils/generation/video";
+// import generateAudio from "@utils/generation/audio";
+// import { generateVideo } from "@utils/generation/video";
 
 const { writeFileSync, mkdirSync } = window.require("fs");
 
@@ -119,11 +119,11 @@ export const createCommentImage = async (comments: Comment[]) => {
           : mergedText;
 
       // Get list of folders in temp dir
-      const folders = getFolders(tempPath);
+      const folders = getFolders(renderDir);
 
       // Generate new folder path
       const folderPath = join(
-        tempPath,
+        renderDir,
         `${folders.length}-${createRandomString(4)}`
       );
 
@@ -147,11 +147,11 @@ export const createCommentImage = async (comments: Comment[]) => {
 
       logger("Image created successfully", "success");
 
-      const audioPath = join(folderPath, "audio.wav");
+      // const audioPath = join(folderPath, "audio.wav");
 
-      const duration = await generateAudio(textPath, audioPath);
+      // const duration = await generateAudio(textPath, audioPath);
 
-      await generateVideo(imagePath, audioPath, folderPath, duration);
+      // await generateVideo(imagePath, audioPath, folderPath, duration);
 
       await writeText(comment);
     };

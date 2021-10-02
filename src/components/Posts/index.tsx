@@ -5,6 +5,7 @@ import { CardWrapper, Card, Spinner, BreadCrumb } from "@ui";
 import Controls from "./Controls";
 import {
   AlertOctagonIcon,
+  BookmarkIcon,
   CommentsIcon,
   HeartIcon,
   ThumbUpIcon,
@@ -14,7 +15,7 @@ import {
 import { getPosts, search } from "@utils/redditApi";
 import { logger, roundUp } from "@utils/helpers";
 
-import { Post, SearchItem, Pagination } from "@interface/reddit";
+import { Post, SearchItem, Pagination, BookmarkPost } from "@interface/reddit";
 
 import styles from "@styles/Posts/index.module.scss";
 
@@ -30,9 +31,16 @@ const PostsPage: React.FC = () => {
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
-  const [favourite, setFavourite] = useState<SearchItem[]>([]);
 
   const getPostsLoad = async () => {
+    let bookmark: BookmarkPost = {};
+
+    try {
+      bookmark = JSON.parse(localStorage.getItem("bookmark") ?? "{}");
+    } catch (error) {
+      logger("Data saved in localStorage is corrupted!", "error");
+    }
+
     try {
       const { data, pagination: resultsPagination } = await getPosts(
         subredditId,
@@ -40,15 +48,44 @@ const PostsPage: React.FC = () => {
       );
 
       setPagination(resultsPagination);
+
+      if (Object.keys(bookmark).length !== 0) {
+        setPosts(
+          data.map((post) => ({
+            ...post,
+            added:
+              !!bookmark[subredditId][
+                post.permalink.split(`${post.id}/`)[1].replace("/", "")
+              ],
+          }))
+        );
+
+        return;
+      }
+
       setPosts(data);
     } catch (error) {
       setError(true);
     }
   };
 
+  const fetchFav = () => {
+    try {
+      return JSON.parse(
+        localStorage.getItem("favourite") ?? "[]"
+      ) as SearchItem[];
+    } catch (err) {
+      logger("Data saved in localStorage is corrupted!", "error");
+
+      return [];
+    }
+  };
+
   const fetchSubreddit = async () => {
     try {
       const { data } = await search(`/r/${subredditId}`);
+
+      const favourite = fetchFav();
 
       const addedFilter = data.map((subreddit) => {
         let isAdded = false;
@@ -81,6 +118,8 @@ const PostsPage: React.FC = () => {
 
     const added = subreddit.added;
 
+    const favourite = fetchFav();
+
     if (added) {
       const newFav = favourite.filter((fav) => fav.url !== subreddit?.url);
       localStorage.setItem("favourite", JSON.stringify(newFav));
@@ -95,6 +134,14 @@ const PostsPage: React.FC = () => {
   const loadMore = async () => {
     setError(false);
 
+    let bookmark: BookmarkPost = {};
+
+    try {
+      bookmark = JSON.parse(localStorage.getItem("bookmark") ?? "{}");
+    } catch (error) {
+      logger("Data saved in localStorage is corrupted!", "error");
+    }
+
     try {
       const { data, pagination: resultsPagination } = await getPosts(
         subredditId,
@@ -105,7 +152,16 @@ const PostsPage: React.FC = () => {
 
       setPagination(resultsPagination);
       setPosts((prevState) => {
-        return [...(prevState as Post[]), ...data];
+        return [
+          ...(prevState as Post[]),
+          ...data.map((post) => ({
+            ...post,
+            added:
+              !!bookmark[subredditId][
+                post.permalink.split(`${post.id}/`)[1].replace("/", "")
+              ],
+          })),
+        ];
       });
     } catch (err) {
       console.log(err);
@@ -114,25 +170,41 @@ const PostsPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchFav = () => {
-      const data = localStorage.getItem("favourite");
+  const onChangeBookmark = (post: Post, index: number) => {
+    let bookmark: BookmarkPost = {};
 
-      if (data) {
-        try {
-          const favourite = JSON.parse(data) as SearchItem[];
+    try {
+      bookmark = JSON.parse(localStorage.getItem("bookmark") ?? "{}");
+    } catch (error) {
+      logger("Data saved in localStorage is corrupted!", "error");
+    }
 
-          setFavourite(
-            favourite.map((item: SearchItem) => ({ ...item, added: true }))
-          );
-        } catch (err) {
-          logger("Data saved in localStorage is corrupted!", "error");
-        }
+    const commentSlug = post.permalink.split(`${post.id}/`)[1].replace("/", "");
+
+    if (post.added) {
+      delete bookmark[post.subreddit][commentSlug];
+    } else {
+      if (bookmark[post.subreddit]) {
+        bookmark[post.subreddit][commentSlug] = { post };
+      } else {
+        bookmark[post.subreddit] = {
+          [commentSlug]: { post },
+        };
       }
-    };
+    }
 
+    localStorage.setItem("bookmark", JSON.stringify(bookmark));
+
+    setPosts((prevState) => {
+      return prevState.map((post, postIndex) => ({
+        ...post,
+        added: postIndex === index ? !post.added : post.added,
+      }));
+    });
+  };
+
+  useEffect(() => {
     const onLoad = async () => {
-      fetchFav();
       await fetchSubreddit();
       await getPostsLoad();
 
@@ -156,7 +228,7 @@ const PostsPage: React.FC = () => {
           />
 
           <div className={styles.nav__actions} onClick={onChangeFav}>
-            <HeartIcon added={subreddit !== null && subreddit.added === true} />
+            <HeartIcon added={subreddit !== null && !!subreddit.added} />
           </div>
         </div>
 
@@ -212,6 +284,13 @@ const PostsPage: React.FC = () => {
                         const url = `/r/${subredditId}/comments/${item.id}/${commentSlug}`;
 
                         history.push(url);
+                      },
+                    },
+                    {
+                      text: `Bookmark`,
+                      icon: <BookmarkIcon added={item.added ?? false} />,
+                      onClick: () => {
+                        onChangeBookmark(item, index);
                       },
                     },
                   ]}

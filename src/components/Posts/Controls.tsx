@@ -116,9 +116,7 @@ const Controls: React.FC<Props> = ({
             }}
             key={index}
           >
-            <Button type={type} size="xs">
-              {icon} {text}
-            </Button>
+            <Button type={type} size="xs" text={text} icon={icon} />
           </li>
         );
       })}

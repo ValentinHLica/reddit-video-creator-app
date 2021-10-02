@@ -30,9 +30,8 @@ const CardWrapper: React.FC<Props> = ({
             }}
             size="xs"
             loading={loading}
-          >
-            Load More
-          </Button>
+            text="Load More"
+          />
         </div>
       )}
     </div>

@@ -33,7 +33,7 @@
     [x]. use ReactJS for front end and maybe use a framework
     [x]. Krijo nje design per app ne figma 
     []. Create ni si tip tutoriali ku shpjego dhe ndrysho settingse per preferencat e tij
-    []x. Search subreddits
+    [x]. Search subreddits
     [x]. Open post
     [x]. select post Comments
     [x]. count word in minutes
@@ -42,6 +42,5 @@
         []. npm i hddserial   -  merr id e hdd dhe ruje ne server
 
 
-[]. Bugs
-    []. Rregullo ate qe te mos krijoje nje imaz kur te overflow posht
+
 

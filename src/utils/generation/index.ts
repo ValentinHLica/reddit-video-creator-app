@@ -1,12 +1,35 @@
 import { Post } from "@interface/reddit";
 import { Comment } from "@interface/video";
 
-import { resetTemp, roundUp } from "@utils/helpers";
+import { logger, resetTemp, roundUp } from "@utils/helpers";
 import { measureComments } from "@utils/generation/images/measureComments";
 import { transformComments } from "@utils/generation/images/transfromComments";
 import { createCommentImage } from "@utils/generation/images/image";
 import { createPostTitle } from "./images/postTitle";
-import { mergeVideos } from "./video";
+import { renderPath } from "@config/paths";
+import { mergeVideos } from "@utils/generation/video";
+
+const { execFile } = window.require("child_process");
+
+/**
+ * Render video
+ */
+const renderVideo = async () => {
+  return new Promise((resolve) => {
+    logger("Rendering Video", "action");
+
+    execFile(renderPath, (error: any, stdout: any) => {
+      if (error) {
+        logger("Video couldn't render successfully", "error");
+        throw error;
+      }
+
+      logger("Video rendered successfully", "success");
+
+      resolve(null);
+    });
+  });
+};
 
 /**
  * Generate single comment tree images
@@ -36,6 +59,8 @@ export const createPost = async (
     for (const comment of transformedComments) {
       await createCommentImage(comment);
     }
+
+    await renderVideo();
 
     return await mergeVideos(post.title, path);
   } catch (err) {

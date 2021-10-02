@@ -1,4 +1,4 @@
-import { tempPath } from "@config/paths";
+import { renderDir, tempPath, cliPath } from "@config/paths";
 
 const {
   mkdirSync,
@@ -7,9 +7,11 @@ const {
   rmdirSync,
   unlinkSync,
   lstatSync,
-  statSync,
+  writeFileSync,
+  readFileSync,
+  // statSync,
 } = window.require("fs");
-const { join } = window.require("path");
+const { join, basename } = window.require("path");
 
 /**
  * Logger handler for action, success, error
@@ -44,16 +46,16 @@ export const createRandomString = (size: number) =>
  * @returns List of files and folders inside folder
  */
 export const getFolders = (path: string | null): string[] => {
-  const files = readdirSync(path) ?? [];
+  const files: string[] = readdirSync(path) ?? [];
 
-  files.sort(function (a: string, b: string) {
-    return (
-      statSync(join(path, a)).mtime.getTime() -
-      statSync(join(path, b)).mtime.getTime()
-    );
-  });
+  const filesList = [];
 
-  return files;
+  for (const file of files) {
+    const index = parseInt(file.split("-")[0], 10);
+    filesList[index] = file;
+  }
+
+  return filesList;
 };
 
 /**
@@ -79,7 +81,7 @@ export const roundUp = (number: number): string => {
  */
 export const countWords = (sentence: string): number => {
   const words = sentence.split(" ");
-  return parseFloat((words.length / 130).toFixed(1).replace(".0", ""));
+  return parseFloat((words.length / 170).toFixed(1).replace(".0", ""));
 };
 
 /**
@@ -100,12 +102,55 @@ export const deleteFolder = (path: string) => {
   }
 };
 
+// Copy files
+const copyFileSync = (source: string, target: string) => {
+  let targetFile = target;
+
+  if (existsSync(target)) {
+    if (lstatSync(target).isDirectory()) {
+      targetFile = join(target, basename(source));
+    }
+  }
+
+  writeFileSync(targetFile, readFileSync(source));
+};
+
+// Copy dir
+const copyFolderRecursiveSync = (source: string, target: string) => {
+  var files = [];
+
+  // Check if folder needs to be created or integrated
+  var targetFolder = join(target, basename(source));
+  if (!existsSync(targetFolder)) {
+    mkdirSync(targetFolder);
+  }
+
+  // Copy
+  if (lstatSync(source).isDirectory()) {
+    files = readdirSync(source);
+    files.forEach(function (file: string) {
+      var curSource = join(source, file);
+      if (lstatSync(curSource).isDirectory()) {
+        copyFolderRecursiveSync(curSource, targetFolder);
+      } else {
+        copyFileSync(curSource, targetFolder);
+      }
+    });
+  }
+};
+
 /**
  * Reset Temp folder for new process
  */
 export const resetTemp = async () => {
-  deleteFolder(tempPath);
-  mkdirSync(tempPath);
+  if (!existsSync(join(tempPath, "cli"))) {
+    mkdirSync(join(tempPath, "cli"));
+
+    copyFolderRecursiveSync(cliPath, tempPath);
+  }
+
+  deleteFolder(renderDir);
+  mkdirSync(renderDir);
 };
 
 /**

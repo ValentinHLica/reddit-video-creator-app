@@ -83,7 +83,7 @@ export const getPosts = async (
   const res = await fetch(url);
   const data = await res.json();
 
-  const fileredData = data.data.children.map((item: Posts) => {
+  const fileredData = data.data.children.map((item: Posts): Post => {
     const {
       data: {
         all_awardings,
@@ -115,6 +115,7 @@ export const getPosts = async (
       subreddit_name_prefixed,
       total_awards_received,
       ups,
+      added: false,
     };
   });
 
@@ -143,7 +144,6 @@ export const redditCheckup = async () => {
  * @param commentSlug Comment Slug
  */
 
-// todo clean up content to match desired input for creating video
 export const getComments = async (
   subredditId: string,
   commentId: string,
