@@ -100,21 +100,32 @@ ul {
 }
 
 .icon {
+  fill: transparent;
   transition: fill 0.3s ease, color 0.3s ease;
 }
 
 .isFav {
   fill: var(--red-500);
   color: var(--red-500);
-  box-shadow: 0 0;
 }
 
 .isBookmark {
   fill: var(--yellow-500);
   color: var(--yellow-500);
-  box-shadow: 0 0;
+}
+
+.isCreated {
+  svg {
+    fill: var(--pink-500);
+    color: var(--pink-500);
+  }
 }
 
 .user--item {
   cursor: unset !important;
+}
+
+svg {
+  fill: transparent;
+  transition: color 0.5s ease, fill 0.5s ease;
 }

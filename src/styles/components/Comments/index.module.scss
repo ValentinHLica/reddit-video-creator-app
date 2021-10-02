@@ -58,6 +58,17 @@
           cursor: pointer;
         }
 
+        &.stat__created {
+          cursor: pointer;
+
+          &:hover {
+            svg {
+              color: var(--pink-500);
+              fill: var(--pink-500);
+            }
+          }
+        }
+
         svg {
           margin-right: 5px;
         }

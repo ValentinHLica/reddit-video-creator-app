@@ -19,6 +19,7 @@ type Props = {
   setPosts: (posts: Post[]) => void;
   setLoading: (state: boolean) => void;
   setError: (state: boolean) => void;
+  checkIsCreated: (posts: Post[]) => Post[];
 };
 
 const Controls: React.FC<Props> = ({
@@ -26,6 +27,7 @@ const Controls: React.FC<Props> = ({
   setPosts,
   setLoading,
   setError,
+  checkIsCreated,
 }) => {
   const [controls, setControls] = useState<ControlsType>({
     filter: "hot",
@@ -71,7 +73,7 @@ const Controls: React.FC<Props> = ({
         controls.topFilter
       );
 
-      setPosts(data);
+      setPosts(checkIsCreated(data));
     } catch (error) {
       setError(true);
     }

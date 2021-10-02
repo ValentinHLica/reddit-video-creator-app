@@ -6,6 +6,7 @@ import Controls from "./Controls";
 import {
   AlertOctagonIcon,
   BookmarkIcon,
+  CircleIcon,
   CommentsIcon,
   HeartIcon,
   ThumbUpIcon,
@@ -51,7 +52,7 @@ const PostsPage: React.FC = () => {
 
       if (Object.keys(bookmark).length !== 0) {
         setPosts(
-          data.map((post) => ({
+          checkIsCreated(data).map((post) => ({
             ...post,
             added:
               !!bookmark[subredditId][
@@ -63,7 +64,7 @@ const PostsPage: React.FC = () => {
         return;
       }
 
-      setPosts(data);
+      setPosts(checkIsCreated(data));
     } catch (error) {
       setError(true);
     }
@@ -154,7 +155,7 @@ const PostsPage: React.FC = () => {
       setPosts((prevState) => {
         return [
           ...(prevState as Post[]),
-          ...data.map((post) => ({
+          ...checkIsCreated(data).map((post) => ({
             ...post,
             added:
               !!bookmark[subredditId][
@@ -201,6 +202,35 @@ const PostsPage: React.FC = () => {
         added: postIndex === index ? !post.added : post.added,
       }));
     });
+  };
+
+  const checkIsCreated = (data: Post[]): Post[] => {
+    let bookmark: BookmarkPost = {};
+
+    try {
+      bookmark = JSON.parse(localStorage.getItem("bookmark") ?? "{}");
+    } catch (error) {
+      logger("Data saved in localStorage is corrupted!", "error");
+    }
+
+    const check = (comment: Post) => {
+      const commentSlug = comment.permalink
+        .split(`${comment.id}/`)[1]
+        .replace("/", "");
+
+      if (bookmark[subredditId] && bookmark[subredditId][commentSlug]) {
+        if (bookmark[subredditId][commentSlug].created) {
+          return true;
+        }
+      }
+
+      return false;
+    };
+
+    return data.map((comment) => ({
+      ...comment,
+      created: check(comment),
+    }));
   };
 
   useEffect(() => {
@@ -253,6 +283,7 @@ const PostsPage: React.FC = () => {
             setPosts={setPosts}
             setLoading={setLoading}
             setError={setError}
+            checkIsCreated={checkIsCreated}
           />
         </div>
 
@@ -293,6 +324,19 @@ const PostsPage: React.FC = () => {
                         onChangeBookmark(item, index);
                       },
                     },
+                    ...(() => {
+                      if (item.created) {
+                        return [
+                          {
+                            text: `Created`,
+                            icon: <CircleIcon />,
+                            className: "isCreated",
+                          },
+                        ];
+                      }
+
+                      return [];
+                    })(),
                   ]}
                 />
               );

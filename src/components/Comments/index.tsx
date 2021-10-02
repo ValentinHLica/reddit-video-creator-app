@@ -6,6 +6,7 @@ import CommentCard from "./CommentCard";
 import OutputVideo from "@components/Settings/OutputVideo";
 import {
   BookmarkIcon,
+  CircleIcon,
   ClockIcon,
   SimpleArrowRightIcon,
   ThumbUpIcon,
@@ -34,6 +35,14 @@ const CommentsPage: React.FC = () => {
   const [fixedTimer, setFixedTimer] = useState<boolean>(false);
   const [outputPathModal, setOutputPathModal] = useState<boolean>(false);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const [isCreated, setIsCreated] = useState<number | null>(null);
+
+  const timerMinutes = countWords(
+    comments
+      .filter((c) => c.selected)
+      .map((c) => c.body)
+      .join("")
+  );
 
   const fetchComments = async () => {
     const { comments, postDetails } = await getComments(
@@ -44,6 +53,28 @@ const CommentsPage: React.FC = () => {
 
     setComments(comments);
     setPost(postDetails);
+  };
+
+  const onUsePrevComments = () => {
+    let bookmark: BookmarkPost = {};
+
+    try {
+      bookmark = JSON.parse(localStorage.getItem("bookmark") ?? "{}");
+    } catch (error) {
+      logger("Data saved in localStorage is corrupted!", "error");
+    }
+
+    if (bookmark[subredditId] && bookmark[subredditId][commentSlug]) {
+      const localComments = bookmark[subredditId][commentSlug].comments;
+      if (localComments) {
+        setComments((prevState) =>
+          prevState.map((comment) => ({
+            ...comment,
+            selected: localComments[comment.id],
+          }))
+        );
+      }
+    }
   };
 
   const onCheck = (index: number) => {
@@ -103,6 +134,43 @@ const CommentsPage: React.FC = () => {
     setComments(commentsCopy);
   };
 
+  const savePost = () => {
+    let bookmark: BookmarkPost = {};
+
+    try {
+      bookmark = JSON.parse(localStorage.getItem("bookmark") ?? "{}");
+    } catch (error) {
+      logger("Data saved in localStorage is corrupted!", "error");
+    }
+
+    const commentIdList: { [x: string]: true } = {};
+
+    for (const comment of comments) {
+      if (comment.selected) {
+        commentIdList[comment.id] = true;
+      }
+    }
+
+    const data = {
+      post: post as Post,
+      comments: commentIdList,
+      created: new Date(),
+      minutes: timerMinutes,
+    };
+
+    if (bookmark[subredditId]) {
+      bookmark[subredditId][commentSlug] = data;
+    } else {
+      bookmark[subredditId] = {
+        [commentSlug]: data,
+      };
+    }
+
+    localStorage.setItem("bookmark", JSON.stringify(bookmark));
+
+    setIsCreated(timerMinutes);
+  };
+
   const createVideo = () => {
     const outputPath = localStorage.getItem("output-path");
 
@@ -113,11 +181,15 @@ const CommentsPage: React.FC = () => {
       return;
     }
 
+    savePost();
+
     history.push({
       pathname: "/create-video",
       state: {
         comments: comments.filter((comment) => comment.selected),
         post,
+        commentSlug,
+        timerMinutes,
       },
     });
   };
@@ -132,6 +204,11 @@ const CommentsPage: React.FC = () => {
     }
 
     setIsBookmarked(!!bookmark[subredditId][commentSlug]);
+    setIsCreated(
+      bookmark[subredditId][commentSlug]
+        ? bookmark[subredditId][commentSlug].minutes ?? null
+        : null
+    );
   };
 
   const onBookmark = () => {
@@ -147,7 +224,14 @@ const CommentsPage: React.FC = () => {
       delete bookmark[subredditId][commentSlug];
     } else {
       if (bookmark[subredditId]) {
-        bookmark[subredditId][commentSlug] = { post: post as Post };
+        if (bookmark[subredditId][commentSlug]) {
+          bookmark[subredditId][commentSlug] = {
+            ...bookmark[subredditId][commentSlug],
+            post: post as Post,
+          };
+        } else {
+          bookmark[subredditId][commentSlug] = { post: post as Post };
+        }
       } else {
         bookmark[subredditId] = {
           [commentSlug]: { post: post as Post },
@@ -180,13 +264,6 @@ const CommentsPage: React.FC = () => {
   if (!post) {
     return <Spinner size="xl" />;
   }
-
-  const timerMinutes = countWords(
-    comments
-      .filter((c) => c.selected)
-      .map((c) => c.body)
-      .join("")
-  );
 
   const timerContent = (
     <Fragment>
@@ -238,6 +315,15 @@ const CommentsPage: React.FC = () => {
           >
             <BookmarkIcon added={isBookmarked} /> Bookmark
           </li>
+
+          {isCreated && (
+            <li
+              className={`${styles.stat} ${styles.stat__created}`}
+              onClick={onUsePrevComments}
+            >
+              <CircleIcon /> Use previous comments
+            </li>
+          )}
         </ul>
       </div>
 

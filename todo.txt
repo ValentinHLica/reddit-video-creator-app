@@ -42,5 +42,5 @@
         []. npm i hddserial   -  merr id e hdd dhe ruje ne server
 
 
-
+[]. implemento qe postin qe mund ta kemi bo video ta trregoje dhe komentet qe jan sgjedh ne fillim
 

@@ -21,6 +21,7 @@ import {
   BookmarkIcon,
   MenuIcon,
   SettingsIcon,
+  CircleIcon,
 } from "@icon";
 
 import { logger, roundUp } from "@utils/helpers";
@@ -66,7 +67,9 @@ const HomePage: React.FC = () => {
 
       for (const subreddit of Object.keys(localBookmark)) {
         for (const post of Object.keys(localBookmark[subreddit])) {
-          bookmarkList.push(localBookmark[subreddit][post].post);
+          const bookmark = localBookmark[subreddit][post];
+
+          bookmarkList.push({ ...bookmark.post, created: !!bookmark.created });
         }
       }
 
@@ -229,6 +232,20 @@ const HomePage: React.FC = () => {
                                 onChangeBookmark(item, index);
                               },
                             },
+
+                            ...(() => {
+                              if (item.created) {
+                                return [
+                                  {
+                                    text: `Created`,
+                                    icon: <CircleIcon />,
+                                    className: "isCreated",
+                                  },
+                                ];
+                              }
+
+                              return [];
+                            })(),
                           ]}
                         />
                       );

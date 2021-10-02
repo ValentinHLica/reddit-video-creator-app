@@ -18,6 +18,8 @@ const CreateVideoPage: React.FC = () => {
   const location = useLocation<{
     comments: Comment[];
     post: Post;
+    commentSlug: string;
+    timerMinutes: string;
   }>();
 
   const [loading, setLoading] = useState<boolean>(true);

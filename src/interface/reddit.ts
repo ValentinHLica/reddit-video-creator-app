@@ -37,6 +37,7 @@ export interface Post {
   num_comments: number;
   permalink: string;
   added?: boolean;
+  created?: boolean;
 }
 
 export interface Posts {
@@ -99,7 +100,10 @@ export type BookmarkPost = {
   [subredditId: string]: {
     [postSlug: string]: {
       created?: Date | null;
-      comments?: null;
+      minutes?: number;
+      comments?: {
+        [commentId: string]: true;
+      };
       post: Post;
     };
   };
