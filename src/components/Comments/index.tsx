@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
 import Layout from "@components/Layout";
-import { Spinner, BreadCrumb, GoTop, Button, Modal } from "@ui";
+import { Spinner, GoTop, Button, Modal } from "@ui";
 import CommentCard from "./CommentCard";
 import OutputVideo from "@components/Settings/OutputVideo";
 import { BookmarkIcon, CircleIcon, ClockIcon, PlayIcon, UpsIcon } from "@icon";

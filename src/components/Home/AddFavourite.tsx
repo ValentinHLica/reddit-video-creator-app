@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 
 import { Spinner, Card, CardWrapper, Input, Button } from "@ui";
 import Context from "@context";
-import { HeartIcon, PostIcon, UserIcon, ZapIcon } from "@icon";
+import { HeartIcon, UserIcon, ZapIcon } from "@icon";
 
 import { search } from "@utils/redditApi";
 import { roundUp } from "@utils/helpers";

@@ -49,4 +49,6 @@
         []. nje file tjtr ku poston kerkes per me u shtu
         []. per auth perdor hhd id dhe kjo do crytohet me ni kod dhe e qo ne server qe nese dikush e shikon ne network request nuk do kuptoje dote request 
         https://workers.cloudflare.com/
-        
+[]. implemento theme font background
+[]. Voice select
+[]. rregullo bugun ku shiko a ekziston ne temp reddit-video-creator

@@ -1,8 +1,7 @@
 import React, { Fragment, useContext } from "react";
 
 import Context from "@context";
-import { BreadCrumb, Button, Drawer } from "@ui";
-import { MenuIcon } from "@icon";
+import { BreadCrumb, Drawer } from "@ui";
 
 import styles from "@styles/layout.module.scss";
 

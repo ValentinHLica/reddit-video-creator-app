@@ -1,22 +1,18 @@
 .drawer {
   width: 200px;
   background-color: var(--gray-200);
-  box-shadow: -2px 0px 5px var(--gray-600);
+  box-shadow: -1px 0px 2px var(--gray-400);
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   transform: translateX(100%);
   visibility: hidden;
-  opacity: 0;
   z-index: 1;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0.3s ease,
-    opacity 0.3s ease;
-  padding: 10px 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0.3s ease;
 
   &__visible {
     visibility: visible;
-    opacity: 1;
     transform: translateX(0);
   }
 
@@ -24,6 +20,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    padding: 10px 15px;
 
     p {
       font-size: small;
@@ -40,6 +37,12 @@
         align-items: center;
         justify-content: flex-start;
         font-size: small;
+        padding: 5px 15px;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: var(--gray-300);
+        }
 
         svg {
           margin-right: 5px;

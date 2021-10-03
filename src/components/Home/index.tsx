@@ -2,15 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import Layout from "@components/Layout";
-import {
-  BreadCrumb,
-  CardWrapper,
-  Card,
-  Button,
-  Modal,
-  Tabs,
-  Dropdown,
-} from "@ui";
+import { CardWrapper, Card, Button, Modal, Tabs } from "@ui";
 import AddFavourite from "./AddFavourite";
 import {
   AddIcon,
@@ -19,8 +11,6 @@ import {
   UpsIcon,
   CommentsIcon,
   BookmarkIcon,
-  MenuIcon,
-  SettingsIcon,
   CircleIcon,
   ZapIcon,
 } from "@icon";
