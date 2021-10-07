@@ -20,8 +20,7 @@ body {
 
   @include light-theme();
 
-  .card__container,
-  .settings__card {
+  .card__container {
     @include light-theme();
     background-color: white;
     border-bottom: 1px solid var(--gray-400);
@@ -39,8 +38,7 @@ body {
   &[data-theme="dark"] {
     @include dark-theme();
 
-    .card__container,
-    .settings__card {
+    .card__container {
       @include dark-theme();
       border-bottom: 1px solid var(--gray-900);
     }
@@ -174,4 +172,19 @@ ul {
 
 .reddit-icon {
   fill: var(--red-500);
+}
+
+.video-icon {
+  fill: var(--red-500);
+  color: var(--red-500);
+}
+
+.folder-icon {
+  fill: var(--yellow-500);
+  color: var(--yellow-500);
+}
+
+.headphone-icon {
+  // fill: var(--green-500);
+  color: var(--green-500);
 }

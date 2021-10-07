@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
 import {
+  ArrowDownIcon,
+  ArrowUpIcon,
   ClockIcon,
   CollapseIcon,
   ExpandIcon,
@@ -18,6 +20,9 @@ import styles from "@styles/Comments/comment-card.module.scss";
 interface Props extends Comment {
   onCheck: () => void;
   onCollapse?: () => void;
+  onMove: (index: number, direction: "up" | "down") => void;
+  cardIndex: number;
+  commentsLength: number;
 }
 
 const CommentCard: React.FC<Props> = ({
@@ -31,6 +36,9 @@ const CommentCard: React.FC<Props> = ({
   onCollapse,
   collapse,
   visible,
+  onMove,
+  cardIndex,
+  commentsLength,
 }) => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
@@ -69,6 +77,39 @@ const CommentCard: React.FC<Props> = ({
             },
           },
         ];
+      }
+
+      return [];
+    })(),
+    { text: "", icon: <></>, className: styles.stat__collapse },
+    ...(() => {
+      if (depth === 0) {
+        const upArrow = {
+          icon: <ArrowUpIcon />,
+          text: "",
+          onClick: () => {
+            onMove(cardIndex, "up");
+          },
+        };
+
+        const downArrow = {
+          icon: <ArrowDownIcon />,
+          text: "",
+          onClick: () => {
+            onMove(cardIndex, "down");
+          },
+        };
+
+        switch (cardIndex) {
+          case 0:
+            return [downArrow];
+
+          case commentsLength - 1:
+            return [upArrow];
+
+          default:
+            return [upArrow, downArrow];
+        }
       }
 
       return [];

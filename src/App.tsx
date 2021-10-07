@@ -9,7 +9,6 @@ import PostsPage from "@components/Posts";
 import CommentsPage from "@components/Comments";
 import NotFoundPage from "@components/NotFound";
 import CreateVideoPage from "@components/CreateVideo";
-import SettingsPage from "@components/Settings";
 import TestPage from "@components/Test";
 
 const App: React.FC = () => {
@@ -31,8 +30,6 @@ const App: React.FC = () => {
           />
 
           <Route exact path="/create-video" component={CreateVideoPage} />
-
-          <Route exact path="/settings" component={SettingsPage} />
 
           <Route exact path="/test" component={TestPage} />
 

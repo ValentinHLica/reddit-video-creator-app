@@ -654,7 +654,7 @@ export const FolderIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="icon"
+    className="icon folder-icon"
   >
     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
   </svg>
@@ -912,5 +912,59 @@ export const RedditIcon = () => (
     <path d="M309.605 343.348c-11.468 11.468-36.042 15.562-53.554 15.562-17.563 0-42.086-4.094-53.555-15.562a6.887 6.887 0 00-9.777 0 6.887 6.887 0 000 9.777c18.176 18.176 53.094 19.61 63.332 19.61s45.105-1.434 63.336-19.61a6.987 6.987 0 000-9.777 6.892 6.892 0 00-9.782 0zm0 0M224 282.676C224 267.98 212.02 256 197.324 256c-14.691 0-26.676 11.98-26.676 26.676 0 14.691 11.985 26.676 26.676 26.676 14.696 0 26.676-11.98 26.676-26.676zm0 0"></path>
     <path d="M256 0C114.637 0 0 114.637 0 256s114.637 256 256 256 256-114.637 256-256S397.363 0 256 0zm148.531 290.148c.563 3.688.871 7.426.871 11.215 0 57.446-66.867 103.989-149.351 103.989s-149.352-46.543-149.352-103.989c0-3.84.309-7.629.871-11.316-13.004-5.836-22.066-18.89-22.066-34.047 0-20.582 16.691-37.324 37.324-37.324 10.035 0 19.098 3.941 25.805 10.394 25.906-18.687 61.75-30.62 101.633-31.644 0-.512 18.636-89.293 18.636-89.293a6.57 6.57 0 012.868-4.196c1.484-.972 3.277-1.28 5.02-.921l62.054 13.207c4.351-8.805 13.308-14.899 23.804-14.899 14.747 0 26.676 11.93 26.676 26.676s-11.93 26.676-26.676 26.676c-14.285 0-25.855-11.266-26.52-25.395l-55.554-11.828-16.996 80.027c39.168 1.38 74.344 13.258 99.84 31.692 6.707-6.5 15.82-10.496 25.906-10.496 20.637 0 37.324 16.691 37.324 37.324 0 15.258-9.164 28.312-22.117 34.148zm0 0"></path>
     <path d="M314.676 256C299.98 256 288 267.98 288 282.676c0 14.691 11.98 26.676 26.676 26.676 14.691 0 26.676-11.985 26.676-26.676 0-14.696-11.98-26.676-26.676-26.676zm0 0"></path>
+  </svg>
+);
+
+export const VideoIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon video-icon"
+    viewBox="0 0 24 24"
+  >
+    <path d="M23 7L16 12 23 17 23 7z"></path>
+    <rect width="15" height="14" x="1" y="5" rx="2" ry="2"></rect>
+  </svg>
+);
+
+export const HeadphoneIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon headphone-icon"
+    viewBox="0 0 24 24"
+  >
+    <path d="M3 18v-6a9 9 0 0118 0v6"></path>
+    <path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"></path>
+  </svg>
+);
+
+export const VolumeLoudIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <path d="M11 5L6 9 2 9 2 15 6 15 11 19 11 5z"></path>
+    <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"></path>
   </svg>
 );

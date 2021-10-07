@@ -1,5 +1,5 @@
 .drawer {
-  width: 200px;
+  width: 350px;
   background-color: var(--gray-200);
   box-shadow: -1px 0px 2px var(--gray-400);
   position: fixed;
@@ -39,10 +39,6 @@
         font-size: small;
         padding: 5px 15px;
         transition: background-color 0.3s ease;
-
-        &:hover {
-          background-color: var(--gray-300);
-        }
 
         svg {
           margin-right: 5px;

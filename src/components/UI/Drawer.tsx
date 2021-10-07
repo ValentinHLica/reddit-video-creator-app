@@ -4,7 +4,7 @@ import { Button } from "@ui";
 import { MenuIcon, RedditIcon, SettingsIcon } from "@icon";
 
 import styles from "@styles/UI/drawer.module.scss";
-import { useHistory } from "react-router";
+import SettingsPage from "@components/Settings";
 
 type Props = {
   visible: boolean;
@@ -12,8 +12,6 @@ type Props = {
 };
 
 const Drawer: React.FC<Props> = ({ visible, setVisible }) => {
-  const history = useHistory();
-
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,17 +29,18 @@ const Drawer: React.FC<Props> = ({ visible, setVisible }) => {
   }, []);
 
   const drawerNav: {
-    text: string;
-    icon: JSX.Element;
+    content: string | JSX.Element;
+    icon?: JSX.Element;
     onClick?: () => void;
     className?: string;
   }[] = [
     {
-      text: "Settings",
+      content: "Settings",
       icon: <SettingsIcon />,
-      onClick: () => {
-        history.push("/settings");
-      },
+    },
+    {
+      content: <SettingsPage miniVersion={true} />,
+      onClick: () => {},
     },
   ];
 
@@ -65,15 +64,15 @@ const Drawer: React.FC<Props> = ({ visible, setVisible }) => {
         <div className={styles.drawer__content}>
           <ul className={styles.content__list}>
             {drawerNav.map((item, index) => {
-              const { text, icon, className, onClick } = item;
+              const { content, icon, className, onClick } = item;
 
               return (
                 <li
-                  className={`${styles.list__item} ${className ?? ""} pointer`}
+                  className={`${styles.list__item} ${className ?? ""}`}
                   onClick={onClick}
                   key={index}
                 >
-                  {icon} {text}
+                  {icon} {content}
                 </li>
               );
             })}

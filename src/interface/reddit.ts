@@ -101,6 +101,7 @@ export type BookmarkPost = {
     [postSlug: string]: {
       created?: Date | null;
       minutes?: number;
+      bookmarked: boolean;
       comments?: {
         [commentId: string]: true;
       };
@@ -108,3 +109,7 @@ export type BookmarkPost = {
     };
   };
 };
+
+export interface Created extends Post {
+  isBookmarked: boolean;
+}

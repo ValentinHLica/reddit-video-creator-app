@@ -3,7 +3,7 @@ import React from "react";
 import styles from "@styles/Settings/item-card.module.scss";
 
 type Props = {
-  title: string;
+  title: string | JSX.Element;
 };
 
 const ItemCard: React.FC<Props> = ({ title, children }) => {

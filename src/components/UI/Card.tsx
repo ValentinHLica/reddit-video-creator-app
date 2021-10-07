@@ -41,7 +41,7 @@ const Card: React.FC<CardProps> = ({
         <div className={styles.card__content}>
           <h3 className={styles.content__title}>{title}</h3>
 
-          {desc && (
+          {desc && desc.length > 1 && (
             <h4 className={styles[`content__${comment ? "comment" : "desc"}`]}>
               {desc}
             </h4>

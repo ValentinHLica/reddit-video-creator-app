@@ -1,5 +1,6 @@
 .dropdown {
   position: relative;
+  width: fit-content;
 
   .posts__controls {
     position: absolute;
@@ -10,11 +11,11 @@
     border: 1px solid var(--gray-400);
     color: var(--gray-900);
     border-radius: 4px;
-    width: 100%;
     visibility: hidden;
     opacity: 0;
     transition: visibility 0.2s ease, opacity 0.2s ease;
-    min-width: fit-content;
+    max-height: 200px;
+    overflow-y: auto;
 
     &__visible {
       visibility: visible;

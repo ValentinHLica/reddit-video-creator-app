@@ -1,4 +1,4 @@
-import { renderDir, tempPath, cliPath } from "@config/paths";
+import { balconPath } from "@config/paths";
 
 const {
   mkdirSync,
@@ -12,6 +12,7 @@ const {
   // statSync,
 } = window.require("fs");
 const { join, basename } = window.require("path");
+const { execFile } = window.require("child_process");
 
 /**
  * Logger handler for action, success, error
@@ -116,7 +117,7 @@ const copyFileSync = (source: string, target: string) => {
 };
 
 // Copy dir
-const copyFolderRecursiveSync = (source: string, target: string) => {
+export const copyFolderRecursiveSync = (source: string, target: string) => {
   var files = [];
 
   // Check if folder needs to be created or integrated
@@ -137,20 +138,6 @@ const copyFolderRecursiveSync = (source: string, target: string) => {
       }
     });
   }
-};
-
-/**
- * Reset Temp folder for new process
- */
-export const resetTemp = async () => {
-  if (!existsSync(join(tempPath, "cli"))) {
-    mkdirSync(join(tempPath, "cli"));
-
-    copyFolderRecursiveSync(cliPath, tempPath);
-  }
-
-  deleteFolder(renderDir);
-  mkdirSync(renderDir);
 };
 
 /**
@@ -179,4 +166,26 @@ export const splitText = (text: string): string[] => {
   }
 
   return sentences;
+};
+
+/**
+ * Get List of voices
+ * @returns List of voices
+ */
+export const getVoices = (): Promise<string[]> => {
+  return new Promise((resolve) => {
+    execFile(balconPath, ["-l"], (error: any, stdout: string) => {
+      if (error) {
+        throw error;
+      }
+
+      const listOfVoice = stdout
+        .trim()
+        .split("\n")
+        .map((v) => v.trim())
+        .filter((v) => v !== "SAPI 5:");
+
+      resolve(listOfVoice);
+    });
+  });
 };

@@ -1,58 +1,66 @@
 import React, { useEffect, useState } from "react";
 
-import { balconPath } from "@config/paths";
-
-import { Dropdown } from "@ui";
+import { Button, Dropdown } from "@ui";
+import { HeadphoneIcon, VolumeLoudIcon } from "@icon";
 import Card from "./ItemCard";
+import { getVoices } from "@utils/helpers";
 
 import styles from "@styles/Settings/voice-changer.module.scss";
-
-const { execFile } = window.require("child_process");
 
 const VoiceChanger: React.FC = () => {
   const [selectedVoice, setSelectedVoice] = useState<string>("");
   const [voices, setVoices] = useState<string[]>([]);
 
-  const getSelectedVoice = () => {
-    const voice = localStorage.getItem("voice");
+  const loadVoices = async () => {
+    let listOfVoices: string[];
+    try {
+      listOfVoices = await getVoices();
 
-    if (voice) {
-      setSelectedVoice(voice);
-    }
+      setVoices(listOfVoices);
+
+      const voice = localStorage.getItem("voice");
+
+      if (voice) {
+        setSelectedVoice(voice);
+      } else {
+        setSelectedVoice(listOfVoices[0]);
+
+        localStorage.setItem("voice", listOfVoices[0]);
+      }
+    } catch (error) {}
   };
 
-  const getVoices = () => {
-    return new Promise((resolve) => {
-      execFile(balconPath, ["-l"], (error: any, stdout: string) => {
-        if (error) {
-          throw error;
-        }
+  const onVoiceChange = (voice: string) => {
+    localStorage.setItem("voice", voice);
 
-        const listOfVoice = stdout;
-
-        console.log(stdout);
-
-        // SAPI 5:
-        // IVONA 2 Eric
-        // Microsoft Hazel Desktop
-        // Microsoft Zira Desktop
-        // ScanSoft Daniel_Full_22kHz
-
-        resolve(listOfVoice);
-      });
-    });
+    setSelectedVoice(voice);
   };
 
   useEffect(() => {
-    getSelectedVoice();
-
-    getVoices();
+    loadVoices();
   }, []);
 
   return (
-    <Card title="Change Voice">
+    <Card title={<>{<HeadphoneIcon />} Change Voice</>}>
       <div className={styles.container}>
-        <Dropdown text={selectedVoice} items={[]} />
+        <div className={styles.dropdown}>
+          <Dropdown
+            size="xs"
+            type="light"
+            text={selectedVoice}
+            items={voices.map((voice) => {
+              return {
+                text: voice,
+                onClick: onVoiceChange.bind(this, voice),
+              };
+            })}
+            onClick={() => {
+              loadVoices();
+            }}
+          />
+        </div>
+
+        <Button size="xs" text="Speak" type="light" icon={<VolumeLoudIcon />} />
       </div>
     </Card>
   );

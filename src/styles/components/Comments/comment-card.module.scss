@@ -28,6 +28,7 @@
     .comment__stats {
       display: flex;
       align-items: center;
+      flex: 1;
 
       li {
         display: flex;
@@ -40,6 +41,10 @@
           svg {
             color: var(--green-600);
           }
+        }
+
+        &.stat__collapse {
+          margin-right: auto;
         }
 
         &:last-child {

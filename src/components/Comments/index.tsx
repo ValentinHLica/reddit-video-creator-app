@@ -5,6 +5,7 @@ import Layout from "@components/Layout";
 import { Spinner, GoTop, Button, Modal } from "@ui";
 import CommentCard from "./CommentCard";
 import OutputVideo from "@components/Settings/OutputVideo";
+import VoiceChanger from "@components/Settings/VoiceChanger";
 import { BookmarkIcon, CircleIcon, ClockIcon, PlayIcon, UpsIcon } from "@icon";
 
 import { getComments } from "@utils/redditApi";
@@ -28,7 +29,7 @@ const CommentsPage: React.FC = () => {
   const [post, setPost] = useState<Post>();
   const [comments, setComments] = useState<Comment[]>([]);
   const [fixedTimer, setFixedTimer] = useState<boolean>(false);
-  const [outputPathModal, setOutputPathModal] = useState<boolean>(false);
+  const [settingsModal, setSettingsModal] = useState<boolean>(false);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const [isCreated, setIsCreated] = useState<number | null>(null);
 
@@ -129,6 +130,69 @@ const CommentsPage: React.FC = () => {
     setComments(commentsCopy);
   };
 
+  const onMove = (index: number, direction: "up" | "down") => {
+    setComments((prevState) => {
+      let beforeIndex: number = index;
+      if (index !== 0) {
+        for (let i = index - 1; i >= 0; i--) {
+          beforeIndex = i;
+          if (prevState[i].depth === 0) break;
+        }
+      }
+
+      let tailCommentIndex: number = index;
+      if (index !== prevState.length - 1) {
+        for (let i = index + 1; i < prevState.length; i++) {
+          tailCommentIndex = i;
+          if (prevState[i].depth === 0) break;
+        }
+      } else {
+        tailCommentIndex = prevState.length;
+      }
+
+      let afterIndex: number = prevState.length;
+      if (index !== prevState.length - 1 && prevState[tailCommentIndex + 1]) {
+        for (let i = tailCommentIndex + 1; i < prevState.length; i++) {
+          afterIndex = i;
+          if (prevState[i].depth === 0) break;
+        }
+      }
+
+      const selectedArr = prevState.slice(
+        index,
+        tailCommentIndex !== prevState.length - 1
+          ? tailCommentIndex
+          : direction === "up"
+          ? prevState.length
+          : prevState.length - 1
+      );
+
+      if (direction === "up") {
+        return [
+          ...prevState.slice(0, beforeIndex),
+          ...selectedArr,
+          ...prevState.slice(beforeIndex, index),
+          ...prevState.slice(
+            tailCommentIndex !== prevState.length - 1
+              ? tailCommentIndex
+              : prevState.length,
+            prevState.length
+          ),
+        ];
+      }
+
+      const afterArr = prevState.slice(tailCommentIndex, afterIndex);
+      const endArr = prevState.slice(afterIndex, prevState.length);
+
+      return [
+        ...prevState.slice(0, index),
+        ...afterArr,
+        ...selectedArr,
+        ...endArr,
+      ];
+    });
+  };
+
   const savePost = () => {
     let bookmark: BookmarkPost = {};
 
@@ -151,6 +215,7 @@ const CommentsPage: React.FC = () => {
       comments: commentIdList,
       created: new Date(),
       minutes: timerMinutes,
+      bookmarked: true,
     };
 
     if (bookmark[subredditId]) {
@@ -171,9 +236,15 @@ const CommentsPage: React.FC = () => {
 
     if (!outputPath) {
       if (!existsSync(outputPath)) {
-        setOutputPathModal(true);
+        setSettingsModal(true);
       }
       return;
+    }
+
+    const voice = localStorage.getItem("voice");
+
+    if (!voice) {
+      setSettingsModal(true);
     }
 
     savePost();
@@ -190,20 +261,23 @@ const CommentsPage: React.FC = () => {
   };
 
   const checkBookmark = () => {
-    let bookmark: BookmarkPost = {};
-
     try {
-      bookmark = JSON.parse(localStorage.getItem("bookmark") ?? "{}");
+      const bookmark: BookmarkPost = JSON.parse(
+        localStorage.getItem("bookmark") ?? "{}"
+      );
+
+      setIsBookmarked(
+        bookmark[subredditId] &&
+          (bookmark[subredditId][commentSlug].bookmarked as boolean)
+      );
+      setIsCreated(
+        bookmark[subredditId][commentSlug]
+          ? bookmark[subredditId][commentSlug].minutes ?? null
+          : null
+      );
     } catch (error) {
       logger("Data saved in localStorage is corrupted!", "error");
     }
-
-    setIsBookmarked(!!bookmark[subredditId][commentSlug]);
-    setIsCreated(
-      bookmark[subredditId][commentSlug]
-        ? bookmark[subredditId][commentSlug].minutes ?? null
-        : null
-    );
   };
 
   const onBookmark = () => {
@@ -216,7 +290,7 @@ const CommentsPage: React.FC = () => {
     }
 
     if (isBookmarked) {
-      delete bookmark[subredditId][commentSlug];
+      bookmark[subredditId][commentSlug].bookmarked = false;
     } else {
       if (bookmark[subredditId]) {
         if (bookmark[subredditId][commentSlug]) {
@@ -225,11 +299,14 @@ const CommentsPage: React.FC = () => {
             post: post as Post,
           };
         } else {
-          bookmark[subredditId][commentSlug] = { post: post as Post };
+          bookmark[subredditId][commentSlug] = {
+            post: post as Post,
+            bookmarked: true,
+          };
         }
       } else {
         bookmark[subredditId] = {
-          [commentSlug]: { post: post as Post },
+          [commentSlug]: { post: post as Post, bookmarked: true },
         };
       }
     }
@@ -353,8 +430,15 @@ const CommentsPage: React.FC = () => {
               <CommentCard
                 key={index}
                 onCollapse={onCollapse.bind(this, index)}
+                onMove={onMove}
                 onCheck={onCheck.bind(this, index)}
+                cardIndex={index}
+                commentsLength={comments.length}
                 {...comment}
+                collapse={
+                  comments[index + 1] &&
+                  comments[index + 1].depth > comments[index].depth
+                }
               />
             );
           })}
@@ -366,20 +450,22 @@ const CommentsPage: React.FC = () => {
           }`}
           type={timerMinutes > 10 ? "success" : "light"}
           onClick={timerMinutes ? createVideo : undefined}
-          text={`${timerMinutes} minutes`}
+          text={timerMinutes < 10 ? `${timerMinutes} minutes` : "Create"}
           icon={<ClockIcon />}
         />
 
         <GoTop />
 
         <Modal
-          visible={outputPathModal}
-          setModal={setOutputPathModal}
+          visible={settingsModal}
+          setModal={setSettingsModal}
           className={styles.modal__content}
         >
           <h1>Please Select Outpath</h1>
 
           <OutputVideo />
+
+          <VoiceChanger />
         </Modal>
       </div>
     </Layout>

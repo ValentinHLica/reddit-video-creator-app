@@ -1,0 +1,19 @@
+.container {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .dropdown {
+    margin-right: 15px;
+    width: 100%;
+    & > div {
+      flex: 1;
+      width: 100%;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

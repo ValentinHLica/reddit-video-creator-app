@@ -1,4 +1,8 @@
 .container {
+  width: 100%;
+  display: grid;
+  row-gap: 15px;
+
   .container__header {
     display: flex;
     align-items: flex-start;

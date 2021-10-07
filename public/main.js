@@ -23,10 +23,10 @@ function createWindow() {
     resizable: false,
   });
 
-  if (!isDev) {
-    const mainMenu = Menu.buildFromTemplate([]);
-    Menu.setApplicationMenu(mainMenu);
-  }
+  // if (!isDev) {
+  //   const mainMenu = Menu.buildFromTemplate([]);
+  //   Menu.setApplicationMenu(mainMenu);
+  // }
 
   win.loadURL(
     isDev

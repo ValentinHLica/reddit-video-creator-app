@@ -26,7 +26,7 @@ const CreateVideoPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [videoPath, setVideoPath] = useState<string | null>(null);
 
-  const createVideo = async () => {
+  const createVideo = async (options: { signal: AbortSignal }) => {
     const outputPath = localStorage.getItem("output-path");
 
     if (!outputPath) {
@@ -55,7 +55,8 @@ const CreateVideoPage: React.FC = () => {
       const path = await createPost(
         location.state.post,
         filteredComments,
-        outputPath
+        outputPath,
+        options
       );
       setVideoPath(path);
     } catch (err) {
@@ -68,8 +69,14 @@ const CreateVideoPage: React.FC = () => {
 
   useEffect(() => {
     if (location.state) {
-      createVideo();
+      const abortCtrl = new AbortController();
+      const opts = { signal: abortCtrl.signal };
+
+      createVideo(opts);
+
+      return () => abortCtrl.abort();
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

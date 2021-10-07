@@ -13,6 +13,7 @@ type Props = {
   size?: Size;
   type?: Type;
   items: ControlsListItem[];
+  onClick?: () => void;
 };
 
 const Dropdown: React.FC<Props> = ({
@@ -21,6 +22,7 @@ const Dropdown: React.FC<Props> = ({
   size = "md",
   type = "primary",
   items,
+  onClick,
 }) => {
   const container = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState<boolean>(false);
@@ -52,6 +54,10 @@ const Dropdown: React.FC<Props> = ({
         type={type}
         onClick={() => {
           setVisible(true);
+
+          if (onClick) {
+            onClick();
+          }
         }}
         icon={icon}
         text={text}

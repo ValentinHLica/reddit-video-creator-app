@@ -56,6 +56,7 @@ const PostsPage: React.FC = () => {
           checkIsCreated(data).map((post) => ({
             ...post,
             added:
+              bookmark[subredditId] &&
               !!bookmark[subredditId][
                 post.permalink.split(`${post.id}/`)[1].replace("/", "")
               ],
@@ -67,6 +68,8 @@ const PostsPage: React.FC = () => {
 
       setPosts(checkIsCreated(data));
     } catch (error) {
+      console.log(error);
+
       setError(true);
     }
 
@@ -186,13 +189,17 @@ const PostsPage: React.FC = () => {
     const commentSlug = post.permalink.split(`${post.id}/`)[1].replace("/", "");
 
     if (post.added) {
-      delete bookmark[post.subreddit][commentSlug];
+      if (!bookmark[post.subreddit][commentSlug].created) {
+        delete bookmark[post.subreddit][commentSlug];
+      } else {
+        bookmark[post.subreddit][commentSlug].bookmarked = false;
+      }
     } else {
       if (bookmark[post.subreddit]) {
-        bookmark[post.subreddit][commentSlug] = { post };
+        bookmark[post.subreddit][commentSlug] = { post, bookmarked: true };
       } else {
         bookmark[post.subreddit] = {
-          [commentSlug]: { post },
+          [commentSlug]: { post, bookmarked: true },
         };
       }
     }

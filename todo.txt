@@ -37,18 +37,21 @@
     [x]. Open post
     [x]. select post Comments
     [x]. count word in minutes
-    []. Kill switch
-        []. krijo serverin dhe hostoji diku qe eshte live 24/7
-        []. npm i hddserial   -  merr id e hdd dhe ruje ne server
+    [x]. Voice select
+    [x]. rregullo bugun ku shiko a ekziston ne temp reddit-video-creator
 
 
-[]. implemento qe postin qe mund ta kemi bo video ta trregoje dhe komentet qe jan sgjedh ne fillim
+[x]. show created videos
+[x]. move comments order up and down dependin on indenetetion 0
+[]. bug qe komentet dalin jasht ekrani
 []. konvertoje te gjith logjiken e projektit ne exe me pkg
     []. ke me te leht te implementosh authurization
         []. ruaj noj file diku online ku te listosh user qe kan appin dhe emrin
         []. nje file tjtr ku poston kerkes per me u shtu
         []. per auth perdor hhd id dhe kjo do crytohet me ni kod dhe e qo ne server qe nese dikush e shikon ne network request nuk do kuptoje dote request 
         https://workers.cloudflare.com/
+        []. Kill switch
+            []. krijo serverin dhe hostoji diku qe eshte live 24/7
+            []. npm i hddserial   -  merr id e hdd dhe ruje ne server
+[]. listen selected voice
 []. implemento theme font background
-[]. Voice select
-[]. rregullo bugun ku shiko a ekziston ne temp reddit-video-creator
