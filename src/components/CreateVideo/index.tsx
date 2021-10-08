@@ -24,9 +24,9 @@ const CreateVideoPage: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [videoPath, setVideoPath] = useState<string | null>(null);
+  // const [videoPath, setVideoPath] = useState<string | null>(null);
 
-  const createVideo = async (options: { signal: AbortSignal }) => {
+  const createVideo = async () => {
     const outputPath = localStorage.getItem("output-path");
 
     if (!outputPath) {
@@ -52,13 +52,8 @@ const CreateVideoPage: React.FC = () => {
     );
 
     try {
-      const path = await createPost(
-        location.state.post,
-        filteredComments,
-        outputPath,
-        options
-      );
-      setVideoPath(path);
+      await createPost(location.state.post, filteredComments, outputPath);
+      // setVideoPath(path);
     } catch (err) {
       setError("Failed to create Video");
       console.log(err);
@@ -69,12 +64,7 @@ const CreateVideoPage: React.FC = () => {
 
   useEffect(() => {
     if (location.state) {
-      const abortCtrl = new AbortController();
-      const opts = { signal: abortCtrl.signal };
-
-      createVideo(opts);
-
-      return () => abortCtrl.abort();
+      createVideo();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,11 +127,11 @@ const CreateVideoPage: React.FC = () => {
         </h1>
       </div>
 
-      {videoPath && (
+      {/* {videoPath && (
         <div className={styles.container__video}>
           <video src={videoPath} autoPlay controls />
         </div>
-      )}
+      )} */}
     </div>
   );
 };
