@@ -1,0 +1,44 @@
+@import "../utils/background";
+
+.container {
+  position: sticky;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 13;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 15px;
+  -webkit-app-region: drag;
+
+  .app__nav {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+
+    .nav__item {
+      margin-right: 10px;
+      width: 1em;
+      height: 1em;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1;
+      -webkit-app-region: no-drag;
+
+      @include background-theme();
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .drag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}

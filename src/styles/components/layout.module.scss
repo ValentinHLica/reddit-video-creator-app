@@ -1,6 +1,11 @@
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 15px;
+.layout {
+  padding: 16px 24px;
+  min-height: calc(100vh - 31px);
+
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
 }

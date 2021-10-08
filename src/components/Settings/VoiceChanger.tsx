@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Dropdown } from "@ui";
 import { HeadphoneIcon, VolumeLoudIcon } from "@icon";
 import Card from "./ItemCard";
-import { getVoices } from "@utils/helpers";
+import { getVoices, listenVoice } from "@utils/helpers";
 
 import styles from "@styles/Settings/voice-changer.module.scss";
 
@@ -60,7 +60,13 @@ const VoiceChanger: React.FC = () => {
           />
         </div>
 
-        <Button size="xs" text="Speak" type="light" icon={<VolumeLoudIcon />} />
+        <Button
+          size="xs"
+          text="Speak"
+          type="light"
+          icon={<VolumeLoudIcon />}
+          onClick={listenVoice}
+        />
       </div>
     </Card>
   );

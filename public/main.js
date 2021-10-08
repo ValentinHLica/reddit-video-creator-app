@@ -20,13 +20,15 @@ function createWindow() {
       enableRemoteModule: true,
       webSecurity: false,
     },
+    frame: false,
     resizable: false,
+    autoHideMenuBar: true,
   });
 
-  // if (!isDev) {
-  //   const mainMenu = Menu.buildFromTemplate([]);
-  //   Menu.setApplicationMenu(mainMenu);
-  // }
+  if (!isDev) {
+    const mainMenu = Menu.buildFromTemplate([]);
+    Menu.setApplicationMenu(mainMenu);
+  }
 
   win.loadURL(
     isDev

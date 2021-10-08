@@ -2,15 +2,14 @@
 
 .container {
   position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 11;
-  padding: 5px 0;
+  bottom: 10px;
+  left: 10px;
+  padding: 10px 15px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translateY(-100%);
+  transform: translateY(calc(100% + 10px));
   transition: transform 0.3s ease;
 
   @include background-theme();

@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from "react";
+import React, { useContext } from "react";
 
 import Context from "@context";
 import { BreadCrumb, Drawer } from "@ui";
@@ -17,7 +17,7 @@ const Layout: React.FC<Props> = ({ nav, children }) => {
   const { drawer, setDrawer } = useContext(Context);
 
   return (
-    <Fragment>
+    <div className={styles.layout}>
       <div className={styles.container}>
         <BreadCrumb nav={nav} />
 
@@ -25,7 +25,7 @@ const Layout: React.FC<Props> = ({ nav, children }) => {
       </div>
 
       {children}
-    </Fragment>
+    </div>
   );
 };
 

@@ -189,3 +189,24 @@ export const getVoices = (): Promise<string[]> => {
     });
   });
 };
+
+/**
+ * Listen to selected voice
+ */
+export const listenVoice = () => {
+  return new Promise((resolve) => {
+    const voice = localStorage.getItem("voice");
+
+    execFile(
+      balconPath,
+      ["-n", voice, "-t", "Hello my name is john"],
+      (error: any, stdout: string) => {
+        if (error) {
+          throw error;
+        }
+
+        resolve(null);
+      }
+    );
+  });
+};

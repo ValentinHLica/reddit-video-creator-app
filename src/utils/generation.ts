@@ -5,6 +5,7 @@ import { Post } from "@interface/reddit";
 import { Comment } from "@interface/video";
 
 import { copyFolderRecursiveSync, logger } from "@utils/helpers";
+import { Dispatch, SetStateAction } from "react";
 
 const { execFile } = window.require("child_process");
 const { writeFileSync, existsSync, mkdirSync } = window.require("fs");
@@ -18,7 +19,10 @@ const { writeFileSync, existsSync, mkdirSync } = window.require("fs");
 export const createPost = async (
   post: Post,
   comments: Comment[],
-  exportPath: string
+  exportPath: string,
+  setProgress: Dispatch<SetStateAction<number>>,
+  setTotalProgress: Dispatch<SetStateAction<number>>,
+  setVideoPath: Dispatch<SetStateAction<string | null>>
 ): Promise<any> => {
   try {
     if (!existsSync(tempPath)) {
@@ -66,6 +70,45 @@ export const createPost = async (
         logger("Video rendered successfully", "success");
 
         resolve(stdout);
+      }).stdout.on("data", (data: string) => {
+        if (data.includes("total-processes=")) {
+          setTotalProgress((prevState) => {
+            if (prevState !== 0) {
+              return prevState;
+            }
+
+            return parseInt(data.split("=")[1]) + 1;
+          });
+        }
+
+        if (data.includes("process-image-done")) {
+          setProgress((prevState) => {
+            return prevState + 0.5;
+          });
+        }
+
+        if (data.includes("process-audio-done")) {
+          setProgress((prevState) => {
+            return prevState + 0.2;
+          });
+        }
+
+        if (data.includes("process-video-done")) {
+          setProgress((prevState) => {
+            return prevState + 0.2;
+          });
+        }
+
+        if (data.includes("process-merge-done")) {
+          setProgress((prevState) => {
+            return prevState + 0.2;
+          });
+        }
+
+        if (data.includes("process-done")) {
+          const path = data.split("=")[1];
+          setVideoPath(path);
+        }
       });
     });
   } catch (err) {

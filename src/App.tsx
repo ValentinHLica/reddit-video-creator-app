@@ -3,7 +3,7 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
 import { ContextProvider } from "@components/Context";
 
-import { OfflineNotification, ThemeSwitcher } from "@ui";
+import { OfflineNotification, Navigation } from "@ui";
 import HomePage from "@components/Home";
 import PostsPage from "@components/Posts";
 import CommentsPage from "@components/Comments";
@@ -16,7 +16,7 @@ const App: React.FC = () => {
     <ContextProvider>
       <Router>
         <OfflineNotification />
-        <ThemeSwitcher />
+        <Navigation />
 
         <Switch>
           <Route exact path="/" component={HomePage} />

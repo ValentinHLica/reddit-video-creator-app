@@ -11,6 +11,8 @@ import Spinner from "./Spinner";
 import ThemeSwitcher from "./ThemeSwitcher";
 import Tabs from "./Tabs";
 import Drawer from "./Drawer";
+import Progress from "./Progress";
+import Navigation from "./Navigation";
 
 export {
   BreadCrumb,
@@ -26,4 +28,6 @@ export {
   ThemeSwitcher,
   Tabs,
   Drawer,
+  Progress,
+  Navigation,
 };
