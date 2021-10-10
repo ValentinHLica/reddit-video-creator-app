@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import Layout from "@components/Layout";
 import { CardWrapper, Card, Button, Modal, Tabs } from "@ui";
@@ -129,7 +129,7 @@ const HomePage: React.FC = () => {
         />
       </div>
 
-      {/* <Link to="/test">Test</Link> */}
+      {/* <Link to="/create-video">Test</Link> */}
 
       <Modal visible={modal} setModal={setModal}>
         <AddFavourite

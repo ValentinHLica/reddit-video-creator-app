@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { Button, Dropdown } from "@ui";
 import { HeadphoneIcon, VolumeLoudIcon } from "@icon";
@@ -8,6 +8,7 @@ import { getVoices, listenVoice } from "@utils/helpers";
 import styles from "@styles/Settings/voice-changer.module.scss";
 
 const VoiceChanger: React.FC = () => {
+  const textarea = useRef<HTMLTextAreaElement>(null);
   const [selectedVoice, setSelectedVoice] = useState<string>("");
   const [voices, setVoices] = useState<string[]>([]);
 
@@ -65,9 +66,17 @@ const VoiceChanger: React.FC = () => {
           text="Speak"
           type="light"
           icon={<VolumeLoudIcon />}
-          onClick={listenVoice}
+          onClick={() => {
+            listenVoice(textarea.current?.value);
+          }}
         />
       </div>
+
+      <textarea
+        className={styles.textarea}
+        ref={textarea}
+        placeholder="Enter text..."
+      />
     </Card>
   );
 };

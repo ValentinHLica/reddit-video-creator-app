@@ -53,7 +53,9 @@ const Drawer: React.FC<Props> = ({ visible, setVisible }) => {
         onClick={() => setVisible(true)}
       />
       <div
-        className={`${styles.drawer} ${visible ? styles.drawer__visible : ""}`}
+        className={`${styles.drawer} ${
+          visible ? styles.drawer__visible : ""
+        } drawer`}
       >
         <div className={styles.drawer__header}>
           <RedditIcon />
