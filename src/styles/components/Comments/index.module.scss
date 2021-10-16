@@ -81,4 +81,32 @@
       margin-bottom: 10px;
     }
   }
+
+  .dropdown__modal {
+    .file__dropdown {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    .crop__container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      .crop {
+        div[class*="ReactCrop"] {
+          div {
+            height: 400px;
+            img {
+              height: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
 }

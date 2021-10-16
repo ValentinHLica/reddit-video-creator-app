@@ -2,16 +2,17 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 
 import dateFormat from "dateformat";
+import { Crop } from "react-image-crop";
 
 import { Comment, Post } from "@interface/reddit";
 import { Comment as VideoComment } from "@interface/video";
 
 import { Spinner, Button, Progress } from "@ui";
 import { AlertTriangleIcon, HappyFaceIcon } from "@icon";
+import Layout from "@components/Layout";
 import { createPost } from "@utils/generation";
 
 import styles from "@styles/CreateVideo/index.module.scss";
-import Layout from "@components/Layout";
 
 const { existsSync } = window.require("fs");
 
@@ -22,6 +23,8 @@ const CreateVideoPage: React.FC = () => {
     post: Post;
     commentSlug: string;
     timerMinutes: string;
+    backgroundPath: string;
+    cropDetails: Partial<Crop>;
   }>();
 
   const startTime = useRef<Date>(new Date());
@@ -62,12 +65,12 @@ const CreateVideoPage: React.FC = () => {
         location.state.post,
         filteredComments,
         outputPath,
+        location.state.backgroundPath,
         setProgress,
         setTotalProgress,
-        setVideoPath
+        setVideoPath,
+        location.state.cropDetails
       );
-
-      // setVideoPath(path);
     } catch (err) {
       setError("Failed to create Video");
       console.log(err);
@@ -135,13 +138,13 @@ const CreateVideoPage: React.FC = () => {
             error ? styles.header__title__red : ""
           }`}
         >
-          {loading && (
+          {loading && !videoPath && (
             <Fragment>
               <Spinner /> Creating video please wait!
             </Fragment>
           )}
 
-          {!loading && !error && (
+          {videoPath && (
             <Fragment>
               <HappyFaceIcon /> Video was created successfully
             </Fragment>
@@ -156,7 +159,13 @@ const CreateVideoPage: React.FC = () => {
       </div>
 
       <div className={styles.container__video}>
-        {videoPath && <video src={videoPath} autoPlay controls />}
+        {videoPath && (
+          <video
+            src={videoPath}
+            poster={videoPath.replace("video.mp4", "thumbnail.jpg")}
+            controls
+          />
+        )}
       </div>
 
       <div className={styles.timer}>

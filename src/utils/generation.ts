@@ -1,5 +1,7 @@
 import { join } from "path";
 
+import { Crop } from "react-image-crop";
+
 import { tempPath, cliPath } from "@config/paths";
 import { Post } from "@interface/reddit";
 import { Comment } from "@interface/video";
@@ -20,9 +22,11 @@ export const createPost = async (
   post: Post,
   comments: Comment[],
   exportPath: string,
+  backgroundPath: string,
   setProgress: Dispatch<SetStateAction<number>>,
   setTotalProgress: Dispatch<SetStateAction<number>>,
-  setVideoPath: Dispatch<SetStateAction<string | null>>
+  setVideoPath: Dispatch<SetStateAction<string | null>>,
+  cropDetails: Partial<Crop>
 ): Promise<any> => {
   try {
     if (!existsSync(tempPath)) {
@@ -39,6 +43,8 @@ export const createPost = async (
         post,
         comments,
         exportPath,
+        backgroundPath,
+        cropDetails,
       })
     );
 

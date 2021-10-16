@@ -5,3 +5,8 @@
 []. youtube
     []. krijo nje interface per krijimin e nje videoje
     []. automatizoje postimin pas krijimit te videos
+
+[]. implemento qe user te dropp ni file dhe pastaj te selektoj pjesen kryesore qe do te shfaq ne thumbnail
+[]. implemento drafted ku user selekto komentet dhe pastaj e draft ate post dhe e ben render kur te doje user
+    []. ktu do besh nje switch qe e turn on dhe krejt videot bohen njera pas tjetres    
+    []. implemento error handle se pse i ngec ne pc gazit

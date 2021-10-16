@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
+
+import ReactCrop, { Crop } from "react-image-crop";
+import { useDropzone } from "react-dropzone";
 
 import Layout from "@components/Layout";
 import { Spinner, GoTop, Button, Modal } from "@ui";
@@ -26,12 +29,31 @@ const CommentsPage: React.FC = () => {
     useParams();
   const history = useHistory();
 
+  const imgRef = useRef<HTMLImageElement | null>(null);
   const [post, setPost] = useState<Post>();
   const [comments, setComments] = useState<Comment[]>([]);
   const [fixedTimer, setFixedTimer] = useState<boolean>(false);
   const [settingsModal, setSettingsModal] = useState<boolean>(false);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const [isCreated, setIsCreated] = useState<number | null>(null);
+  const [thumbnailModal, setThumbnailModal] = useState<boolean>(false);
+  const [thumbnailImageSrc, setThumbnailImageSrc] = useState<string | null>(
+    null
+  );
+  const [cropDetails, setcropDetails] = useState<Partial<Crop>>({
+    aspect: 9 / 16,
+  });
+  const onDrop = useCallback((acceptedFiles) => {
+    if (acceptedFiles[0]) {
+      setThumbnailImageSrc(acceptedFiles[0].path);
+    }
+  }, []);
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    multiple: false,
+    maxFiles: 1,
+    accept: ["image/png", "image/jpg", "image/jpeg"],
+  });
 
   const timerMinutes = countWords(
     comments
@@ -231,7 +253,7 @@ const CommentsPage: React.FC = () => {
     setIsCreated(timerMinutes);
   };
 
-  const createVideo = () => {
+  const createVideo = async () => {
     const outputPath = localStorage.getItem("output-path");
 
     if (!outputPath) {
@@ -247,7 +269,30 @@ const CommentsPage: React.FC = () => {
       setSettingsModal(true);
     }
 
+    console.log(cropDetails);
+
+    if (
+      cropDetails.x === undefined ||
+      cropDetails.y === undefined ||
+      cropDetails.width === undefined ||
+      cropDetails.height === undefined
+    ) {
+      setThumbnailModal(true);
+      return;
+    }
+
     savePost();
+
+    const image = imgRef.current as HTMLImageElement;
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+
+    const newCropDetials = {
+      x: cropDetails.x * scaleX,
+      y: cropDetails.y * scaleY,
+      width: cropDetails.width * scaleX,
+      height: cropDetails.height * scaleY,
+    };
 
     history.push({
       pathname: "/create-video",
@@ -256,6 +301,8 @@ const CommentsPage: React.FC = () => {
         post,
         commentSlug,
         timerMinutes,
+        backgroundPath: thumbnailImageSrc,
+        cropDetails: newCropDetials,
       },
     });
   };
@@ -315,6 +362,10 @@ const CommentsPage: React.FC = () => {
 
     setIsBookmarked(!isBookmarked);
   };
+
+  const onLoad = useCallback((img) => {
+    imgRef.current = img as HTMLImageElement;
+  }, []);
 
   useEffect(() => {
     fetchComments();
@@ -466,6 +517,39 @@ const CommentsPage: React.FC = () => {
           <OutputVideo />
 
           <VoiceChanger />
+        </Modal>
+
+        <Modal
+          visible={thumbnailModal}
+          setModal={setThumbnailModal}
+          className={styles.dropdown__modal}
+        >
+          {!thumbnailImageSrc ? (
+            <div {...getRootProps()} className={styles.file__dropdown}>
+              <input {...getInputProps()} />
+              <p>Drop the files here ...</p>
+            </div>
+          ) : (
+            <div className={styles.crop__container}>
+              <div className={styles.crop}>
+                <ReactCrop
+                  src={thumbnailImageSrc}
+                  crop={cropDetails as Partial<Crop>}
+                  onChange={(newCrop) => {
+                    setcropDetails(newCrop);
+                  }}
+                  onImageLoaded={onLoad}
+                />
+              </div>
+
+              <Button
+                text="Create Video"
+                onClick={async () => {
+                  await createVideo();
+                }}
+              />
+            </div>
+          )}
         </Modal>
       </div>
     </Layout>

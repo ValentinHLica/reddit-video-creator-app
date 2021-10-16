@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import Layout from "@components/Layout";
 import { CardWrapper, Card, Button, Modal, Tabs } from "@ui";
