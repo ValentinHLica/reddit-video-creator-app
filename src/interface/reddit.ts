@@ -22,6 +22,7 @@ export interface Pagination {
 export interface Award {
   count: number;
   name: string;
+  icon_url: string;
 }
 
 export interface Post {

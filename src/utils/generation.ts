@@ -20,13 +20,13 @@ const { writeFileSync, existsSync, mkdirSync } = window.require("fs");
  */
 export const createPost = async (
   post: Post,
-  comments: Comment[],
+  comments: { [x: string]: any }[],
   exportPath: string,
-  backgroundPath: string,
+  background: string,
   setProgress: Dispatch<SetStateAction<number>>,
   setTotalProgress: Dispatch<SetStateAction<number>>,
   setVideoPath: Dispatch<SetStateAction<string | null>>,
-  cropDetails: Partial<Crop>
+  crop: Partial<Crop>
 ): Promise<any> => {
   try {
     if (!existsSync(tempPath)) {
@@ -43,8 +43,6 @@ export const createPost = async (
         post,
         comments,
         exportPath,
-        backgroundPath,
-        cropDetails,
       })
     );
 
@@ -60,9 +58,9 @@ export const createPost = async (
       const renderPath = join(cliPath, "render", "render.exe");
 
       const args = [
-        `BALCON=${balconPath}`,
-        `FFMPEG=${ffmpegPath}`,
-        `FFPROBE=${ffprobePath}`,
+        // `BALCON=${balconPath}`,
+        // `FFMPEG=${ffmpegPath}`,
+        // `FFPROBE=${ffprobePath}`,
         `POST=${postPath}`,
         ...(() => (voice ? [`VOICE=${voice}`] : []))(),
       ];
@@ -77,37 +75,19 @@ export const createPost = async (
 
         resolve(stdout);
       }).stdout.on("data", (data: string) => {
-        if (data.includes("total-processes=")) {
+        if (data.includes("process-count=")) {
           setTotalProgress((prevState) => {
             if (prevState !== 0) {
               return prevState;
             }
 
-            return parseInt(data.split("=")[1]) + 1;
+            return parseInt(data.split("=")[1]);
           });
         }
 
-        if (data.includes("process-image-done")) {
+        if (data.includes("-generated")) {
           setProgress((prevState) => {
-            return prevState + 0.5;
-          });
-        }
-
-        if (data.includes("process-audio-done")) {
-          setProgress((prevState) => {
-            return prevState + 0.2;
-          });
-        }
-
-        if (data.includes("process-video-done")) {
-          setProgress((prevState) => {
-            return prevState + 0.2;
-          });
-        }
-
-        if (data.includes("process-merge-done")) {
-          setProgress((prevState) => {
-            return prevState + 0.2;
+            return prevState + 1;
           });
         }
 

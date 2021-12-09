@@ -102,8 +102,8 @@ export const getPosts = async (
 
     return {
       all_awardings: all_awardings.map((awards) => {
-        const { count, name } = awards;
-        return { count, name };
+        const { count, name, icon_url } = awards;
+        return { count, name, icon_url };
       }),
       id,
       title,
@@ -171,9 +171,9 @@ export const getComments = async (
 
     return {
       all_awardings: all_awardings.map((awards) => {
-        const { count, name } = awards;
+        const { count, name, icon_url } = awards;
 
-        return { count, name };
+        return { count, name, icon_url };
       }),
       id,
       title,
@@ -221,8 +221,8 @@ export const getComments = async (
         // .replace(/(?:https?|ftp):\/\/[\n\S]+/g, "")
         // .replaceAll("\n", " "),
         all_awardings: all_awardings.map((awards) => {
-          const { count, name } = awards;
-          return { count, name };
+          const { count, name, icon_url } = awards;
+          return { count, name, icon_url };
         }),
         created_utc,
         depth,

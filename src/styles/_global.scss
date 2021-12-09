@@ -1,12 +1,14 @@
 @import "theme/index";
 
+@import "font/index";
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   -webkit-appearance: none;
   scroll-behavior: smooth;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
 }
 
 *:focus {

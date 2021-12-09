@@ -2,9 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 
-import "react-image-crop/dist/ReactCrop.css";
-
-import "@fontsource/open-sans";
+// import "react-image-crop/dist/ReactCrop.css";
 
 import "./styles/main.scss";
 

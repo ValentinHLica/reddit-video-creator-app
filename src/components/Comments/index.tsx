@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
-import ReactCrop, { Crop } from "react-image-crop";
-import { useDropzone } from "react-dropzone";
+// import ReactCrop, { Crop } from "react-image-crop";
+// import { useDropzone } from "react-dropzone";
 
 import Layout from "@components/Layout";
 import { Spinner, GoTop, Button, Modal } from "@ui";
@@ -36,24 +36,24 @@ const CommentsPage: React.FC = () => {
   const [settingsModal, setSettingsModal] = useState<boolean>(false);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const [isCreated, setIsCreated] = useState<number | null>(null);
-  const [thumbnailModal, setThumbnailModal] = useState<boolean>(false);
-  const [thumbnailImageSrc, setThumbnailImageSrc] = useState<string | null>(
-    null
-  );
-  const [cropDetails, setcropDetails] = useState<Partial<Crop>>({
-    aspect: 9 / 16,
-  });
-  const onDrop = useCallback((acceptedFiles) => {
-    if (acceptedFiles[0]) {
-      setThumbnailImageSrc(acceptedFiles[0].path);
-    }
-  }, []);
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    multiple: false,
-    maxFiles: 1,
-    accept: ["image/png", "image/jpg", "image/jpeg"],
-  });
+  // const [thumbnailModal, setThumbnailModal] = useState<boolean>(false);
+  // const [thumbnailImageSrc, setThumbnailImageSrc] = useState<string | null>(
+  //   null
+  // );
+  // const [cropDetails, setcropDetails] = useState<Partial<Crop>>({
+  //   aspect: 9 / 16,
+  // });
+  // const onDrop = useCallback((acceptedFiles) => {
+  //   if (acceptedFiles[0]) {
+  //     setThumbnailImageSrc(acceptedFiles[0].path);
+  //   }
+  // }, []);
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   onDrop,
+  //   multiple: false,
+  //   maxFiles: 1,
+  //   accept: ["image/png", "image/jpg", "image/jpeg"],
+  // });
 
   const timerMinutes = countWords(
     comments
@@ -269,30 +269,30 @@ const CommentsPage: React.FC = () => {
       setSettingsModal(true);
     }
 
-    console.log(cropDetails);
+    // console.log(cropDetails);
 
-    if (
-      cropDetails.x === undefined ||
-      cropDetails.y === undefined ||
-      cropDetails.width === undefined ||
-      cropDetails.height === undefined
-    ) {
-      setThumbnailModal(true);
-      return;
-    }
+    // if (
+    //   cropDetails.x === undefined ||
+    //   cropDetails.y === undefined ||
+    //   cropDetails.width === undefined ||
+    //   cropDetails.height === undefined
+    // ) {
+    //   setThumbnailModal(true);
+    //   return;
+    // }
 
     savePost();
 
-    const image = imgRef.current as HTMLImageElement;
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
+    // const image = imgRef.current as HTMLImageElement;
+    // const scaleX = image.naturalWidth / image.width;
+    // const scaleY = image.naturalHeight / image.height;
 
-    const newCropDetials = {
-      x: cropDetails.x * scaleX,
-      y: cropDetails.y * scaleY,
-      width: cropDetails.width * scaleX,
-      height: cropDetails.height * scaleY,
-    };
+    // const newCropDetials = {
+    //   x: cropDetails.x * scaleX,
+    //   y: cropDetails.y * scaleY,
+    //   width: cropDetails.width * scaleX,
+    //   height: cropDetails.height * scaleY,
+    // };
 
     history.push({
       pathname: "/create-video",
@@ -301,8 +301,8 @@ const CommentsPage: React.FC = () => {
         post,
         commentSlug,
         timerMinutes,
-        backgroundPath: thumbnailImageSrc,
-        cropDetails: newCropDetials,
+        // backgroundPath: thumbnailImageSrc,
+        // cropDetails: newCropDetials,
       },
     });
   };
@@ -519,7 +519,7 @@ const CommentsPage: React.FC = () => {
           <VoiceChanger />
         </Modal>
 
-        <Modal
+        {/* <Modal
           visible={thumbnailModal}
           setModal={setThumbnailModal}
           className={styles.dropdown__modal}
@@ -550,7 +550,7 @@ const CommentsPage: React.FC = () => {
               />
             </div>
           )}
-        </Modal>
+        </Modal> */}
       </div>
     </Layout>
   );

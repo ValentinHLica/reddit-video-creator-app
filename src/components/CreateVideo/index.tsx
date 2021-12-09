@@ -52,13 +52,12 @@ const CreateVideoPage: React.FC = () => {
       return;
     }
 
-    const filteredComments: VideoComment[] = location.state.comments.map(
-      (comment) => ({
-        text: comment.body,
-        userName: comment.author,
-        indentation: comment.depth,
-      })
-    );
+    const filteredComments = location.state.comments.map((comment) => ({
+      content: comment.body,
+      user: comment.author,
+      depth: comment.depth,
+      score: comment.score,
+    }));
 
     try {
       await createPost(

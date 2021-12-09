@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
-import { CardWrapper, Card, Spinner, GoTop } from "@ui";
+import { CardWrapper, Card, Spinner, GoTop, Input } from "@ui";
 import Controls from "./Controls";
 import {
   AlertOctagonIcon,
@@ -25,6 +25,7 @@ const PostsPage: React.FC = () => {
   const history = useHistory();
   const { subredditId }: { subredditId: string } = useParams();
 
+  const urlInput = useRef<HTMLInputElement>(null);
   const [subreddit, setSubreddit] = useState<SearchItem | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
@@ -243,6 +244,28 @@ const PostsPage: React.FC = () => {
     }));
   };
 
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const postUrl = urlInput.current?.value;
+
+    //www.reddit.com/r/AskReddit/comments/qhvzne/what_is_the_best_couple_in_tv_history/
+
+    if (
+      postUrl?.includes("https://www.reddit.com/r/") &&
+      postUrl.includes("/comments/")
+    ) {
+      const splitedUrl = postUrl.split("/comments/")[1].split("/");
+
+      const commentId = splitedUrl[0];
+      const commentSlugId = splitedUrl[1].replace("/", "");
+
+      const url = `/r/${subredditId}/comments/${commentId}/${commentSlugId}`;
+
+      history.push(url);
+    }
+  };
+
   useEffect(() => {
     const onLoad = async () => {
       await fetchSubreddit();
@@ -284,6 +307,19 @@ const PostsPage: React.FC = () => {
                 <li className={styles.list__item}>
                   {<UserIcon />}
                   {subreddit ? roundUp(subreddit.subscribers) : "0"}
+                </li>
+
+                <li className={styles.list__item}>
+                  <form onSubmit={submit}>
+                    <Input
+                      type="text"
+                      placeholder="Post url..."
+                      query={urlInput}
+                      size="xs"
+                    />
+
+                    <input type="submit" hidden={true} />
+                  </form>
                 </li>
               </ul>
             </div>
