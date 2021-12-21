@@ -10,3 +10,9 @@ UI
 []. Implement search for subreddit
 []. Draft
 []. Auto select comments
+[]. Dark mode
+[]. Krijo nje card component qe perdoret tek te gjitha
+[]. Ruje state kur je te ni post
+[]. remove date
+[]. shfaq kohen kur te scroll tek buttoni
+[]

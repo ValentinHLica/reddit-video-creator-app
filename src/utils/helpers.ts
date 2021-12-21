@@ -174,7 +174,7 @@ export const splitText = (text: string): string[] => {
  */
 export const getVoices = (): Promise<string[]> => {
   return new Promise((resolve) => {
-    execFile(balconPath, ["-l"], (error: any, stdout: string) => {
+    execFile("balcon", ["-l"], (error: any, stdout: string) => {
       if (error) {
         throw error;
       }
@@ -198,7 +198,7 @@ export const listenVoice = (text: string | undefined) => {
     const voice = localStorage.getItem("voice");
 
     execFile(
-      balconPath,
+      "balcon",
       [
         "-n",
         voice,
