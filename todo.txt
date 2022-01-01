@@ -10,9 +10,15 @@ UI
 []. Implement search for subreddit
 []. Draft
 []. Auto select comments
-[]. Dark mode
 []. Krijo nje card component qe perdoret tek te gjitha
 []. Ruje state kur je te ni post
 []. remove date
 []. shfaq kohen kur te scroll tek buttoni
-[]
+
+
+Te jete e automated selektimi e posteve nga nje server ne cloudflare qe bo ca request ne reddit cdo 2h edhe ne fund te dites te qet poste me te mira.
+
+
+1. Reddit Recap
+    []. Implement changing thumbnail color based on subreddit
+    []. Implement getting post text

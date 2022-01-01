@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 
+import { Type } from "@interface/UI/button";
+
 import Context from "@context";
 import { AlertCircleIcon, WifiIcon } from "@icon";
-
-import { Type } from "@interface/UI/button";
 
 import styles from "@styles/UI/notification.module.scss";
 
@@ -13,8 +13,8 @@ type Props = {
 };
 
 const Notification: React.FC<Props> = () => {
-  const [visible, setVisible] = useState<boolean>(false);
   const { offline } = useContext(Context);
+  const [visible, setVisible] = useState<boolean>(false);
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
 
   useEffect(() => {

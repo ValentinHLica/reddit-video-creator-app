@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 import { Button } from "@ui";
-import { MenuIcon, RedditIcon, SettingsIcon } from "@icon";
+import { MenuIcon, SettingsIcon } from "@icon";
 
 import styles from "@styles/UI/drawer.module.scss";
 import SettingsPage from "@components/Settings";
@@ -39,7 +39,7 @@ const Drawer: React.FC<Props> = ({ visible, setVisible }) => {
       icon: <SettingsIcon />,
     },
     {
-      content: <SettingsPage miniVersion={true} />,
+      content: <SettingsPage />,
       onClick: () => {},
     },
   ];
@@ -57,12 +57,6 @@ const Drawer: React.FC<Props> = ({ visible, setVisible }) => {
           visible ? styles.drawer__visible : ""
         } drawer`}
       >
-        <div className={styles.drawer__header}>
-          <RedditIcon />
-
-          <p>Reddit Video Creator</p>
-        </div>
-
         <div className={styles.drawer__content}>
           <ul className={styles.content__list}>
             {drawerNav.map((item, index) => {

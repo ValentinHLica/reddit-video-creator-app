@@ -167,6 +167,7 @@ export const getComments = async (
       subreddit_name_prefixed,
       total_awards_received,
       ups,
+      selftext,
     } = data[0].data.children[0].data as Post;
 
     return {
@@ -185,6 +186,7 @@ export const getComments = async (
       subreddit_name_prefixed,
       total_awards_received,
       ups,
+      selftext,
     };
   };
 
@@ -212,14 +214,11 @@ export const getComments = async (
           score,
         },
       } = commentDetails;
-
       comments.push({
         author,
         ups,
         id,
         body: body,
-        // .replace(/(?:https?|ftp):\/\/[\n\S]+/g, "")
-        // .replaceAll("\n", " "),
         all_awardings: all_awardings.map((awards) => {
           const { count, name, icon_url } = awards;
           return { count, name, icon_url };
@@ -251,6 +250,18 @@ export const getComments = async (
     };
 
     cleanUpComment(commentTree);
+  }
+
+  if (postDetails.selftext !== "") {
+    comments.unshift({
+      ...postDetails,
+      body: postDetails.selftext as string,
+      created_utc: 1,
+      depth: 0,
+      selected: false,
+      collapse: false,
+      visible: true,
+    });
   }
 
   return {

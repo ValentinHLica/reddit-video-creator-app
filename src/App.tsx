@@ -2,21 +2,17 @@ import React from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
 import { ContextProvider } from "@components/Context";
-
-import { OfflineNotification, Navigation } from "@ui";
+import { OfflineNotification } from "@ui";
 import HomePage from "@components/Home";
 import PostsPage from "@components/Posts";
 import CommentsPage from "@components/Comments";
-import NotFoundPage from "@components/NotFound";
 import CreateVideoPage from "@components/CreateVideo";
-import TestPage from "@components/Test";
 
 const App: React.FC = () => {
   return (
     <ContextProvider>
       <Router>
         <OfflineNotification />
-        <Navigation />
 
         <Switch>
           <Route exact path="/" component={HomePage} />
@@ -30,10 +26,6 @@ const App: React.FC = () => {
           />
 
           <Route exact path="/create-video" component={CreateVideoPage} />
-
-          <Route exact path="/test" component={TestPage} />
-
-          <Route exact path="*" component={NotFoundPage} />
         </Switch>
       </Router>
     </ContextProvider>

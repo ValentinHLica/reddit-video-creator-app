@@ -1,10 +1,7 @@
 import { join } from "path";
 
-import { Crop } from "react-image-crop";
-
 import { tempPath, cliPath } from "@config/paths";
-import { Post } from "@interface/reddit";
-import { Comment } from "@interface/video";
+import { Colors, Post } from "@interface/reddit";
 
 import { copyFolderRecursiveSync, logger } from "@utils/helpers";
 import { Dispatch, SetStateAction } from "react";
@@ -18,15 +15,15 @@ const { writeFileSync, existsSync, mkdirSync } = window.require("fs");
  * @param comments Comments List
  * @param path Path to export final output
  */
+
 export const createPost = async (
   post: Post,
   comments: { [x: string]: any }[],
   exportPath: string,
-  background: string,
   setProgress: Dispatch<SetStateAction<number>>,
   setTotalProgress: Dispatch<SetStateAction<number>>,
   setVideoPath: Dispatch<SetStateAction<string | null>>,
-  crop: Partial<Crop>
+  colors: Colors
 ): Promise<any> => {
   try {
     if (!existsSync(tempPath)) {
@@ -43,6 +40,7 @@ export const createPost = async (
         post,
         comments,
         exportPath,
+        colors,
       })
     );
 
@@ -52,9 +50,6 @@ export const createPost = async (
       logger("Rendering Video", "action");
 
       const cliPath = join(tempPath, "cli");
-      const balconPath = join(cliPath, "balcon", "balcon.exe");
-      const ffprobePath = join(cliPath, "ffmpeg", "ffprobe.exe");
-      const ffmpegPath = join(cliPath, "ffmpeg", "ffmpeg.exe");
       const renderPath = join(cliPath, "render", "render.exe");
 
       const args = [

@@ -1,64 +1,81 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 
+import { SearchItem } from "@interface/reddit";
+
+import { CardWrapper, Card, Button, Modal, Tabs, Input } from "@ui";
+import { AddIcon, HeartIcon, UserIcon, ZapIcon } from "@icon";
 import Layout from "@components/Layout";
-import { CardWrapper, Card, Button, Modal, Tabs } from "@ui";
 import AddFavourite from "./AddFavourite";
 import CreatedComments from "./CreatedComments";
 import Bookmarked from "./Bookmarked";
-import { AddIcon, HeartIcon, UserIcon, ZapIcon } from "@icon";
 
-import { logger, roundUp } from "@utils/helpers";
-
-import { SearchItem } from "@interface/reddit";
+import { roundUp, getStorage, setStorage } from "@utils/helpers";
 
 import styles from "@styles/Home/index.module.scss";
 
 const HomePage: React.FC = () => {
   const history = useHistory();
 
+  const urlInput = useRef<HTMLInputElement>(null);
   const [subreddits, setSubreddits] = useState<SearchItem[]>([]);
   const [modal, setModal] = useState<boolean>(false);
-
-  const fetchFav = () => {
-    const data = localStorage.getItem("favourite");
-
-    if (data) {
-      try {
-        const favourite = JSON.parse(data) as SearchItem[];
-
-        setSubreddits(
-          favourite.map((item: SearchItem) => ({ ...item, added: true }))
-        );
-      } catch (err) {
-        logger("Data saved in localStorage is corrupted!", "error");
-      }
-    }
-  };
 
   const removeSubreddit = (item: SearchItem) => {
     const newFav = subreddits.filter((subreddit) => subreddit.url !== item.url);
 
     setSubreddits(newFav);
 
-    try {
-      localStorage.setItem("favourite", JSON.stringify(newFav));
-    } catch (error) {
-      logger("Data saved in localStorage is corrupted!", "error");
+    setStorage("favourite", JSON.stringify(newFav));
+  };
+
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const postUrl = urlInput.current?.value;
+
+    //www.reddit.com/r/AskReddit/comments/qhvzne/what_is_the_best_couple_in_tv_history/
+
+    if (
+      postUrl?.includes("https://www.reddit.com/r/") &&
+      postUrl.includes("/comments/")
+    ) {
+      const splitedUrl = postUrl.split("/comments/")[1].split("/");
+
+      const subredditId = postUrl.split("/comments/")[0].split("/r/")[1];
+      const commentId = splitedUrl[0];
+      const commentSlugId = splitedUrl[1].replace("/", "");
+
+      const url = `/r/${subredditId}/comments/${commentId}/${commentSlugId}`;
+
+      history.push(url);
     }
   };
 
   useEffect(() => {
-    fetchFav();
+    const data = getStorage("favourite");
 
+    if (data) {
+      setSubreddits(data.map((item: SearchItem) => ({ ...item, added: true })));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Layout>
-      <div className={styles.container}>
-        {/* <Updater /> */}
+      <form onSubmit={submit}>
+        <h4>Direct Post</h4>
+        <Input
+          type="text"
+          placeholder="Post url..."
+          query={urlInput}
+          size="xs"
+        />
 
+        <input type="submit" hidden={true} />
+      </form>
+
+      <div className={styles.container}>
         <Tabs
           tabs={[
             {
@@ -128,8 +145,6 @@ const HomePage: React.FC = () => {
           ]}
         />
       </div>
-
-      {/* <Link to="/create-video">Test</Link> */}
 
       <Modal visible={modal} setModal={setModal}>
         <AddFavourite

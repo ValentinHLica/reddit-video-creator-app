@@ -20,7 +20,6 @@ function createWindow() {
       enableRemoteModule: true,
       webSecurity: false,
     },
-    frame: false,
     resizable: false,
     autoHideMenuBar: true,
   });

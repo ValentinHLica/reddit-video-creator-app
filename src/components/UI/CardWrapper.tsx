@@ -25,7 +25,9 @@ const CardWrapper: React.FC<Props> = ({
           <Button
             onClick={async () => {
               setLoading(true);
+
               await loadMore();
+
               setLoading(false);
             }}
             size="xs"

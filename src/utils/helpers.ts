@@ -1,5 +1,3 @@
-import { balconPath } from "@config/paths";
-
 const {
   mkdirSync,
   existsSync,
@@ -214,4 +212,34 @@ export const listenVoice = (text: string | undefined) => {
       }
     );
   });
+};
+
+export const getStorage = (key: string) => {
+  try {
+    const data = localStorage.getItem(key);
+
+    if (data && data !== "") {
+      return JSON.parse(data);
+    }
+  } catch (err) {
+    logger("Data saved in localStorage is corrupted!", "error");
+  }
+
+  return null;
+};
+
+export const setStorage = (key: string, data: any) => {
+  try {
+    localStorage.setItem(key, data);
+  } catch (err) {
+    logger("Data saved in localStorage is corrupted!", "error");
+  }
+};
+
+export const deleteStorage = (key: string) => {
+  try {
+    localStorage.removeItem(key);
+  } catch (err) {
+    logger("Data saved in localStorage is corrupted!", "error");
+  }
 };

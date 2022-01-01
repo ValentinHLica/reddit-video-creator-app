@@ -3,7 +3,7 @@
   background-color: var(--gray-200);
   box-shadow: -1px 0px 2px var(--gray-400);
   position: fixed;
-  top: 31px;
+  top: 0;
   right: 0;
   bottom: 0;
   transform: translateX(100%);
@@ -14,18 +14,6 @@
   &__visible {
     visibility: visible;
     transform: translateX(0);
-  }
-
-  .drawer__header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 10px 15px;
-
-    p {
-      font-size: small;
-      margin-left: 10px;
-    }
   }
 
   .drawer__content {

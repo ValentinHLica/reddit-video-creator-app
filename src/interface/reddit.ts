@@ -39,6 +39,7 @@ export interface Post {
   permalink: string;
   added?: boolean;
   created?: boolean;
+  selftext?: string;
 }
 
 export interface Posts {
@@ -73,7 +74,7 @@ export interface Comment {
   author: string;
   body: string;
   replies?: Replies | "";
-  parent_id: string;
+  parent_id?: string;
   score: number;
   all_awardings: Award[];
   created_utc: number;
@@ -113,4 +114,10 @@ export type BookmarkPost = {
 
 export interface Created extends Post {
   isBookmarked: boolean;
+}
+
+export interface Colors {
+  subreddit: string;
+  background: string;
+  color: string;
 }

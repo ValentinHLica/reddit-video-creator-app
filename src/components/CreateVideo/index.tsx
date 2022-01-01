@@ -2,10 +2,8 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 
 import dateFormat from "dateformat";
-import { Crop } from "react-image-crop";
 
-import { Comment, Post } from "@interface/reddit";
-import { Comment as VideoComment } from "@interface/video";
+import { Colors, Comment, Post } from "@interface/reddit";
 
 import { Spinner, Button, Progress } from "@ui";
 import { AlertTriangleIcon, HappyFaceIcon } from "@icon";
@@ -13,6 +11,7 @@ import Layout from "@components/Layout";
 import { createPost } from "@utils/generation";
 
 import styles from "@styles/CreateVideo/index.module.scss";
+import { getStorage } from "@utils/helpers";
 
 const { existsSync } = window.require("fs");
 
@@ -23,8 +22,6 @@ const CreateVideoPage: React.FC = () => {
     post: Post;
     commentSlug: string;
     timerMinutes: string;
-    backgroundPath: string;
-    cropDetails: Partial<Crop>;
   }>();
 
   const startTime = useRef<Date>(new Date());
@@ -59,16 +56,17 @@ const CreateVideoPage: React.FC = () => {
       score: comment.score,
     }));
 
+    const colors = getStorage("colors") as Colors[];
+
     try {
       await createPost(
         location.state.post,
         filteredComments,
         outputPath,
-        location.state.backgroundPath,
         setProgress,
         setTotalProgress,
         setVideoPath,
-        location.state.cropDetails
+        colors.filter((e) => e.subreddit === location.state.post.subreddit)[0]
       );
     } catch (err) {
       setError("Failed to create Video");
@@ -108,8 +106,6 @@ const CreateVideoPage: React.FC = () => {
       </div>
     );
   }
-
-  // const { title, comments } = location.state;
 
   return (
     <Layout

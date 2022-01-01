@@ -13,7 +13,7 @@ import Context from "@context";
 import { HeartIcon, UserIcon, ZapIcon } from "@icon";
 
 import { search } from "@utils/redditApi";
-import { roundUp } from "@utils/helpers";
+import { roundUp, setStorage } from "@utils/helpers";
 import { SearchItem, Pagination } from "@interface/reddit";
 
 import styles from "@styles/Home/add-favourite.module.scss";
@@ -76,8 +76,8 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
   const addSubreddit = (item: SearchItem) => {
     const isFav = favourite.filter((subreddit) => subreddit.url === item.url);
 
-    const saveSubreddits = (state: boolean) => {
-      return (searchSubreddit as SearchItem[]).map((subreddit) => {
+    const saveSubreddits = (state: boolean) =>
+      (searchSubreddit as SearchItem[]).map((subreddit) => {
         if (subreddit.url === item.url) {
           return {
             ...subreddit,
@@ -87,7 +87,6 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
 
         return subreddit;
       });
-    };
 
     let newFav: SearchItem[] = [];
 
@@ -98,7 +97,7 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
       newFav = [...favourite, item];
     }
 
-    localStorage.setItem("favourite", JSON.stringify(newFav));
+    setStorage("favourite", JSON.stringify(newFav));
     favouriteSubreddit(newFav);
     setSearchSubreddit(saveSubreddits(true));
   };

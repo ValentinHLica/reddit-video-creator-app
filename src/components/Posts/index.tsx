@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
-import { CardWrapper, Card, Spinner, GoTop, Input } from "@ui";
+import { CardWrapper, Card, Spinner, GoTop } from "@ui";
 import Controls from "./Controls";
 import {
   AlertOctagonIcon,
@@ -14,9 +14,15 @@ import {
 } from "@icon";
 
 import { getPosts, search } from "@utils/redditApi";
-import { logger, roundUp } from "@utils/helpers";
+import { getStorage, logger, roundUp, setStorage } from "@utils/helpers";
 
-import { Post, SearchItem, Pagination, BookmarkPost } from "@interface/reddit";
+import {
+  Post,
+  SearchItem,
+  Pagination,
+  BookmarkPost,
+  Colors,
+} from "@interface/reddit";
 
 import styles from "@styles/Posts/index.module.scss";
 import Layout from "@components/Layout";
@@ -25,7 +31,10 @@ const PostsPage: React.FC = () => {
   const history = useHistory();
   const { subredditId }: { subredditId: string } = useParams();
 
-  const urlInput = useRef<HTMLInputElement>(null);
+  const [colors, setColors] = useState({
+    background: "#eee",
+    color: "#eee",
+  });
   const [subreddit, setSubreddit] = useState<SearchItem | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
@@ -244,25 +253,53 @@ const PostsPage: React.FC = () => {
     }));
   };
 
-  const submit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const changeColor = (type: "background" | "color", value: string) => {
+    const storedColors = getStorage("colors") as Colors[];
 
-    const postUrl = urlInput.current?.value;
+    setColors((prevState) => ({
+      ...prevState,
+      [type]: value,
+    }));
 
-    //www.reddit.com/r/AskReddit/comments/qhvzne/what_is_the_best_couple_in_tv_history/
+    if (storedColors) {
+      let isStored: boolean = false;
 
-    if (
-      postUrl?.includes("https://www.reddit.com/r/") &&
-      postUrl.includes("/comments/")
-    ) {
-      const splitedUrl = postUrl.split("/comments/")[1].split("/");
+      for (const color of storedColors) {
+        if (color.subreddit === subredditId) {
+          isStored = true;
+        }
+      }
 
-      const commentId = splitedUrl[0];
-      const commentSlugId = splitedUrl[1].replace("/", "");
+      if (isStored) {
+        setStorage(
+          "colors",
+          JSON.stringify(
+            storedColors.map((e) => {
+              if (e.subreddit === subredditId) {
+                return { ...e, [type]: value };
+              }
 
-      const url = `/r/${subredditId}/comments/${commentId}/${commentSlugId}`;
-
-      history.push(url);
+              return e;
+            })
+          )
+        );
+      } else {
+        setStorage(
+          "colors",
+          JSON.stringify([
+            ...storedColors,
+            {
+              subreddit: subredditId,
+              ...colors,
+            },
+          ])
+        );
+      }
+    } else {
+      setStorage(
+        "colors",
+        JSON.stringify([{ ...colors, subreddit: subredditId }])
+      );
     }
   };
 
@@ -273,6 +310,20 @@ const PostsPage: React.FC = () => {
     };
 
     onLoad();
+
+    const storedColors = getStorage("colors") as Colors[];
+
+    if (storedColors) {
+      for (const color of storedColors) {
+        if (color.subreddit === subredditId) {
+          setColors({
+            background: color.background,
+            color: color.color,
+          });
+        }
+      }
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -310,16 +361,28 @@ const PostsPage: React.FC = () => {
                 </li>
 
                 <li className={styles.list__item}>
-                  <form onSubmit={submit}>
-                    <Input
-                      type="text"
-                      placeholder="Post url..."
-                      query={urlInput}
-                      size="xs"
-                    />
+                  Background:
+                  <input
+                    type="color"
+                    onChange={(e) => {
+                      changeColor("background", e.target.value);
+                    }}
+                    onInput={(e) => {
+                      console.log(e.currentTarget.value);
+                    }}
+                    value={colors.background}
+                  />
+                </li>
 
-                    <input type="submit" hidden={true} />
-                  </form>
+                <li className={styles.list__item}>
+                  Color:
+                  <input
+                    type="color"
+                    onChange={(e) => {
+                      changeColor("color", e.target.value);
+                    }}
+                    value={colors.color}
+                  />
                 </li>
               </ul>
             </div>

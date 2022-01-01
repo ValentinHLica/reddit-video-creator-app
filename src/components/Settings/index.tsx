@@ -5,11 +5,7 @@ import VoiceChanger from "./VoiceChanger";
 
 import styles from "@styles/Settings/index.module.scss";
 
-type Props = {
-  miniVersion?: boolean;
-};
-
-const SettingsPage: React.FC<Props> = ({ miniVersion = false }) => {
+const SettingsPage: React.FC = () => {
   return (
     <ul className={styles.container}>
       <OutputVideo />
