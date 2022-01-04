@@ -43,6 +43,14 @@
           }
         }
 
+        &.stat__draft {
+          &:hover {
+            svg {
+              color: var(--pink-500);
+            }
+          }
+        }
+
         svg {
           margin-right: 5px;
         }

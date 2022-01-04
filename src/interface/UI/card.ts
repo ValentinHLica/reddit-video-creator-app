@@ -20,4 +20,5 @@ export type CardProps = {
   author?: string;
   actions?: ActionProps[];
   comment?: boolean;
+  children?: JSX.Element;
 };

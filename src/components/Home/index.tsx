@@ -9,6 +9,7 @@ import Layout from "@components/Layout";
 import AddFavourite from "./AddFavourite";
 import CreatedComments from "./CreatedComments";
 import Bookmarked from "./Bookmarked";
+import Draft from "./Draft";
 
 import { roundUp, getStorage, setStorage } from "@utils/helpers";
 
@@ -141,6 +142,10 @@ const HomePage: React.FC = () => {
             {
               text: "Created",
               content: <CreatedComments />,
+            },
+            {
+              text: "Draft",
+              content: <Draft />,
             },
           ]}
         />

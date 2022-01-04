@@ -6,12 +6,25 @@ import { Spinner, GoTop, Button, Modal } from "@ui";
 import CommentCard from "./CommentCard";
 import OutputVideo from "@components/Settings/OutputVideo";
 import VoiceChanger from "@components/Settings/VoiceChanger";
-import { BookmarkIcon, CircleIcon, ClockIcon, PlayIcon, UpsIcon } from "@icon";
+import {
+  BookmarkIcon,
+  CircleIcon,
+  ClockIcon,
+  DraftIcon,
+  PlayIcon,
+  UpsIcon,
+} from "@icon";
 
 import { getComments } from "@utils/redditApi";
 import { countWords, logger, roundUp } from "@utils/helpers";
 
-import { BookmarkPost, Comment, Post } from "@interface/reddit";
+import {
+  BookmarkPost,
+  Colors,
+  Comment,
+  DraftItem,
+  Post,
+} from "@interface/reddit";
 
 import styles from "@styles/Comments/index.module.scss";
 
@@ -32,6 +45,7 @@ const CommentsPage: React.FC = () => {
   const [settingsModal, setSettingsModal] = useState<boolean>(false);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const [isCreated, setIsCreated] = useState<number | null>(null);
+  const [isDrafted, setIsDrafted] = useState<boolean>(false);
   const timerMinutes = countWords(
     comments
       .filter((c) => c.selected)
@@ -259,6 +273,32 @@ const CommentsPage: React.FC = () => {
     });
   };
 
+  const draftVideo = async () => {
+    setIsDrafted(true);
+
+    const draftData = localStorage.getItem("draft");
+    const colorsData = localStorage.getItem("colors");
+    const exportPath = localStorage.getItem("output-path");
+
+    if (colorsData && post && exportPath) {
+      try {
+        const draft = draftData ? (JSON.parse(draftData) as DraftItem[]) : [];
+        const colors = (JSON.parse(colorsData) as Colors[]).filter(
+          (e) => e.subreddit === post.subreddit
+        )[0];
+
+        draft.push({
+          post,
+          colors,
+          comments,
+          exportPath,
+        });
+
+        localStorage.setItem("draft", JSON.stringify(draft));
+      } catch (error) {}
+    }
+  };
+
   const checkBookmark = () => {
     try {
       const bookmark: BookmarkPost = JSON.parse(
@@ -276,6 +316,23 @@ const CommentsPage: React.FC = () => {
       );
     } catch (error) {
       logger("Data saved in localStorage is corrupted!", "error");
+    }
+  };
+
+  const checkDraft = () => {
+    const draftData = localStorage.getItem("draft");
+
+    if (draftData && post) {
+      try {
+        const drafts = JSON.parse(draftData) as DraftItem[];
+
+        for (const item of drafts) {
+          if (item.post.id === post.id) {
+            setIsDrafted(true);
+            break;
+          }
+        }
+      } catch (error) {}
     }
   };
 
@@ -314,6 +371,12 @@ const CommentsPage: React.FC = () => {
 
     setIsBookmarked(!isBookmarked);
   };
+
+  useEffect(() => {
+    if (post) {
+      checkDraft();
+    }
+  }, [post]);
 
   useEffect(() => {
     fetchComments();
@@ -384,6 +447,18 @@ const CommentsPage: React.FC = () => {
 
       return [];
     })(),
+    ...(() => {
+      if (isDrafted) return [];
+
+      return [
+        {
+          text: "Draft",
+          icon: <DraftIcon />,
+          className: `${styles.stat__draft} pointer`,
+          onClick: draftVideo,
+        },
+      ];
+    })(),
   ];
 
   return (
@@ -449,7 +524,11 @@ const CommentsPage: React.FC = () => {
           }`}
           type={timerMinutes > 10 ? "success" : "light"}
           onClick={timerMinutes ? createVideo : undefined}
-          text={timerMinutes < 10 ? `${timerMinutes} minutes` : "Create"}
+          text={
+            timerMinutes < 10
+              ? `${timerMinutes} minutes`
+              : `${timerMinutes}m Create`
+          }
           icon={<ClockIcon />}
         />
 

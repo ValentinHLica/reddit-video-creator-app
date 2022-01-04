@@ -121,3 +121,10 @@ export interface Colors {
   background: string;
   color: string;
 }
+
+export interface DraftItem {
+  post: Post;
+  comments: Comment[];
+  exportPath: string;
+  colors: Colors;
+}
