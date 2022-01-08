@@ -23,7 +23,8 @@ export const createPost = async (
   setProgress: Dispatch<SetStateAction<number>>,
   setTotalProgress: Dispatch<SetStateAction<number>>,
   setVideoPath: Dispatch<SetStateAction<string | null>>,
-  colors: Colors
+  colors: Colors,
+  poster: string
 ): Promise<any> => {
   try {
     if (!existsSync(tempPath)) {
@@ -41,6 +42,7 @@ export const createPost = async (
         comments,
         exportPath,
         colors,
+        poster,
       })
     );
 

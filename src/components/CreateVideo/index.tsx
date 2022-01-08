@@ -57,6 +57,7 @@ const CreateVideoPage: React.FC = () => {
     }));
 
     const colors = getStorage("colors") as Colors[];
+    const poster = localStorage.getItem("poster-path") as string;
 
     try {
       await createPost(
@@ -66,7 +67,8 @@ const CreateVideoPage: React.FC = () => {
         setProgress,
         setTotalProgress,
         setVideoPath,
-        colors.filter((e) => e.subreddit === location.state.post.subreddit)[0]
+        colors.filter((e) => e.subreddit === location.state.post.subreddit)[0],
+        poster
       );
     } catch (err) {
       setError("Failed to create Video");

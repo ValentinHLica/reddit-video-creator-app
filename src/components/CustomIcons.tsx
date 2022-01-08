@@ -1006,3 +1006,22 @@ export const DraftIcon = () => (
     <path d="M9 15L15 15"></path>
   </svg>
 );
+
+export const ImageIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+    <path d="M21 15L16 10 5 21"></path>
+  </svg>
+);
