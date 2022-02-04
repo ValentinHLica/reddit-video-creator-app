@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  row-gap: 15px;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &:first-child {
+      input {
+        width: 89.2%;
+      }
+    }
+
+    span {
+      width: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    h5 {
+      margin-left: 10px;
+      font-weight: 500;
+    }
+
+    & > div {
+      display: flex;
+      align-items: center;
+      column-gap: 10px;
+    }
+  }
+}

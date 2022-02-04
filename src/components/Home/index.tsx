@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import { SearchItem } from "@interface/reddit";
+import { Subreddit } from "@interface/reddit";
 
 import { CardWrapper, Card, Button, Modal, Tabs, Input } from "@ui";
 import { AddIcon, HeartIcon, UserIcon, ZapIcon } from "@icon";
@@ -9,7 +9,6 @@ import Layout from "@components/Layout";
 import AddFavourite from "./AddFavourite";
 import CreatedComments from "./CreatedComments";
 import Bookmarked from "./Bookmarked";
-import Draft from "./Draft";
 
 import { roundUp, getStorage, setStorage } from "@utils/helpers";
 
@@ -18,11 +17,11 @@ import styles from "@styles/Home/index.module.scss";
 const HomePage: React.FC = () => {
   const history = useHistory();
 
-  const urlInput = useRef<HTMLInputElement>(null);
-  const [subreddits, setSubreddits] = useState<SearchItem[]>([]);
+  const inputEl = useRef<HTMLInputElement>(null);
+  const [subreddits, setSubreddits] = useState<Subreddit[]>([]);
   const [modal, setModal] = useState<boolean>(false);
 
-  const removeSubreddit = (item: SearchItem) => {
+  const removeSubreddit = (item: Subreddit) => {
     const newFav = subreddits.filter((subreddit) => subreddit.url !== item.url);
 
     setSubreddits(newFav);
@@ -30,10 +29,12 @@ const HomePage: React.FC = () => {
     setStorage("favourite", JSON.stringify(newFav));
   };
 
-  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+  const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    const postUrl = urlInput.current?.value;
+    if (!inputEl.current) return;
+
+    const postUrl = inputEl.current.value;
 
     //www.reddit.com/r/AskReddit/comments/qhvzne/what_is_the_best_couple_in_tv_history/
 
@@ -54,28 +55,17 @@ const HomePage: React.FC = () => {
   };
 
   useEffect(() => {
-    const data = getStorage("favourite");
+    const data = getStorage("favourite") as Subreddit[];
 
     if (data) {
-      setSubreddits(data.map((item: SearchItem) => ({ ...item, added: true })));
+      setSubreddits(data.map((item) => ({ ...item, added: true })));
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Layout>
-      <form onSubmit={submit}>
-        <h4>Direct Post</h4>
-        <Input
-          type="text"
-          placeholder="Post url..."
-          query={urlInput}
-          size="xs"
-        />
-
-        <input type="submit" hidden={true} />
-      </form>
-
       <div className={styles.container}>
         <Tabs
           tabs={[
@@ -143,11 +133,19 @@ const HomePage: React.FC = () => {
               text: "Created",
               content: <CreatedComments />,
             },
-            {
-              text: "Draft",
-              content: <Draft />,
-            },
           ]}
+          more={
+            <form onSubmit={submit}>
+              <Input
+                type="text"
+                placeholder="Post url..."
+                query={inputEl}
+                size="xs"
+              />
+
+              <input type="submit" hidden={true} />
+            </form>
+          }
         />
       </div>
 

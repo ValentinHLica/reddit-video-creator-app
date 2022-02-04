@@ -11,7 +11,8 @@
     "start:ui": "react-app-rewired start",
     "build:ui": "react-app-rewired build",
     "dev": "concurrently -k \"cross-env BROWSER=none npm run start:ui\" \"wait-on tcp:3000 && electron .\"",
-    "build": "npm run clear:build && npm run build:ui && electron-builder -c.extraMetadata.main=build/main.js"
+    "build": "npm run clear:build && npm run build:ui && electron-builder -c.extraMetadata.main=build/main.js",
+    "app": "npm run clear:build && npm run build:ui && electron-builder -c.extraMetadata.main=build/main.js --win portable"
   },
   "repository": {
     "type": "git",

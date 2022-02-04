@@ -1,22 +1,27 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button, Dropdown } from "@ui";
-import { HeadphoneIcon, VolumeLoudIcon } from "@icon";
-import Card from "./ItemCard";
+import { VolumeLoudIcon } from "@icon";
 
 import { getVoices, listenVoice } from "@utils/helpers";
 
-import styles from "@styles/Settings/voice-changer.module.scss";
-
 const VoiceChanger: React.FC = () => {
-  const textarea = useRef<HTMLTextAreaElement>(null);
   const [selectedVoice, setSelectedVoice] = useState<string>("");
   const [voices, setVoices] = useState<string[]>([]);
+  const [audioPath, setAudioPath] = useState<string | null>(null);
 
   const loadVoices = async () => {
     let listOfVoices: string[];
+
+    const balcon = localStorage.getItem("balcon");
+    const bal4web = localStorage.getItem("bal4web");
+
     try {
-      listOfVoices = await getVoices();
+      listOfVoices = getVoices({
+        bal4web,
+        balcon,
+        customAudio: true,
+      });
 
       setVoices(listOfVoices);
 
@@ -43,42 +48,45 @@ const VoiceChanger: React.FC = () => {
   }, []);
 
   return (
-    <Card title={<>{<HeadphoneIcon />} Change Voice</>}>
-      <div className={styles.container}>
-        <div className={styles.dropdown}>
-          <Dropdown
-            size="xs"
-            type="light"
-            text={selectedVoice}
-            items={voices.map((voice) => {
-              return {
-                text: voice,
-                onClick: onVoiceChange.bind(this, voice),
-              };
-            })}
-            onClick={() => {
-              loadVoices();
-            }}
-          />
-        </div>
+    <li>
+      <span>
+        <VolumeLoudIcon />
+
+        <h5>Listen Audio</h5>
+      </span>
+
+      {audioPath && <audio hidden src={audioPath} />}
+
+      <div>
+        <Dropdown
+          size="xs"
+          type="light"
+          text={selectedVoice}
+          items={voices.map((voice) => {
+            return {
+              text: voice,
+              onClick: onVoiceChange.bind(this, voice),
+            };
+          })}
+          onClick={() => {
+            loadVoices();
+          }}
+        />
 
         <Button
           size="xs"
           text="Speak"
-          type="light"
-          icon={<VolumeLoudIcon />}
-          onClick={() => {
-            listenVoice(textarea.current?.value);
+          onClick={async () => {
+            setAudioPath(
+              await listenVoice({
+                text: `Hello my name is ${selectedVoice.replace("Neural", "")}`,
+                customAudio: true,
+              })
+            );
           }}
         />
       </div>
-
-      <textarea
-        className={styles.textarea}
-        ref={textarea}
-        placeholder="Enter text..."
-      />
-    </Card>
+    </li>
   );
 };
 

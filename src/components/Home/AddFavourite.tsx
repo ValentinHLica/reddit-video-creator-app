@@ -14,13 +14,13 @@ import { HeartIcon, UserIcon, ZapIcon } from "@icon";
 
 import { search } from "@utils/redditApi";
 import { roundUp, setStorage } from "@utils/helpers";
-import { SearchItem, Pagination } from "@interface/reddit";
+import { Subreddit, Pagination } from "@interface/reddit";
 
 import styles from "@styles/Home/add-favourite.module.scss";
 
 type Props = {
-  favourite: SearchItem[];
-  favouriteSubreddit: Dispatch<SetStateAction<SearchItem[]>>;
+  favourite: Subreddit[];
+  favouriteSubreddit: Dispatch<SetStateAction<Subreddit[]>>;
 };
 
 const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
@@ -73,11 +73,11 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
     setLoading(false);
   };
 
-  const addSubreddit = (item: SearchItem) => {
+  const addSubreddit = (item: Subreddit) => {
     const isFav = favourite.filter((subreddit) => subreddit.url === item.url);
 
     const saveSubreddits = (state: boolean) =>
-      (searchSubreddit as SearchItem[]).map((subreddit) => {
+      (searchSubreddit as Subreddit[]).map((subreddit) => {
         if (subreddit.url === item.url) {
           return {
             ...subreddit,
@@ -88,7 +88,7 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
         return subreddit;
       });
 
-    let newFav: SearchItem[] = [];
+    let newFav: Subreddit[] = [];
 
     if (isFav.length !== 0) {
       newFav = favourite.filter((subreddit) => subreddit.url !== item.url);
@@ -129,7 +129,7 @@ const AddFavourite: React.FC<Props> = ({ favourite, favouriteSubreddit }) => {
 
       setPagination(resultsPagination);
       setSearchSubreddit((prevState) => {
-        return [...(prevState as SearchItem[]), ...addedFilter];
+        return [...(prevState as Subreddit[]), ...addedFilter];
       });
     } catch (err) {
       console.log(err);

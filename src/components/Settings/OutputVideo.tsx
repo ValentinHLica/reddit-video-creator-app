@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Button, Input } from "@ui";
-import { FolderIcon, VideoIcon } from "@icon";
-import Card from "./ItemCard";
-
-import styles from "@styles/Settings/output.module.scss";
+import { FolderIcon } from "@icon";
 
 const { dialog } = window.require("@electron/remote");
 const { existsSync } = window.require("fs");
@@ -50,19 +47,19 @@ const OutputVideo: React.FC = () => {
   }, []);
 
   return (
-    <Card title={<>{<VideoIcon />} Video Output</>}>
-      <div className={styles.container}>
+    <li>
+      <span>
+        <FolderIcon />
+
+        <h5>Output Path</h5>
+      </span>
+
+      <div>
         <Input readOnly placeholder={outputPath ?? ".."} size="xs" />
 
-        <Button
-          onClick={updatePath}
-          size="xs"
-          text="Change"
-          type="light"
-          icon={<FolderIcon />}
-        />
+        <Button onClick={updatePath} size="xs" text="Change" />
       </div>
-    </Card>
+    </li>
   );
 };
 

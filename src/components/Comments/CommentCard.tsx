@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  ClockIcon,
   CollapseIcon,
   ExpandIcon,
   SquareCheckIcon,
@@ -28,7 +27,6 @@ interface Props extends Comment {
 const CommentCard: React.FC<Props> = ({
   author,
   body,
-  created_utc,
   depth,
   ups,
   selected,
@@ -51,10 +49,6 @@ const CommentCard: React.FC<Props> = ({
     {
       icon: <UpsIcon />,
       text: `${roundUp(ups)} Ups`,
-    },
-    {
-      icon: <ClockIcon />,
-      text: new Date(created_utc * 1000).toLocaleDateString("en-US"),
     },
     {
       icon: selected ? <SquareCheckIcon /> : <SquareIcon />,
@@ -81,7 +75,6 @@ const CommentCard: React.FC<Props> = ({
 
       return [];
     })(),
-    { text: "", icon: <></>, className: styles.stat__collapse },
     ...(() => {
       if (depth === 0) {
         const upArrow = {
@@ -143,9 +136,7 @@ const CommentCard: React.FC<Props> = ({
         </ul>
       </div>
 
-      <p className={styles.comment__content}>
-        {body}
-      </p>
+      <p className={styles.comment__content}>{body}</p>
     </div>
   );
 };

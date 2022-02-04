@@ -1,7 +1,7 @@
 import { join } from "path";
 
-import { tempPath, cliPath } from "@config/paths";
-import { Colors, Post } from "@interface/reddit";
+import { tempPath, cliPath, buildPath } from "@config/paths";
+import { Colors, Post, PostFile } from "@interface/reddit";
 
 import { copyFolderRecursiveSync, logger } from "@utils/helpers";
 import { Dispatch, SetStateAction } from "react";
@@ -18,7 +18,12 @@ const { writeFileSync, existsSync, mkdirSync } = window.require("fs");
 
 export const createPost = async (
   post: Post,
-  comments: { [x: string]: any }[],
+  comments: {
+    content: string;
+    user: string;
+    depth: number;
+    score: number;
+  }[],
   exportPath: string,
   setProgress: Dispatch<SetStateAction<number>>,
   setTotalProgress: Dispatch<SetStateAction<number>>,
@@ -32,46 +37,64 @@ export const createPost = async (
     }
 
     copyFolderRecursiveSync(cliPath, tempPath);
+    copyFolderRecursiveSync(join(buildPath, "music"), tempPath);
 
     const postPath = join(tempPath, "post.json");
 
-    writeFileSync(
-      postPath,
-      JSON.stringify({
-        post,
-        comments,
-        exportPath,
-        colors,
-        poster,
-      })
-    );
-
+    const outro = localStorage.getItem("outro");
+    const outroImage = localStorage.getItem("outro-image");
+    const ffmpeg = localStorage.getItem("ffmpeg");
+    const ffprobe = localStorage.getItem("ffprobe");
+    const balcon = localStorage.getItem("balcon");
+    const bal4web = localStorage.getItem("bal4web");
     const voice = localStorage.getItem("voice");
+
+    const configHandler = (value: string | null) =>
+      value && value !== "" && existsSync(value) ? value : null;
+
+    const postFile: PostFile = {
+      post,
+      comments,
+      exportPath,
+      colors,
+      poster,
+      voice,
+      cli: {
+        ffmpeg: configHandler(ffmpeg),
+        ffprobe: configHandler(ffprobe),
+        balcon: configHandler(balcon),
+        bal4web: configHandler(bal4web),
+      },
+      customAudio: true,
+      audioTrimDuration: 0.8,
+      outro: configHandler(outro),
+      outroImage: configHandler(outroImage),
+    };
+
+    writeFileSync(postPath, JSON.stringify(postFile));
 
     return new Promise(async (resolve) => {
       logger("Rendering Video", "action");
 
       const cliPath = join(tempPath, "cli");
-      const renderPath = join(cliPath, "render", "render.exe");
+      const renderPath = join(cliPath, "render.exe");
 
-      const args = [
-        // `BALCON=${balconPath}`,
-        // `FFMPEG=${ffmpegPath}`,
-        // `FFPROBE=${ffprobePath}`,
-        `POST=${postPath}`,
-        ...(() => (voice ? [`VOICE=${voice}`] : []))(),
-      ];
+      await execFile(
+        renderPath,
+        [`POST=${postPath}`],
+        (error: any, stdout: string) => {
+          if (error) {
+            logger("Video couldn't render successfully", "error");
+            throw error;
+          }
 
-      await execFile(renderPath, args, (error: any, stdout: string) => {
-        if (error) {
-          logger("Video couldn't render successfully", "error");
-          throw error;
+          logger("Video rendered successfully", "success");
+
+          resolve(stdout);
         }
+      ).stdout.on("data", (data: string) => {
+        console.log(data);
 
-        logger("Video rendered successfully", "success");
-
-        resolve(stdout);
-      }).stdout.on("data", (data: string) => {
         if (data.includes("process-count=")) {
           setTotalProgress((prevState) => {
             if (prevState !== 0) {

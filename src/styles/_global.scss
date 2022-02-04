@@ -9,7 +9,7 @@
   -webkit-appearance: none;
   scroll-behavior: smooth;
   outline: none;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 body {
@@ -162,18 +162,6 @@ ul {
   stroke-linejoin: round;
 }
 
-.clock-icon {
-  circle {
-    color: var(--yellow-500);
-    fill: var(--yellow-500);
-  }
-
-  path {
-    color: white;
-    fill: white;
-  }
-}
-
 .pointer {
   cursor: pointer;
 }
@@ -185,11 +173,6 @@ ul {
 .video-icon {
   fill: var(--red-500);
   color: var(--red-500);
-}
-
-.folder-icon {
-  fill: var(--yellow-500);
-  color: var(--yellow-500);
 }
 
 .headphone-icon {

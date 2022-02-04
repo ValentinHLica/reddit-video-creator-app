@@ -1,5 +1,5 @@
 .drawer {
-  width: 350px;
+  width: 400px;
   background-color: var(--gray-200);
   box-shadow: -1px 0px 2px var(--gray-400);
   position: fixed;
@@ -10,28 +10,10 @@
   visibility: hidden;
   z-index: 1;
   transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0.3s ease;
+  padding: 5px 15px;
 
   &__visible {
     visibility: visible;
     transform: translateX(0);
-  }
-
-  .drawer__content {
-    .content__list {
-      margin-top: 15px;
-
-      .list__item {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        font-size: small;
-        padding: 5px 15px;
-        transition: background-color 0.3s ease;
-
-        svg {
-          margin-right: 5px;
-        }
-      }
-    }
   }
 }

@@ -4,7 +4,7 @@ import {
   Post,
   Posts,
   Comment,
-  SearchItem,
+  Subreddit,
   Filter,
   Pagination,
   CommentWrapper,
@@ -20,7 +20,7 @@ const redditUrl = "https://www.reddit.com";
 export const search = async (
   query: string,
   page?: string
-): Promise<{ pagination: Pagination; data: SearchItem[] }> => {
+): Promise<{ pagination: Pagination; data: Subreddit[] }> => {
   const url = `${redditUrl}/search.json?q=${query}&type=sr%2Cuser${
     page ? `&after=${page}` : ""
   }`;

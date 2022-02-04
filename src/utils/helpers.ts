@@ -1,3 +1,6 @@
+import { tempPath } from "@config/paths";
+import { Storage } from "@interface/helper";
+
 const {
   mkdirSync,
   existsSync,
@@ -10,7 +13,7 @@ const {
   // statSync,
 } = window.require("fs");
 const { join, basename } = window.require("path");
-const { execFile } = window.require("child_process");
+const { execSync } = window.require("child_process");
 
 /**
  * Logger handler for action, success, error
@@ -166,61 +169,91 @@ export const splitText = (text: string): string[] => {
   return sentences;
 };
 
+type GetVoices = (args: {
+  customAudio: boolean;
+  balcon: string | null;
+  bal4web: string | null;
+}) => string[];
+
 /**
  * Get List of voices
  * @returns List of voices
  */
-export const getVoices = (): Promise<string[]> => {
-  return new Promise((resolve) => {
-    execFile("balcon", ["-l"], (error: any, stdout: string) => {
-      if (error) {
-        throw error;
-      }
+export const getVoices: GetVoices = ({ customAudio, balcon, bal4web }) => {
+  if (!customAudio) {
+    const command = `${
+      balcon && existsSync(balcon) ? `"${balcon}"` : "balcon"
+    } -l`;
 
-      const listOfVoice = stdout
-        .trim()
-        .split("\n")
-        .map((v) => v.trim())
-        .filter((v) => v !== "SAPI 5:");
+    const voices = execSync(command).toString() as string;
 
-      resolve(listOfVoice);
-    });
-  });
+    return voices
+      .trim()
+      .split("\n")
+      .map((v) => v.trim())
+      .filter((v) => v !== "SAPI 5:");
+  } else {
+    const command = `${
+      bal4web && existsSync(bal4web) ? `"${bal4web}"` : "bal4web"
+    } -s m -m`;
+
+    const voices = execSync(command).toString() as string;
+
+    return voices
+      .trim()
+      .split("\n")
+      .map((v) => v.trim())
+      .filter((v) => v !== "* Microsoft Azure *" && v.includes("en-US"))[0]
+      .split(" en-US ")[1]
+      .slice(1, -1)
+      .split(", ");
+  }
 };
+
+type ListenVoice = (args: {
+  text: string | undefined;
+  customAudio: boolean;
+}) => Promise<string | null>;
 
 /**
  * Listen to selected voice
  */
-export const listenVoice = (text: string | undefined) => {
-  return new Promise((resolve) => {
-    const voice = localStorage.getItem("voice");
+export const listenVoice: ListenVoice = ({ text, customAudio }) => {
+  const balcon = localStorage.getItem("balcon");
+  const bal4web = localStorage.getItem("bal4web");
 
-    execFile(
-      "balcon",
-      [
-        "-n",
-        voice,
-        "-t",
-        !text || text === "" ? "Hello my name is john" : text,
-      ],
-      (error: any, stdout: string) => {
-        if (error) {
-          throw error;
-        }
+  const voice = localStorage.getItem("voice");
 
-        resolve(null);
-      }
+  if (!customAudio) {
+    execSync(
+      `${existsSync(balcon) ? `"${balcon}"` : "balcon"} -n ${voice} -t ${text}`
     );
-  });
+  } else {
+    const audioPath = join(
+      tempPath,
+      "data",
+      `${createRandomString(3)}-audio.wav`
+    );
+
+    if (existsSync(audioPath)) {
+      unlinkSync(audioPath);
+    }
+
+    execSync(
+      `${
+        existsSync(bal4web) ? `"${bal4web}"` : "bal4web"
+      } -s m -l en-US -n ${voice} -t "${text}" -w "${audioPath}"`
+    );
+
+    return audioPath;
+  }
 };
 
-export const getStorage = (key: string) => {
+export const getStorage = (key: Storage) => {
   try {
     const data = localStorage.getItem(key);
 
-    if (data && data !== "") {
-      return JSON.parse(data);
-    }
+    if (data && data !== "") return JSON.parse(data);
   } catch (err) {
     logger("Data saved in localStorage is corrupted!", "error");
   }
@@ -228,7 +261,7 @@ export const getStorage = (key: string) => {
   return null;
 };
 
-export const setStorage = (key: string, data: any) => {
+export const setStorage = (key: Storage, data: any) => {
   try {
     localStorage.setItem(key, data);
   } catch (err) {
@@ -236,7 +269,7 @@ export const setStorage = (key: string, data: any) => {
   }
 };
 
-export const deleteStorage = (key: string) => {
+export const deleteStorage = (key: Storage) => {
   try {
     localStorage.removeItem(key);
   } catch (err) {

@@ -17,6 +17,7 @@ const renderPath = join(cliPath, "render", "render.exe");
 
 export {
   assetsPath,
+  buildPath,
   fontPath,
   imagePath,
   tempPath,

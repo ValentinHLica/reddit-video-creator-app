@@ -32,6 +32,24 @@ export const ArrowUpIcon = () => (
   </svg>
 );
 
+export const ArrowLeftIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <path d="M19 12L5 12"></path>
+    <path d="M12 19L5 12 12 5"></path>
+  </svg>
+);
+
 export const HeartIcon = ({ added }: { added: boolean }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -984,26 +1002,6 @@ export const InboxIcon = () => (
   >
     <path d="M22 12L16 12 14 15 10 15 8 12 2 12"></path>
     <path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"></path>
-  </svg>
-);
-
-export const DraftIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
-    fill="none"
-    stroke="currentColor"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    strokeWidth="2"
-    className="icon"
-    viewBox="0 0 24 24"
-  >
-    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
-    <path d="M14 2L14 8 20 8"></path>
-    <path d="M12 18L12 12"></path>
-    <path d="M9 15L15 15"></path>
   </svg>
 );
 

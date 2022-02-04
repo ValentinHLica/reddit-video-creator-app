@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from "react";
 
 import { Button } from "@ui";
-import { MenuIcon, SettingsIcon } from "@icon";
+import { SettingsIcon } from "@icon";
+import SettingsPage from "@components/Settings";
 
 import styles from "@styles/UI/drawer.module.scss";
-import SettingsPage from "@components/Settings";
 
 type Props = {
   visible: boolean;
@@ -28,28 +28,12 @@ const Drawer: React.FC<Props> = ({ visible, setVisible }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const drawerNav: {
-    content: string | JSX.Element;
-    icon?: JSX.Element;
-    onClick?: () => void;
-    className?: string;
-  }[] = [
-    {
-      content: "Settings",
-      icon: <SettingsIcon />,
-    },
-    {
-      content: <SettingsPage />,
-      onClick: () => {},
-    },
-  ];
-
   return (
     <div className={styles.container} ref={container}>
       <Button
         type="empty"
         size="xs"
-        icon={<MenuIcon />}
+        icon={<SettingsIcon />}
         onClick={() => setVisible(true)}
       />
       <div
@@ -57,23 +41,7 @@ const Drawer: React.FC<Props> = ({ visible, setVisible }) => {
           visible ? styles.drawer__visible : ""
         } drawer`}
       >
-        <div className={styles.drawer__content}>
-          <ul className={styles.content__list}>
-            {drawerNav.map((item, index) => {
-              const { content, icon, className, onClick } = item;
-
-              return (
-                <li
-                  className={`${styles.list__item} ${className ?? ""}`}
-                  onClick={onClick}
-                  key={index}
-                >
-                  {icon} {content}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+        <SettingsPage />
       </div>
     </div>
   );

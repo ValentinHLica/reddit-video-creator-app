@@ -18,7 +18,7 @@ import { getStorage, logger, roundUp, setStorage } from "@utils/helpers";
 
 import {
   Post,
-  SearchItem,
+  Subreddit,
   Pagination,
   BookmarkPost,
   Colors,
@@ -35,7 +35,7 @@ const PostsPage: React.FC = () => {
     background: "#eee",
     color: "#eee",
   });
-  const [subreddit, setSubreddit] = useState<SearchItem | null>(null);
+  const [subreddit, setSubreddit] = useState<Subreddit | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
     next: null,
@@ -90,7 +90,7 @@ const PostsPage: React.FC = () => {
     try {
       return JSON.parse(
         localStorage.getItem("favourite") ?? "[]"
-      ) as SearchItem[];
+      ) as Subreddit[];
     } catch (err) {
       logger("Data saved in localStorage is corrupted!", "error");
 
@@ -145,7 +145,7 @@ const PostsPage: React.FC = () => {
       localStorage.setItem("favourite", JSON.stringify(newFav));
     }
 
-    setSubreddit({ ...(subreddit as SearchItem), added: !added });
+    setSubreddit({ ...(subreddit as Subreddit), added: !added });
   };
 
   const loadMore = async () => {
@@ -361,7 +361,6 @@ const PostsPage: React.FC = () => {
                 </li>
 
                 <li className={styles.list__item}>
-                  Background:
                   <input
                     type="color"
                     onChange={(e) => {
@@ -371,18 +370,21 @@ const PostsPage: React.FC = () => {
                       console.log(e.currentTarget.value);
                     }}
                     value={colors.background}
+                    id="background"
                   />
+                  <label htmlFor="background">Background</label>
                 </li>
 
                 <li className={styles.list__item}>
-                  Color:
                   <input
                     type="color"
                     onChange={(e) => {
                       changeColor("color", e.target.value);
                     }}
                     value={colors.color}
+                    id="color"
                   />
+                  <label htmlFor="color">Color</label>
                 </li>
               </ul>
             </div>

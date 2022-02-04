@@ -1,4 +1,4 @@
-export interface SearchItem {
+export interface Subreddit {
   display_name: string;
   title: string;
   display_name_prefixed: string;
@@ -11,7 +11,7 @@ export interface SearchItem {
 
 export interface Search {
   kind: string;
-  data: SearchItem;
+  data: Subreddit;
 }
 
 export interface Pagination {
@@ -122,9 +122,26 @@ export interface Colors {
   color: string;
 }
 
-export interface DraftItem {
+export interface PostFile {
   post: Post;
-  comments: Comment[];
+  comments: {
+    content: string;
+    user: string;
+    depth: number;
+    score: number;
+  }[];
   exportPath: string;
   colors: Colors;
+  poster: string | null;
+  voice: string | null;
+  cli: {
+    ffprobe: string | null;
+    ffmpeg: string | null;
+    balcon: string | null;
+    bal4web: string | null;
+  };
+  customAudio: boolean;
+  audioTrimDuration: number;
+  outro: string | null;
+  outroImage: string | null;
 }

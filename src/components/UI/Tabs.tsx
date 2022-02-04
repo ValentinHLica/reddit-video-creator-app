@@ -4,14 +4,22 @@ import styles from "@styles/UI/tabs.module.scss";
 
 type Props = {
   tabs: { text: string; content: JSX.Element }[];
+  more?: JSX.Element;
 };
 
-const Tabs: React.FC<Props> = ({ tabs }) => {
+const Tabs: React.FC<Props> = ({ tabs, more }) => {
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   return (
     <Fragment>
-      <div className={styles.container}>
+      <div
+        className={styles.container}
+        style={{
+          justifyContent: more ? "space-between" : "center",
+        }}
+      >
+        {more}
+
         <ul className={styles.container__tabs}>
           {tabs.map((tab, index) => (
             <li

@@ -14,7 +14,6 @@
         }
 
         .posts__desc {
-          font-weight: 500;
           line-height: 16px;
           font-size: 14px;
           opacity: 0.9;
@@ -39,6 +38,27 @@
 
             svg {
               margin-right: 5px;
+            }
+
+            label {
+              cursor: pointer;
+            }
+
+            input[type="color"] {
+              -webkit-appearance: none;
+              border: none;
+              width: 13px;
+              height: 13px;
+              cursor: pointer;
+              margin-right: 5px;
+            }
+
+            input[type="color"]::-webkit-color-swatch-wrapper {
+              padding: 0;
+            }
+
+            input[type="color"]::-webkit-color-swatch {
+              border: none;
             }
           }
         }

@@ -6,12 +6,12 @@ import {
   SetStateAction,
 } from "react";
 
-import { SearchItem } from "@interface/reddit";
+import { Subreddit } from "@interface/reddit";
 
 interface State {
   offline: boolean;
-  searchSubreddit: SearchItem[] | null;
-  setSearchSubreddit: Dispatch<SetStateAction<SearchItem[] | null>>;
+  searchSubreddit: Subreddit[] | null;
+  setSearchSubreddit: Dispatch<SetStateAction<Subreddit[] | null>>;
   drawer: boolean;
   setDrawer: (state: boolean) => void;
 }
@@ -27,7 +27,7 @@ const Context = createContext<State>({
 export const ContextProvider: React.FC = ({ children }) => {
   const [drawer, setDrawer] = useState<boolean>(false);
   const [offline, setOffline] = useState<boolean>(false);
-  const [searchSubreddit, setSearchSubreddit] = useState<SearchItem[] | null>(
+  const [searchSubreddit, setSearchSubreddit] = useState<Subreddit[] | null>(
     null
   );
 
