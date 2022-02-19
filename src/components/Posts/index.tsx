@@ -14,7 +14,7 @@ import {
 } from "@icon";
 
 import { getPosts, search } from "@utils/redditApi";
-import { getStorage, logger, roundUp, setStorage } from "@utils/helpers";
+import { logger, roundUp } from "@utils/helpers";
 
 import {
   Post,
@@ -31,10 +31,6 @@ const PostsPage: React.FC = () => {
   const history = useHistory();
   const { subredditId }: { subredditId: string } = useParams();
 
-  const [colors, setColors] = useState({
-    background: "#eee",
-    color: "#eee",
-  });
   const [subreddit, setSubreddit] = useState<Subreddit | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
@@ -253,56 +249,6 @@ const PostsPage: React.FC = () => {
     }));
   };
 
-  const changeColor = (type: "background" | "color", value: string) => {
-    const storedColors = getStorage("colors") as Colors[];
-
-    setColors((prevState) => ({
-      ...prevState,
-      [type]: value,
-    }));
-
-    if (storedColors) {
-      let isStored: boolean = false;
-
-      for (const color of storedColors) {
-        if (color.subreddit === subredditId) {
-          isStored = true;
-        }
-      }
-
-      if (isStored) {
-        setStorage(
-          "colors",
-          JSON.stringify(
-            storedColors.map((e) => {
-              if (e.subreddit === subredditId) {
-                return { ...e, [type]: value };
-              }
-
-              return e;
-            })
-          )
-        );
-      } else {
-        setStorage(
-          "colors",
-          JSON.stringify([
-            ...storedColors,
-            {
-              subreddit: subredditId,
-              ...colors,
-            },
-          ])
-        );
-      }
-    } else {
-      setStorage(
-        "colors",
-        JSON.stringify([{ ...colors, subreddit: subredditId }])
-      );
-    }
-  };
-
   useEffect(() => {
     const onLoad = async () => {
       await fetchSubreddit();
@@ -310,20 +256,6 @@ const PostsPage: React.FC = () => {
     };
 
     onLoad();
-
-    const storedColors = getStorage("colors") as Colors[];
-
-    if (storedColors) {
-      for (const color of storedColors) {
-        if (color.subreddit === subredditId) {
-          setColors({
-            background: color.background,
-            color: color.color,
-          });
-        }
-      }
-    }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -358,33 +290,6 @@ const PostsPage: React.FC = () => {
                 <li className={styles.list__item}>
                   {<UserIcon />}
                   {subreddit ? roundUp(subreddit.subscribers) : "0"}
-                </li>
-
-                <li className={styles.list__item}>
-                  <input
-                    type="color"
-                    onChange={(e) => {
-                      changeColor("background", e.target.value);
-                    }}
-                    onInput={(e) => {
-                      console.log(e.currentTarget.value);
-                    }}
-                    value={colors.background}
-                    id="background"
-                  />
-                  <label htmlFor="background">Background</label>
-                </li>
-
-                <li className={styles.list__item}>
-                  <input
-                    type="color"
-                    onChange={(e) => {
-                      changeColor("color", e.target.value);
-                    }}
-                    value={colors.color}
-                    id="color"
-                  />
-                  <label htmlFor="color">Color</label>
                 </li>
               </ul>
             </div>

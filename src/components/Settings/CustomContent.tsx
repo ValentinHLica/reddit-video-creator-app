@@ -70,12 +70,12 @@ const CustomContent: React.FC = () => {
     }
 
     const savedOutroImage = localStorage.getItem("outro-image");
-    if (savedOutroImage && existsSync(savedOutroImage)) {
+    if (savedOutroImage) {
       setOutroImage(savedOutroImage);
     }
 
     const posterPath = localStorage.getItem("poster-path");
-    if (posterPath && existsSync(posterPath)) {
+    if (posterPath) {
       setPosterPath(posterPath);
     }
   }, []);

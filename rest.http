@@ -1,9 +1,0 @@
-### Search Subreddits
-GET https://www.reddit.com/search.json?q=ana&type=sr%2Cuser HTTP/1.1
-
-### Get Subreddit posts
-GET http://www.reddit.com/r/ama/top.json?t=all HTTP/1.1
-
-### Get post comments
-GET https://www.reddit.com/r/politics/comments/pu8m01/megathread_house_jan_6_select_committee_issues.json?sort=top HTTP/1.1
-

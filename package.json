@@ -47,7 +47,7 @@
   },
   "build": {
     "extends": null,
-    "appId": "com.example.electron-cra",
+    "appId": "com.example.reddit-video-app",
     "files": [
       "dist/**/*",
       "build/**/*",
