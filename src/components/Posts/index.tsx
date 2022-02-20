@@ -16,13 +16,7 @@ import {
 import { getPosts, search } from "@utils/redditApi";
 import { logger, roundUp } from "@utils/helpers";
 
-import {
-  Post,
-  Subreddit,
-  Pagination,
-  BookmarkPost,
-  Colors,
-} from "@interface/reddit";
+import { Post, Subreddit, Pagination, BookmarkPost } from "@interface/reddit";
 
 import styles from "@styles/Posts/index.module.scss";
 import Layout from "@components/Layout";

@@ -48,6 +48,7 @@ export const createPost = async (
     const balcon = localStorage.getItem("balcon");
     const bal4web = localStorage.getItem("bal4web");
     const voice = localStorage.getItem("voice");
+    const music = localStorage.getItem("music");
 
     const configHandler = (value: string | null) =>
       value && value !== "" && existsSync(value) ? value : null;
@@ -66,9 +67,9 @@ export const createPost = async (
         bal4web: configHandler(bal4web),
       },
       customAudio: true,
-      audioTrimDuration: 0.8,
       outro: configHandler(outro),
       outroImage: configHandler(outroImage),
+      music: configHandler(music),
     };
 
     writeFileSync(postPath, JSON.stringify(postFile));

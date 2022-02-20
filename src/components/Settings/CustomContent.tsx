@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Button, Input } from "@ui";
-import { ArrowRightIcon, ImageIcon } from "@icon";
-import { existsSync } from "fs";
+import { ArrowRightIcon, ImageIcon, MusicIcon } from "@icon";
 
 const { dialog } = window.require("@electron/remote");
 
@@ -11,6 +10,7 @@ const CustomContent: React.FC = () => {
   const [outroImage, setOutroImage] = useState<string | null>(null);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [posterPath, setPosterPath] = useState<string | null>(null);
+  const [musicPath, setMusicPath] = useState<string | null>(null);
 
   const onChange: (type: "outro", value: string) => void = (type, value) => {
     switch (type) {
@@ -35,31 +35,46 @@ const CustomContent: React.FC = () => {
     return path.filePaths[0];
   };
 
-  const updatePath = async (type: "mid" | "end") => {
+  const updatePath = async (type: "mid" | "end" | "music") => {
     if (isClicked) {
       return true;
     }
 
     const path = await getPath();
 
-    if (type === "end") {
-      if (path) {
-        setOutroImage(path);
-        localStorage.setItem("outro-image", path);
-      } else {
-        setOutroImage(null);
-        localStorage.removeItem("outro-image");
-      }
+    switch (type) {
+      case "end":
+        if (path) {
+          setOutroImage(path);
+          localStorage.setItem("outro-image", path);
+        } else {
+          setOutroImage(null);
+          localStorage.removeItem("outro-image");
+        }
+        break;
 
-      return;
-    }
+      case "mid":
+        if (path) {
+          setPosterPath(path);
+          localStorage.setItem("poster-path", path);
+        } else {
+          setPosterPath(null);
+          localStorage.removeItem("poster-path");
+        }
+        break;
 
-    if (path) {
-      setPosterPath(path);
-      localStorage.setItem("poster-path", path);
-    } else {
-      setPosterPath(null);
-      localStorage.removeItem("poster-path");
+      case "music":
+        if (path) {
+          setPosterPath(path);
+          localStorage.setItem("poster-path", path);
+        } else {
+          setPosterPath(null);
+          localStorage.removeItem("poster-path");
+        }
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -77,6 +92,11 @@ const CustomContent: React.FC = () => {
     const posterPath = localStorage.getItem("poster-path");
     if (posterPath) {
       setPosterPath(posterPath);
+    }
+
+    const musicPath = localStorage.getItem("music");
+    if (musicPath) {
+      setMusicPath(musicPath);
     }
   }, []);
 
@@ -129,6 +149,24 @@ const CustomContent: React.FC = () => {
 
           <Button
             onClick={updatePath.bind(this, "end")}
+            size="xs"
+            text="Change"
+          />
+        </div>
+      </li>
+
+      <li>
+        <span>
+          <MusicIcon />
+
+          <h5>Background Music</h5>
+        </span>
+
+        <div>
+          <Input readOnly placeholder={musicPath ?? "..."} size="xs" />
+
+          <Button
+            onClick={updatePath.bind(this, "music")}
             size="xs"
             text="Change"
           />
