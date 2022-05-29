@@ -1,0 +1,60 @@
+@import "../../typography";
+@import "../../utils/background";
+
+.card {
+  display: flex;
+  flex-direction: column;
+  column-gap: 10px;
+  row-gap: 10px;
+  padding: 20px 15px;
+  transition: background-color var(--transition-duration)
+    var(--transition-animation);
+
+  &:hover {
+    background-color: var(--gray-cool-100);
+  }
+
+  .details {
+    display: flex;
+    align-items: center;
+
+    .subreddit {
+      font-weight: 500;
+      color: var(--gray-cool-700);
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+      text-transform: capitalize;
+      row-gap: 10px;
+      column-gap: 10px;
+    }
+  }
+
+  .title {
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    row-gap: 15px;
+    column-gap: 15px;
+
+    li {
+      display: flex;
+      align-items: center;
+      row-gap: 10px;
+      column-gap: 10px;
+
+      input {
+        max-width: 70px;
+      }
+    }
+
+    button {
+      margin-left: auto;
+    }
+  }
+}

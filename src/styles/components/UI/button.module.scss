@@ -1,0 +1,47 @@
+@import "../../typography";
+@import "../../utils/background";
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 10px;
+  border: none;
+  border-radius: var(--border-radius);
+  transition: background-color var(--transition-duration)
+      var(--transition-animation),
+    box-shadow var(--transition-duration) var(--transition-animation);
+  cursor: pointer;
+
+  &__xs {
+    padding: 7px 11px;
+
+    @include typography(12px, normal, 400, 18px, 0em, center);
+  }
+
+  &__sm {
+    padding: 9px 13px;
+
+    @include typography(14px, normal, 400, 21px, 0em, center);
+  }
+
+  &__md {
+    padding: 9px 17px;
+
+    @include typography(14px, normal, 400, 21px, 0em, center);
+  }
+
+  &__lg {
+    padding: 9px 17px;
+
+    @include typography(16px, normal, 400, 24px, 0em, center);
+  }
+
+  &__xl {
+    padding: 13px 25px;
+
+    @include typography(16px, normal, 400, 24px, 0em, center);
+  }
+
+  @include colors;
+}

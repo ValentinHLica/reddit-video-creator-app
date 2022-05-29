@@ -1,0 +1,8 @@
+@mixin typography($size, $style, $weight, $height, $spacing, $align) {
+  font-size: $size;
+  font-style: $style;
+  font-weight: $weight;
+  line-height: $height;
+  letter-spacing: $spacing;
+  text-align: $align;
+}

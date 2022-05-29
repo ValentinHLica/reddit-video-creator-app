@@ -1,0 +1,117 @@
+@mixin colors {
+  svg {
+    path {
+      fill: white;
+    }
+  }
+
+  &__light {
+    background-color: var(--gray-cool-200);
+    color: white;
+
+    &:hover {
+      background-color: var(--gray-cool-200);
+      box-shadow: 0 0 0 3px var(--gray-cool-300);
+    }
+  }
+
+  &__gray-cool {
+    background-color: var(--gray-cool-600);
+    color: white;
+
+    &:hover {
+      background-color: var(--gray-cool-700);
+      box-shadow: 0 0 0 3px var(--gray-cool-800);
+    }
+  }
+
+  &__gray {
+    background-color: var(--gray-600);
+    color: white;
+
+    &:hover {
+      background-color: var(--gray-700);
+      box-shadow: 0 0 0 3px var(--gray-400);
+    }
+  }
+
+  &__red {
+    background-color: var(--red-600);
+    color: white;
+
+    &:hover {
+      background-color: var(--red-700);
+      box-shadow: 0 0 0 3px var(--red-400);
+    }
+  }
+
+  &__orange {
+    background-color: var(--orange-600);
+    color: white;
+
+    &:hover {
+      background-color: var(--orange-700);
+      box-shadow: 0 0 0 3px var(--orange-400);
+    }
+  }
+
+  &__yellow {
+    background-color: var(--yellow-600);
+    color: white;
+
+    &:hover {
+      background-color: var(--yellow-700);
+      box-shadow: 0 0 0 3px var(--yellow-400);
+    }
+  }
+
+  &__green {
+    background-color: var(--green-600);
+    color: white;
+
+    &:hover {
+      background-color: var(--green-700);
+      box-shadow: 0 0 0 3px var(--green-400);
+    }
+  }
+
+  &__blue {
+    background-color: var(--blue-600);
+    color: white;
+
+    &:hover {
+      background-color: var(--blue-700);
+      box-shadow: 0 0 0 3px var(--blue-400);
+    }
+  }
+
+  &__indigo {
+    background-color: var(--indigo-600);
+    color: white;
+
+    &:hover {
+      background-color: var(--indigo-700);
+      box-shadow: 0 0 0 3px var(--indigo-400);
+    }
+  }
+
+  &__purple {
+    background-color: var(--purple-600);
+    color: white;
+
+    &:hover {
+      background-color: var(--purple-700);
+      box-shadow: 0 0 0 3px var(--purple-400);
+    }
+  }
+
+  &__pink {
+    background-color: var(--pink-600);
+    color: white;
+
+    &:hover {
+      background-color: var(--pink-700);
+      box-shadow: 0 0 0 3px var(--purple-400);
+    }
+  }
+}

@@ -1,0 +1,49 @@
+@import "../../responsivity";
+
+.modal__background {
+  background-color: var(--gray-cool-800);
+  opacity: 0.6;
+}
+
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 80vw;
+  height: fit-content;
+  margin: auto;
+  transform: scale(1);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--gray-cool-300);
+  background-color: white;
+  padding: 30px;
+
+  @include responsive(mobile-large) {
+    max-width: 60vw;
+  }
+
+  @include responsive(pc-small) {
+    max-width: 40vw;
+  }
+
+  &__hidden {
+    transform: scale(0.9);
+  }
+}
+
+.modal,
+.modal__background {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transition: visibility var(--transition-duration) var(--transition-animation),
+    opacity var(--transition-duration) var(--transition-animation),
+    transform var(--transition-duration) var(--transition-animation);
+
+  &__hidden {
+    visibility: hidden;
+    opacity: 0;
+  }
+}

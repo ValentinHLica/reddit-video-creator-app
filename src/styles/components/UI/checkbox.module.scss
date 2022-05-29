@@ -1,0 +1,28 @@
+@import "../../utils/background";
+
+.checkbox {
+  height: 18px;
+  width: 18px;
+  border-radius: 4px;
+  background-color: var(--gray-cool-200);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color var(--transition-duration)
+      var(--transition-animation),
+    border-color var(--transition-duration) var(--transition-animation),
+    box-shadow var(--transition-duration) var(--transition-animation);
+  cursor: pointer;
+
+  @include colors;
+
+  svg {
+    font-size: 60%;
+
+    path {
+      fill: white;
+    }
+  }
+}

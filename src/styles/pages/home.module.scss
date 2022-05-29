@@ -1,0 +1,30 @@
+.home {
+  .form {
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+    margin-bottom: 30px;
+
+    input {
+      width: 100%;
+    }
+  }
+
+  .posts {
+    width: 100%;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--gray-cool-200);
+    cursor: pointer;
+    transition: background-color var(--transition-duration)
+      var(--transition-animation);
+    background-color: white;
+
+    .post {
+      border-bottom: 1px solid var(--gray-cool-200);
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+}
