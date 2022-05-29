@@ -4,36 +4,67 @@
 .card {
   display: flex;
   flex-direction: column;
-  column-gap: 10px;
-  row-gap: 10px;
-  padding: 20px 15px;
+  border: 1px solid var(--gray-cool-200);
   transition: background-color var(--transition-duration)
     var(--transition-animation);
+  background-color: white;
+  position: relative;
+  overflow: hidden;
 
   &:hover {
     background-color: var(--gray-cool-100);
+    cursor: default;
   }
 
   .details {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-self: flex-start;
+    padding: 15px 24px;
+    padding-top: 20px;
 
     .subreddit {
-      font-weight: 500;
-      color: var(--gray-cool-700);
+      font-weight: 700;
+      color: var(--gray-cool-500);
+      font-size: 0.8em;
+      margin-bottom: 5px;
+    }
+
+    .title {
+      transition: color var(--transition-duration) var(--transition-animation);
+
+      &:hover {
+        color: var(--gray-500);
+      }
     }
 
     .status {
-      display: flex;
-      align-items: center;
-      margin-left: auto;
+      margin-top: 5px;
+      padding: 5px 10px;
+      display: inline-block;
       text-transform: capitalize;
-      row-gap: 10px;
-      column-gap: 10px;
-    }
-  }
+      width: fit-content;
+      border-radius: var(--border-radius);
 
-  .title {
+      transition: background-color var(--transition-duration)
+          var(--transition-animation),
+        color var(--transition-duration) var(--transition-animation);
+
+      &__finished {
+        color: var(--green-900);
+        background: var(--green-100);
+      }
+
+      &__draft {
+        color: var(--blue-900);
+        background: var(--blue-100);
+      }
+
+      &__publish {
+        color: var(--yellow-900);
+        background: var(--yellow-100);
+      }
+    }
   }
 
   .actions {
@@ -41,20 +72,51 @@
     align-items: center;
     row-gap: 15px;
     column-gap: 15px;
+    border-top: 1px solid var(--gray-cool-200);
+    padding: 10px 24px;
+
+    flex-wrap: wrap;
 
     li {
       display: flex;
       align-items: center;
       row-gap: 10px;
       column-gap: 10px;
+      text-transform: capitalize;
 
       input {
-        max-width: 70px;
-      }
-    }
+        max-width: 50px;
+        padding: 5px;
 
-    button {
-      margin-left: auto;
+        &::before {
+          position: absolute;
+          content: "min";
+          right: 0;
+        }
+      }
+
+      &.status {
+        p {
+          cursor: pointer;
+        }
+      }
+
+      &.delete {
+        display: flex;
+        justify-content: flex-end;
+        flex: 1;
+
+        div {
+          padding: 5px;
+          cursor: pointer;
+
+          svg {
+            path {
+              color: var(--red-500);
+            }
+          }
+        }
+      }
     }
   }
 }

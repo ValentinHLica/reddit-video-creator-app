@@ -1,13 +1,6 @@
 import axios from "axios";
 
-import {
-  Post,
-  Comment,
-  CommentWrapper,
-  Replies,
-  RedditData,
-  Award,
-} from "../interface/post";
+import { Post, RedditData, Award } from "../interface/post";
 
 const redditUrl = "https://www.reddit.com";
 
@@ -75,80 +68,5 @@ export const fetchPostData = async (url: string) => {
     score,
   };
 
-  const commentList: Comment[][] = [];
-  let comments: Comment[] = [];
-
-  for (const commentTree of data[1].data.children) {
-    if (commentTree.kind === "more") {
-      break;
-    }
-
-    const cleanUpComment = (commentDetails: CommentWrapper) => {
-      const {
-        data: {
-          author,
-          body,
-          replies,
-          all_awardings,
-          created_utc,
-          depth,
-          score,
-        },
-      } = commentDetails;
-
-      if (depth === 0) {
-        if (comments.length > 0) {
-          commentList.push(comments);
-        }
-
-        comments = [];
-      }
-
-      if (
-        depth > 2 ||
-        score < 1000 ||
-        comments[depth] ||
-        (body as string) === "[deleted]" ||
-        (body as string) === "[removed]"
-      ) {
-        return;
-      }
-
-      comments.push({
-        author,
-        body,
-        all_awardings: postAwards(all_awardings),
-        created_utc,
-        depth,
-        score,
-      });
-
-      if (replies !== "") {
-        for (let i = 0; i < (replies as Replies).data.children.length; i++) {
-          const element = (replies as Replies).data.children[
-            i
-          ] as CommentWrapper;
-
-          if (element.kind !== "more") {
-            cleanUpComment(element);
-          }
-        }
-      }
-    };
-
-    cleanUpComment(commentTree);
-  }
-
-  let duration = 0;
-
-  for (const cg of commentList) {
-    for (const c of cg) {
-      duration += countWords(c.body as string);
-    }
-  }
-
-  return {
-    post: postDetails,
-    duration,
-  };
+  return postDetails;
 };

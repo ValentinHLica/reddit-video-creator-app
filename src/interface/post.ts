@@ -81,6 +81,5 @@ export type RenderPost = {
   duration: number;
   url: string;
   status: "finish" | "draft" | "publish";
-  estimatedDuration: number;
   subreddit: string;
 };

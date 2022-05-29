@@ -6,7 +6,9 @@ const Footer: React.FC = () => {
   return (
     <footer className={styles.footer}>
       <p>
-        © {new Date().getFullYear()} Reddit Video Creator. All rights reserved.
+        © {new Date().getFullYear()}{" "}
+        <a href="https://github.com/valentinHLica">Valentin Lica</a>. All rights
+        reserved.
       </p>
     </footer>
   );

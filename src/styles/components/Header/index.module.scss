@@ -1,12 +1,16 @@
 .header {
-  padding: 10px 2vw;
+  padding: 10px 5vw;
   border-bottom: 1px solid var(--gray-cool-200);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   background-color: white;
   position: sticky;
   top: 0;
+  row-gap: 2vh;
+  column-gap: 10vw;
+  z-index: 2;
 
   .logo {
     display: flex;
@@ -18,6 +22,29 @@
 
       path {
         fill: var(--green-600);
+      }
+    }
+  }
+
+  .form {
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+    row-gap: 20px;
+    flex: 1;
+    flex-wrap: wrap;
+
+    input {
+      flex: 1;
+    }
+
+    button {
+      svg {
+        font-size: 1.5em;
+
+        path {
+          color: white;
+        }
       }
     }
   }

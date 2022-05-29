@@ -1,56 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { RenderPost } from "@interface/post";
-import { fetchPostData } from "@utils/reddit";
 
 import Layout from "@components/Layout";
-import { Button, Card } from "@components/UI";
+import { Card } from "@components/UI";
 
 import styles from "@styles/pages/home.module.scss";
 import { LoadingIcon } from "@components/CustomIcons";
+import Context from "@components/Context";
 
 const HomePage: React.FC = () => {
-  const urlInput = useRef<HTMLInputElement>(null);
-  const [postList, setPostList] = useState<RenderPost[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const submit: React.FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault();
-
-    if (urlInput.current === null) return;
-
-    const url = urlInput.current.value;
-
-    if (postList.filter((data) => data.url === url).length > 0) return;
-
-    setLoading(true);
-
-    const { post, duration } = await fetchPostData(url);
-
-    const data: RenderPost = {
-      title: post.title,
-      duration: 10,
-      status: "draft",
-      url,
-      estimatedDuration: duration,
-      subreddit: post.subreddit,
-    };
-
-    try {
-      const localPosts = localStorage.getItem("local-posts");
-
-      if (!localPosts) return;
-
-      localStorage.setItem(
-        "local-posts",
-        JSON.stringify((JSON.parse(localPosts) as RenderPost[]).concat(data))
-      );
-    } catch (error) {}
-
-    setPostList((state) => state.concat(data));
-
-    setLoading(false);
-  };
+  const {
+    postList,
+    setPostList,
+    postFilter,
+    setPostFilter,
+    reusedPost,
+    setReusedPost,
+  } = useContext(Context);
 
   const onCheck = (index: number) => {
     setPostList((state) => {
@@ -83,34 +50,66 @@ const HomePage: React.FC = () => {
     });
   };
 
+  const filtredPosts = postList.filter(
+    (e) =>
+      e.status === postFilter.filter((e) => e.active)[0].text ||
+      postFilter.filter((e) => e.active)[0].text === "all"
+  );
+
   useEffect(() => {
-    try {
-      const localPosts = localStorage.getItem("local-posts");
-
-      if (!localPosts) {
-        localStorage.setItem("local-posts", "[]");
-        return;
-      }
-
-      const data = JSON.parse(localPosts) as RenderPost[];
-
-      setPostList(data);
-    } catch (error) {}
-  }, []);
+    if (reusedPost === true) {
+      setTimeout(() => {
+        setReusedPost(false);
+      }, 1000);
+    }
+  }, [reusedPost]);
 
   return (
     <Layout>
       <div className={styles.home}>
-        <form onSubmit={submit} className={styles.form}>
-          <input type="url" ref={urlInput} placeholder="Url..." />
-          <Button color="green" type="submit">
-            Add
-          </Button>
-        </form>
+        <div className={styles.filter}>
+          <p>
+            Displaying {filtredPosts.length} related posts for{" "}
+            {postFilter.filter((e) => e.active)[0].text}
+          </p>
+
+          <ul className={styles.status}>
+            {postFilter.map(({ active, text }, index) => (
+              <li
+                key={index}
+                className={active ? styles.active : ""}
+                onClick={() => {
+                  setPostFilter((state) =>
+                    state.map((e) => {
+                      if (e.text === text) {
+                        return {
+                          ...e,
+                          active: true,
+                        };
+                      }
+
+                      return {
+                        ...e,
+                        active: false,
+                      };
+                    })
+                  );
+                }}
+              >
+                {text}
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <ul className={styles.posts}>
-          {postList.map((post, index) => (
-            <li key={index} className={styles.post}>
+          {filtredPosts.map((post, index) => (
+            <li
+              key={index}
+              className={`${styles.post} ${
+                index === 0 && reusedPost ? styles.pulse : ""
+              }`}
+            >
               <Card
                 {...post}
                 index={index}

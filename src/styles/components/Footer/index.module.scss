@@ -1,8 +1,12 @@
 .footer {
   margin-top: auto;
-  padding: 10px 2vw;
+  padding: 10px 5vw;
   border-top: 1px solid var(--gray-cool-200);
   background-color: white;
   font-size: 0.9em;
   margin-top: auto;
+
+  a {
+    color: var(--green-800);
+  }
 }
