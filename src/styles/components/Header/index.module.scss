@@ -47,5 +47,14 @@
         }
       }
     }
+
+    .settings {
+      svg {
+        path {
+          color: var(--gray-cool-900);
+          fill: none;
+        }
+      }
+    }
   }
 }

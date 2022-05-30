@@ -11,6 +11,7 @@ type Props = {
   onClick?: () => void;
   children?: React.ReactNode;
   type?: "button" | "submit";
+  className?: string;
 };
 
 const Button: React.FC<Props> = ({
@@ -20,12 +21,13 @@ const Button: React.FC<Props> = ({
   onClick,
   children,
   type = "button",
+  className,
 }) => {
   return (
     <button
       className={`${styles.button} ${styles[`button__${size}`]} ${
         styles[`button__${color}`]
-      }`}
+      } ${className}`}
       onClick={onClick}
       type={type}
     >

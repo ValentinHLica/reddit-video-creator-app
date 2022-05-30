@@ -1,13 +1,13 @@
 @mixin colors {
   svg {
     path {
-      fill: white;
+      color: white;
     }
   }
 
   &__light {
     background-color: var(--gray-cool-200);
-    color: white;
+    color: var(--gray-cool-900);
 
     &:hover {
       background-color: var(--gray-cool-200);

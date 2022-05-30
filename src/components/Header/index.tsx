@@ -1,17 +1,24 @@
 import React, { useRef, useState, useContext } from "react";
 
-import { AddIcon, LogoIcon } from "@icon";
-import { Button } from "@components/UI";
+import { AddIcon, LogoIcon, SettingsIcon } from "@icon";
+import { Button, Modal } from "@components/UI";
 import Context from "@components/Context";
 import { RenderPost } from "@interface/post";
 import { fetchPostData } from "@utils/reddit";
 
 import styles from "@styles/components/Header/index.module.scss";
+import Settings from "@components/Settings";
 
 const Header: React.FC = () => {
   const urlInput = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const { postList, setPostList, setReusedPost } = useContext(Context);
+  const {
+    postList,
+    setPostList,
+    setReusedPost,
+    settingsModal,
+    setSettingsModal,
+  } = useContext(Context);
 
   const submit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -62,20 +69,35 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className={styles.header}>
-      <div className={styles.logo}>
-        <LogoIcon />
+    <>
+      <header className={styles.header}>
+        <div className={styles.logo}>
+          <LogoIcon />
 
-        <h2>Reddit Video Creator</h2>
-      </div>
+          <h2>Reddit Video Creator</h2>
+        </div>
 
-      <form onSubmit={submit} className={styles.form}>
-        <input type="url" ref={urlInput} placeholder="Post Url..." />
-        <Button color="green" type="submit" icon={<AddIcon />}>
-          New Post
-        </Button>
-      </form>
-    </header>
+        <form onSubmit={submit} className={styles.form}>
+          <input type="url" ref={urlInput} placeholder="Post Url..." />
+
+          <Button color="green" type="submit" icon={<AddIcon />}>
+            New Post
+          </Button>
+
+          <Button
+            color="light"
+            type="button"
+            icon={<SettingsIcon />}
+            className={styles.settings}
+            onClick={() => setSettingsModal(true)}
+          />
+        </form>
+      </header>
+
+      <Modal visible={settingsModal} setVisible={setSettingsModal}>
+        <Settings />
+      </Modal>
+    </>
   );
 };
 

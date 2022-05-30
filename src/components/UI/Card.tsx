@@ -86,6 +86,7 @@ const Card: React.FC<Props> = ({
         <li className={styles.delete}>
           <div onClick={onDelete.bind(this, index)}>
             <BinIcon />
+            <p>Remove</p>
           </div>
         </li>
       </ul>

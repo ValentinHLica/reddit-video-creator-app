@@ -73,33 +73,37 @@ const HomePage: React.FC = () => {
             {postFilter.filter((e) => e.active)[0].text}
           </p>
 
-          <ul className={styles.status}>
-            {postFilter.map(({ active, text }, index) => (
-              <li
-                key={index}
-                className={active ? styles.active : ""}
-                onClick={() => {
-                  setPostFilter((state) =>
-                    state.map((e) => {
-                      if (e.text === text) {
+          {postFilter.length > 0 ? (
+            <ul className={styles.status}>
+              {postFilter.map(({ active, text }, index) => (
+                <li
+                  key={index}
+                  className={active ? styles.active : ""}
+                  onClick={() => {
+                    setPostFilter((state) =>
+                      state.map((e) => {
+                        if (e.text === text) {
+                          return {
+                            ...e,
+                            active: true,
+                          };
+                        }
+
                         return {
                           ...e,
-                          active: true,
+                          active: false,
                         };
-                      }
-
-                      return {
-                        ...e,
-                        active: false,
-                      };
-                    })
-                  );
-                }}
-              >
-                {text}
-              </li>
-            ))}
-          </ul>
+                      })
+                    );
+                  }}
+                >
+                  {text}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <h1>NOthing Here</h1>
+          )}
         </div>
 
         <ul className={styles.posts}>

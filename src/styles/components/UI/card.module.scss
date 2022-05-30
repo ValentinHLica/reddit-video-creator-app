@@ -109,6 +109,11 @@
         div {
           padding: 5px;
           cursor: pointer;
+          color: var(--red-500);
+          display: flex;
+          align-items: center;
+          row-gap: 5px;
+          column-gap: 10px;
 
           svg {
             path {

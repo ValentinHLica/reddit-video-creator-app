@@ -18,6 +18,8 @@ interface State {
       }[]
     >
   >;
+  settingsModal: boolean;
+  setSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Context = createContext<State>({
@@ -27,6 +29,8 @@ const Context = createContext<State>({
   setReusedPost: () => null,
   postFilter: [],
   setPostFilter: () => null,
+  settingsModal: false,
+  setSettingsModal: () => null,
 });
 
 type Props = {
@@ -36,6 +40,7 @@ type Props = {
 export const ContextProvider: React.FC<Props> = ({ children }) => {
   const [postList, setPostList] = useState<RenderPost[]>([]);
   const [reusedPost, setReusedPost] = useState<boolean>(false);
+  const [settingsModal, setSettingsModal] = useState<boolean>(false);
   const [postFilter, setPostFilter] = useState<
     {
       text: string;
@@ -82,6 +87,8 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
     setReusedPost,
     postFilter,
     setPostFilter,
+    settingsModal,
+    setSettingsModal,
   };
 
   return <Context.Provider value={context}>{children}</Context.Provider>;
