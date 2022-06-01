@@ -47,7 +47,16 @@
       "active": false
     },
     "allowlist": {
-      "all": true
+      "all": true,
+      "shell": {
+        "scope": [
+          {
+            "name": "render",
+            "cmd": "node",
+            "args": ["/home/john/Desktop/dev/reddit-recap/test.js"]
+          }
+        ]
+      }
     },
     "windows": [
       {

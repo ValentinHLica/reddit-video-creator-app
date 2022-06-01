@@ -1290,3 +1290,40 @@ export const BinIcon = () => (
     <path d="M14 11L14 17"></path>
   </svg>
 );
+
+export const BatteryEmptyIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <rect width="18" height="12" x="1" y="6" rx="2" ry="2"></rect>
+    <path d="M23 13L23 11"></path>
+  </svg>
+);
+
+export const BatteryChargingIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    className="icon"
+    viewBox="0 0 24 24"
+  >
+    <path d="M5 18H3a2 2 0 01-2-2V8a2 2 0 012-2h3.19M15 6h2a2 2 0 012 2v8a2 2 0 01-2 2h-3.19"></path>
+    <path d="M23 13L23 11"></path>
+    <path d="M11 6L7 12 13 12 9 18"></path>
+  </svg>
+);

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useContext } from "react";
 
-import { AddIcon, LogoIcon, SettingsIcon } from "@icon";
+import { AddIcon, LogoIcon, SettingsIcon, LoadingIcon } from "@icon";
 import { Button, Modal } from "@components/UI";
 import Context from "@components/Context";
 import { RenderPost } from "@interface/post";
@@ -23,7 +23,7 @@ const Header: React.FC = () => {
   const submit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    if (urlInput.current === null) return;
+    if (urlInput.current === null || loading) return;
 
     const url = urlInput.current.value;
 
@@ -36,6 +36,8 @@ const Header: React.FC = () => {
       ]);
 
       setReusedPost(true);
+
+      urlInput.current.value = "";
 
       return;
     }
@@ -65,6 +67,8 @@ const Header: React.FC = () => {
 
     setPostList((state) => [data, ...state]);
 
+    urlInput.current.value = "";
+
     setLoading(false);
   };
 
@@ -79,8 +83,12 @@ const Header: React.FC = () => {
 
         <form onSubmit={submit} className={styles.form}>
           <input type="url" ref={urlInput} placeholder="Post Url..." />
-
-          <Button color="green" type="submit" icon={<AddIcon />}>
+          <Button
+            color="green"
+            type="submit"
+            icon={loading ? <LoadingIcon /> : <AddIcon />}
+            disabled={loading}
+          >
             New Post
           </Button>
 

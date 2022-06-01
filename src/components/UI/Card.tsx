@@ -3,18 +3,17 @@ import React from "react";
 import { RenderPost } from "@interface/post";
 
 import {
-  CheckIcon,
   ClipboardIcon,
   ClipboardListIcon,
   ClockIcon,
-  ExternalLinkIcon,
   BinIcon,
   ZapIcon,
+  BatteryEmptyIcon,
 } from "@components/CustomIcons";
 
 import styles from "@styles/components/UI/card.module.scss";
-import Button from "./Button";
 import Checkbox from "./Checkbox";
+import Progress from "./Progress";
 
 type Props = RenderPost & {
   onDelete: (index: number) => void;
@@ -37,7 +36,7 @@ const Card: React.FC<Props> = ({
       <div className={styles.details}>
         <p className={styles.subreddit}>r/{subreddit}</p>
 
-        <a href={url} target="_blank" title="Open on Reddit">
+        <a href={url} target="_blank" rel="noreferrer" title="Open on Reddit">
           <h3 className={styles.title}>{title}</h3>
         </a>
 
@@ -70,17 +69,25 @@ const Card: React.FC<Props> = ({
             </>
           ) : (
             <>
-              {status !== "publish" ? <ClipboardIcon /> : <ClipboardListIcon />}
+              {status !== "queue" ? <ClipboardIcon /> : <ClipboardListIcon />}
 
               <p onClick={onCheck.bind(this, index)}>Queue</p>
 
               <Checkbox
-                checked={status === "publish"}
+                checked={status === "queue"}
                 onClick={onCheck.bind(this, index)}
                 color="green"
               />
             </>
           )}
+        </li>
+
+        <li className={styles.progress}>
+          <div>
+            <BatteryEmptyIcon />
+            <p>Render</p>
+            <Progress max={100} value={30} />
+          </div>
         </li>
 
         <li className={styles.delete}>

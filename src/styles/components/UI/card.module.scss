@@ -60,7 +60,7 @@
         background: var(--blue-100);
       }
 
-      &__publish {
+      &__queue {
         color: var(--yellow-900);
         background: var(--yellow-100);
       }
@@ -71,7 +71,7 @@
     display: flex;
     align-items: center;
     row-gap: 15px;
-    column-gap: 15px;
+    column-gap: 25px;
     border-top: 1px solid var(--gray-cool-200);
     padding: 10px 24px;
 
@@ -98,6 +98,15 @@
       &.status {
         p {
           cursor: pointer;
+        }
+      }
+
+      &.progress {
+        div {
+          display: flex;
+          align-items: center;
+          row-gap: 5px;
+          column-gap: 10px;
         }
       }
 

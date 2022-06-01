@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
+import { Command } from "@tauri-apps/api/shell";
 
 import { RenderPost } from "@interface/post";
 
 import Layout from "@components/Layout";
-import { Card } from "@components/UI";
+import { Button, Card } from "@components/UI";
 
 import styles from "@styles/pages/home.module.scss";
-import { LoadingIcon } from "@components/CustomIcons";
 import Context from "@components/Context";
+import { AlertCircleIcon } from "@components/CustomIcons";
 
 const HomePage: React.FC = () => {
   const {
@@ -25,7 +26,7 @@ const HomePage: React.FC = () => {
         idx === index
           ? {
               ...e,
-              status: e.status === "draft" ? "publish" : "draft",
+              status: e.status === "draft" ? "queue" : "draft",
             }
           : e
       );
@@ -62,10 +63,25 @@ const HomePage: React.FC = () => {
         setReusedPost(false);
       }, 1000);
     }
+
+    // eslint-disable-next-line
   }, [reusedPost]);
 
   return (
     <Layout>
+      <Button
+        onClick={async () => {
+          const output = await new Command(
+            "test",
+            "/home/john/Desktop/dev/reddit-recap/test.js"
+          ).execute();
+
+          console.log(output);
+        }}
+      >
+        Test
+      </Button>
+
       <div className={styles.home}>
         <div className={styles.filter}>
           <p>
@@ -73,56 +89,58 @@ const HomePage: React.FC = () => {
             {postFilter.filter((e) => e.active)[0].text}
           </p>
 
-          {postFilter.length > 0 ? (
-            <ul className={styles.status}>
-              {postFilter.map(({ active, text }, index) => (
-                <li
-                  key={index}
-                  className={active ? styles.active : ""}
-                  onClick={() => {
-                    setPostFilter((state) =>
-                      state.map((e) => {
-                        if (e.text === text) {
-                          return {
-                            ...e,
-                            active: true,
-                          };
-                        }
-
+          <ul className={styles.status}>
+            {postFilter.map(({ active, text }, index) => (
+              <li
+                key={index}
+                className={active ? styles.active : ""}
+                onClick={() => {
+                  setPostFilter((state) =>
+                    state.map((e) => {
+                      if (e.text === text) {
                         return {
                           ...e,
-                          active: false,
+                          active: true,
                         };
-                      })
-                    );
-                  }}
-                >
-                  {text}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <h1>NOthing Here</h1>
-          )}
+                      }
+
+                      return {
+                        ...e,
+                        active: false,
+                      };
+                    })
+                  );
+                }}
+              >
+                {text}
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <ul className={styles.posts}>
-          {filtredPosts.map((post, index) => (
-            <li
-              key={index}
-              className={`${styles.post} ${
-                index === 0 && reusedPost ? styles.pulse : ""
-              }`}
-            >
-              <Card
-                {...post}
-                index={index}
-                onDelete={onDelete}
-                onCheck={onCheck}
-              />
-            </li>
-          ))}
-        </ul>
+        {filtredPosts.length > 0 ? (
+          <ul className={styles.posts}>
+            {filtredPosts.map((post, index) => (
+              <li
+                key={index}
+                className={`${styles.post} ${
+                  index === 0 && reusedPost ? styles.pulse : ""
+                }`}
+              >
+                <Card
+                  {...post}
+                  index={index}
+                  onDelete={onDelete}
+                  onCheck={onCheck}
+                />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <h1 className={styles.empty}>
+            <AlertCircleIcon /> Nothing Here
+          </h1>
+        )}
       </div>
     </Layout>
   );

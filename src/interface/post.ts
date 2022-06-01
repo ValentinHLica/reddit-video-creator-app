@@ -80,6 +80,6 @@ export type RenderPost = {
   title: string;
   duration: number;
   url: string;
-  status: "finish" | "draft" | "publish";
+  status: "finish" | "draft" | "queue";
   subreddit: string;
 };

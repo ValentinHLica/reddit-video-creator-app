@@ -56,7 +56,7 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
       active: false,
     },
     {
-      text: "publish",
+      text: "queue",
       active: false,
     },
     {

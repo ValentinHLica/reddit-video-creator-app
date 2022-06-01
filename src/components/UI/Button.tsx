@@ -12,6 +12,7 @@ type Props = {
   children?: React.ReactNode;
   type?: "button" | "submit";
   className?: string;
+  disabled?: boolean;
 };
 
 const Button: React.FC<Props> = ({
@@ -22,6 +23,7 @@ const Button: React.FC<Props> = ({
   children,
   type = "button",
   className,
+  disabled = false,
 }) => {
   return (
     <button
@@ -30,6 +32,7 @@ const Button: React.FC<Props> = ({
       } ${className}`}
       onClick={onClick}
       type={type}
+      disabled={disabled}
     >
       {icon} {children}
     </button>
