@@ -47,15 +47,18 @@
       "active": false
     },
     "allowlist": {
-      "all": true,
+      "fs": {
+        "all": true,
+        "scope": ["$TEMP"]
+      },
+      "path": {
+        "all": true
+      },
+      "os": {
+        "all": true
+      },
       "shell": {
-        "scope": [
-          {
-            "name": "render",
-            "cmd": "node",
-            "args": ["/home/john/Desktop/dev/reddit-recap/test.js"]
-          }
-        ]
+        "all": true
       }
     },
     "windows": [

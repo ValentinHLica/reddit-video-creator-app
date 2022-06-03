@@ -19,8 +19,12 @@
 
     .option {
       .opt_title {
+        display: flex;
+        align-items: center;
+        column-gap: 10px;
         margin-bottom: 5px;
         opacity: 0.9;
+        font-weight: 500;
       }
 
       .body {

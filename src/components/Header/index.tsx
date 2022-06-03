@@ -1,7 +1,7 @@
 import React, { useRef, useState, useContext } from "react";
 
 import { AddIcon, LogoIcon, SettingsIcon, LoadingIcon } from "@icon";
-import { Button, Modal } from "@components/UI";
+import { Button, Modal, Switch } from "@components/UI";
 import Context from "@components/Context";
 import { RenderPost } from "@interface/post";
 import { fetchPostData } from "@utils/reddit";
@@ -18,6 +18,8 @@ const Header: React.FC = () => {
     setReusedPost,
     settingsModal,
     setSettingsModal,
+    queue,
+    setQueue,
   } = useContext(Context);
 
   const submit: React.FormEventHandler<HTMLFormElement> = async (e) => {
@@ -102,7 +104,11 @@ const Header: React.FC = () => {
         </form>
       </header>
 
-      <Modal visible={settingsModal} setVisible={setSettingsModal}>
+      <Modal
+        visible={settingsModal}
+        setVisible={setSettingsModal}
+        className={styles.settings}
+      >
         <Settings />
       </Modal>
     </>

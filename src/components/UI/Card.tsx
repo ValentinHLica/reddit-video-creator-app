@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { RenderPost } from "@interface/post";
 
@@ -9,11 +9,15 @@ import {
   BinIcon,
   ZapIcon,
   BatteryEmptyIcon,
+  PlayIcon,
+  ImageIcon,
 } from "@components/CustomIcons";
 
 import styles from "@styles/components/UI/card.module.scss";
 import Checkbox from "./Checkbox";
 import Progress from "./Progress";
+import Switch from "./Switch";
+import Context from "@components/Context";
 
 type Props = RenderPost & {
   onDelete: (index: number) => void;
@@ -31,18 +35,22 @@ const Card: React.FC<Props> = ({
   onCheck,
   index,
 }) => {
+  const { queue, setQueue } = useContext(Context);
+
   return (
     <div className={`${styles.card} `}>
       <div className={styles.details}>
-        <p className={styles.subreddit}>r/{subreddit}</p>
+        <div className={styles.wrapper}>
+          <p className={styles.subreddit}>r/{subreddit}</p>
 
-        <a href={url} target="_blank" rel="noreferrer" title="Open on Reddit">
-          <h3 className={styles.title}>{title}</h3>
-        </a>
+          <a href={url} target="_blank" rel="noreferrer" title="Open on Reddit">
+            <h3 className={styles.title}>{title}</h3>
+          </a>
 
-        <p className={`${styles.status} ${styles[`status__${status}`]}`}>
-          {status}
-        </p>
+          <p className={`${styles.status} ${styles[`status__${status}`]}`}>
+            {status}
+          </p>
+        </div>
       </div>
 
       <ul className={styles.actions}>
@@ -83,12 +91,23 @@ const Card: React.FC<Props> = ({
         </li>
 
         <li className={styles.progress}>
-          <div>
-            <BatteryEmptyIcon />
-            <p>Render</p>
-            <Progress max={100} value={30} />
-          </div>
+          <BatteryEmptyIcon />
+          <p>Render</p>
+          <Progress max={100} value={30} />
         </li>
+
+        <li className={styles.thumbail}>
+          <ImageIcon />
+          <p>Thumbnail</p>
+        </li>
+
+        {index === 0 && (
+          <li className={styles.queue}>
+            <PlayIcon />
+            <p>Queue</p>
+            <Switch state={queue} setState={setQueue} />
+          </li>
+        )}
 
         <li className={styles.delete}>
           <div onClick={onDelete.bind(this, index)}>

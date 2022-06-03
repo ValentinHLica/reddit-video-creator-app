@@ -18,51 +18,67 @@
 
   .details {
     display: flex;
-    flex-direction: column;
-    align-self: flex-start;
-    padding: 15px 24px;
-    padding-top: 20px;
+    justify-content: space-between;
 
-    .subreddit {
-      font-weight: 700;
-      color: var(--gray-cool-500);
-      font-size: 0.8em;
-      margin-bottom: 5px;
-    }
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-self: flex-start;
+      padding: 15px 24px;
+      padding-top: 20px;
 
-    .title {
-      transition: color var(--transition-duration) var(--transition-animation);
+      .subreddit {
+        font-weight: 700;
+        color: var(--gray-cool-500);
+        font-size: 0.8em;
+        margin-bottom: 5px;
+      }
 
-      &:hover {
-        color: var(--gray-500);
+      .title {
+        transition: color var(--transition-duration) var(--transition-animation);
+
+        &:hover {
+          color: var(--gray-500);
+        }
+      }
+
+      .status {
+        margin-top: 5px;
+        padding: 5px 10px;
+        display: inline-block;
+        text-transform: capitalize;
+        width: fit-content;
+        border-radius: var(--border-radius);
+
+        transition: background-color var(--transition-duration)
+            var(--transition-animation),
+          color var(--transition-duration) var(--transition-animation);
+
+        &__finished {
+          color: var(--green-900);
+          background: var(--green-100);
+        }
+
+        &__draft {
+          color: var(--blue-900);
+          background: var(--blue-100);
+        }
+
+        &__queue {
+          color: var(--yellow-900);
+          background: var(--yellow-100);
+        }
       }
     }
 
-    .status {
-      margin-top: 5px;
-      padding: 5px 10px;
-      display: inline-block;
-      text-transform: capitalize;
-      width: fit-content;
-      border-radius: var(--border-radius);
+    .queue {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
 
-      transition: background-color var(--transition-duration)
-          var(--transition-animation),
-        color var(--transition-duration) var(--transition-animation);
-
-      &__finished {
-        color: var(--green-900);
-        background: var(--green-100);
-      }
-
-      &__draft {
-        color: var(--blue-900);
-        background: var(--blue-100);
-      }
-
-      &__queue {
-        color: var(--yellow-900);
-        background: var(--yellow-100);
+      p {
+        font-size: 0.8em;
+        font-weight: 500;
       }
     }
   }
@@ -102,12 +118,14 @@
       }
 
       &.progress {
-        div {
-          display: flex;
-          align-items: center;
-          row-gap: 5px;
-          column-gap: 10px;
-        }
+        display: flex;
+        align-items: center;
+        row-gap: 5px;
+        column-gap: 10px;
+      }
+
+      &.thumbnail {
+        display: flex;
       }
 
       &.delete {

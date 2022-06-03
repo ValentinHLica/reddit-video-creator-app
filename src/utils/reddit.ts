@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Post, RedditData, Award } from "../interface/post";
+import { RedditData, Award } from "../interface/post";
 
 const redditUrl = "https://www.reddit.com";
 
@@ -56,7 +56,7 @@ export const fetchPostData = async (url: string) => {
       return { count, name };
     });
 
-  const postDetails: Post = {
+  return {
     all_awardings: postAwards(all_awardings),
     title,
     author,
@@ -67,6 +67,4 @@ export const fetchPostData = async (url: string) => {
     over_18,
     score,
   };
-
-  return postDetails;
 };

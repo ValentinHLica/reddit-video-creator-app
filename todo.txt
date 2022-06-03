@@ -1,1 +1,5 @@
-[]. 
+[]. Settings
+    []. Mid Poster
+    []. Background Music
+    []. List of Voices
+    []. Output Folder

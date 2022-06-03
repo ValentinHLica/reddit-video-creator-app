@@ -1,10 +1,9 @@
 import React, { useContext, useEffect } from "react";
-import { Command } from "@tauri-apps/api/shell";
 
 import { RenderPost } from "@interface/post";
 
 import Layout from "@components/Layout";
-import { Button, Card } from "@components/UI";
+import { Card } from "@components/UI";
 
 import styles from "@styles/pages/home.module.scss";
 import Context from "@components/Context";
@@ -69,19 +68,6 @@ const HomePage: React.FC = () => {
 
   return (
     <Layout>
-      <Button
-        onClick={async () => {
-          const output = await new Command(
-            "test",
-            "/home/john/Desktop/dev/reddit-recap/test.js"
-          ).execute();
-
-          console.log(output);
-        }}
-      >
-        Test
-      </Button>
-
       <div className={styles.home}>
         <div className={styles.filter}>
           <p>

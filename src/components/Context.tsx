@@ -1,5 +1,7 @@
 import { RenderPost } from "@interface/post";
-import { createContext, useState, useEffect } from "react";
+import { render } from "@utils/render";
+import { setupRender } from "@utils/scripts";
+import { createContext, useState, useEffect, useRef } from "react";
 
 interface State {
   postList: RenderPost[];
@@ -20,6 +22,8 @@ interface State {
   >;
   settingsModal: boolean;
   setSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
+  queue: boolean;
+  setQueue: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Context = createContext<State>({
@@ -31,6 +35,8 @@ const Context = createContext<State>({
   setPostFilter: () => null,
   settingsModal: false,
   setSettingsModal: () => null,
+  queue: false,
+  setQueue: () => null,
 });
 
 type Props = {
@@ -38,9 +44,11 @@ type Props = {
 };
 
 export const ContextProvider: React.FC<Props> = ({ children }) => {
+  const firstLoad = useRef<boolean>(true);
   const [postList, setPostList] = useState<RenderPost[]>([]);
   const [reusedPost, setReusedPost] = useState<boolean>(false);
   const [settingsModal, setSettingsModal] = useState<boolean>(false);
+  const [queue, setQueue] = useState<boolean>(false);
   const [postFilter, setPostFilter] = useState<
     {
       text: string;
@@ -64,6 +72,20 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
       active: false,
     },
   ]);
+  const [loadingSetup, setLoadingSetup] = useState<boolean>(true);
+
+  const context = {
+    postList,
+    setPostList,
+    reusedPost,
+    setReusedPost,
+    postFilter,
+    setPostFilter,
+    settingsModal,
+    setSettingsModal,
+    queue,
+    setQueue,
+  };
 
   useEffect(() => {
     try {
@@ -78,18 +100,23 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
 
       setPostList(data);
     } catch (error) {}
+
+    if (firstLoad.current) {
+      firstLoad.current = false;
+
+      setupRender();
+    }
   }, []);
 
-  const context = {
-    postList,
-    setPostList,
-    reusedPost,
-    setReusedPost,
-    postFilter,
-    setPostFilter,
-    settingsModal,
-    setSettingsModal,
-  };
+  useEffect(() => {
+    if (queue) {
+      for (const post of postList.filter(({ status }) => status === "queue")) {
+        render(post);
+      }
+    }
+
+    // eslint-disable-next-line
+  }, [queue]);
 
   return <Context.Provider value={context}>{children}</Context.Provider>;
 };

@@ -1,0 +1,31 @@
+.switch {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45px;
+  border-radius: 30px;
+  background-color: var(--gray-cool-200);
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  padding: 2px;
+
+  &__on {
+    background-color: var(--green-700);
+
+    .switch__button {
+      transform: translateX(100%);
+    }
+
+    &:hover {
+      background-color: var(--green-800);
+    }
+  }
+
+  .switch__button {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: white;
+    transition: transform 0.3s ease, width 0.3s ease;
+  }
+}
