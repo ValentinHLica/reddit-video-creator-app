@@ -1,5 +1,2 @@
-[]. Settings
-    []. Mid Poster
-    []. Background Music
-    []. List of Voices
-    []. Output Folder
+[]. Setup
+    []. import ffmpeg, balcon and reddit-video-creator to packaged app

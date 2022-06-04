@@ -107,7 +107,7 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
 
       // await setupRender();
 
-      // setLoadingSetup(false);
+      setLoadingSetup(false);
     }
   };
 

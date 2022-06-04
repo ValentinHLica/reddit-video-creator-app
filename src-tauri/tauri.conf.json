@@ -47,12 +47,6 @@
       "active": false
     },
     "allowlist": {
-      "http": {
-        "all": true,
-        "scope": [
-          "https://dublintechsummit.tech/wp-content/uploads/sites/7/2019/01/Alyssa-Carson-400x400.jpg"
-        ]
-      },
       "fs": {
         "all": true,
         "scope": ["$TEMP"]
