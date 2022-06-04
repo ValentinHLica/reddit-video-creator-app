@@ -104,11 +104,7 @@ const Header: React.FC = () => {
         </form>
       </header>
 
-      <Modal
-        visible={settingsModal}
-        setVisible={setSettingsModal}
-        className={styles.settings}
-      >
+      <Modal visible={settingsModal} setVisible={setSettingsModal}>
         <Settings />
       </Modal>
     </>

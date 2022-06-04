@@ -47,6 +47,12 @@
       "active": false
     },
     "allowlist": {
+      "http": {
+        "all": true,
+        "scope": [
+          "https://dublintechsummit.tech/wp-content/uploads/sites/7/2019/01/Alyssa-Carson-400x400.jpg"
+        ]
+      },
       "fs": {
         "all": true,
         "scope": ["$TEMP"]
@@ -59,13 +65,18 @@
       },
       "shell": {
         "all": true
+      },
+      "dialog": {
+        "all": true
       }
     },
     "windows": [
       {
         "title": "Reddit Video Creator",
-        "width": 800,
-        "height": 600,
+        "minWidth": 1280,
+        "width": 1280,
+        "minHeight": 720,
+        "height": 720,
         "resizable": true,
         "fullscreen": false
       }

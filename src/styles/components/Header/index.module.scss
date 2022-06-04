@@ -38,6 +38,7 @@
 
     input {
       flex: 1;
+      -webkit-user-select: auto;
     }
 
     button {
@@ -58,17 +59,5 @@
         }
       }
     }
-  }
-}
-
-.settings {
-  max-width: 80vw;
-
-  @include responsive(mobile-large) {
-    max-width: 60vw;
-  }
-
-  @include responsive(pc-small) {
-    max-width: 30vw;
   }
 }

@@ -2,6 +2,7 @@ import { RenderPost } from "@interface/post";
 import { render } from "@utils/render";
 import { setupRender } from "@utils/scripts";
 import { createContext, useState, useEffect, useRef } from "react";
+import SetupScreen from "./UI/SetupScreen";
 
 interface State {
   postList: RenderPost[];
@@ -87,7 +88,7 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
     setQueue,
   };
 
-  useEffect(() => {
+  const onLoad = async () => {
     try {
       const localPosts = localStorage.getItem("local-posts");
 
@@ -104,8 +105,14 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
     if (firstLoad.current) {
       firstLoad.current = false;
 
-      setupRender();
+      // await setupRender();
+
+      // setLoadingSetup(false);
     }
+  };
+
+  useEffect(() => {
+    onLoad();
   }, []);
 
   useEffect(() => {
@@ -118,7 +125,11 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
     // eslint-disable-next-line
   }, [queue]);
 
-  return <Context.Provider value={context}>{children}</Context.Provider>;
+  return (
+    <Context.Provider value={context}>
+      {!loadingSetup ? children : <SetupScreen />}
+    </Context.Provider>
+  );
 };
 
 export default Context;
