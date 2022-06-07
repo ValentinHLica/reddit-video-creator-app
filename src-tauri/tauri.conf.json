@@ -58,7 +58,19 @@
         "all": true
       },
       "shell": {
-        "all": true
+        "all": true,
+        "scope": [
+          {
+            "name": "git",
+            "cmd": "git",
+            "args": true
+          },
+          {
+            "name": "npm",
+            "cmd": "npm",
+            "args": true
+          }
+        ]
       },
       "dialog": {
         "all": true

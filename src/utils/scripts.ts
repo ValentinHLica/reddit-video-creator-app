@@ -5,15 +5,6 @@ import { join } from "@tauri-apps/api/path";
 import { Command } from "@tauri-apps/api/shell";
 
 export const setupRender = async () => {
-  // const test = await fetch(
-  //   "https://dublintechsummit.tech/wp-content/uploads/sites/7/2019/01/Alyssa-Carson-400x400.jpg"
-  // );
-
-  // console.log(test);
-
-  // $echo <password> | sudo -S
-  return;
-
   // Clone Reddit Video Creator
   const tempDir = await tempdir();
   const renderFolderName = "reddit-video-creator";
@@ -31,6 +22,15 @@ export const setupRender = async () => {
 
     await command.execute();
   }
+
+  await new Command(`npm`, [
+    "i",
+    "--prefix",
+    tmpRenderPath,
+    "--force",
+  ]).execute();
+
+  return;
 
   // Set up FFmpeg
   switch (await type()) {

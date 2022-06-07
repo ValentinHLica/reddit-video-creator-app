@@ -105,7 +105,7 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
     if (firstLoad.current) {
       firstLoad.current = false;
 
-      // await setupRender();
+      await setupRender();
 
       setLoadingSetup(false);
     }
