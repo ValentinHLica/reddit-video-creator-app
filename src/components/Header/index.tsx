@@ -50,7 +50,7 @@ const Header: React.FC = () => {
 
     const data: RenderPost = {
       title: post.title,
-      duration: 10,
+      duration: post.totalDuration,
       status: "draft",
       url,
       subreddit: post.subreddit,

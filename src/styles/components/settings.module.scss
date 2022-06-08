@@ -32,7 +32,18 @@
         row-gap: 5px;
         column-gap: 10px;
 
-        input {
+        form {
+          display: flex;
+          align-items: center;
+          column-gap: 10px;
+
+          button {
+            height: 100%;
+          }
+        }
+
+        input,
+        form {
           width: 100%;
         }
 

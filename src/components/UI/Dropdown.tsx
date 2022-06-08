@@ -13,9 +13,10 @@ type Props = {
     onClick: () => void;
   }[];
   onClick?: () => void;
+  children?: React.ReactNode;
 };
 
-const Dropdown: React.FC<Props> = ({ icon, text, items, onClick }) => {
+const Dropdown: React.FC<Props> = ({ icon, items, onClick, children }) => {
   const container = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState<boolean>(false);
   const [itemIndex, setItemIndex] = useState<number | null>(null);
@@ -46,7 +47,7 @@ const Dropdown: React.FC<Props> = ({ icon, text, items, onClick }) => {
         icon={icon}
         color="green"
       >
-        {text}
+        {children}
       </Button>
 
       <ul

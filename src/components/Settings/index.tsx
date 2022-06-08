@@ -1,22 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { open } from "@tauri-apps/api/dialog";
 
 import { Button, Dropdown } from "@components/UI";
 import {
   ArrowDownIcon,
+  ClockIcon,
   FolderIcon,
   ImageIcon,
   MusicIcon,
+  SaveIcon,
   VolumeLoudIcon,
 } from "@components/CustomIcons";
 
 import styles from "@styles/components/settings.module.scss";
+import Context from "@components/Context";
 
 const Settings: React.FC = () => {
-  const [exportPath, setExportPath] = useState<string>("");
-  const [midPoster, setMidPoster] = useState<string>("");
-  const [backgroundMusic, setBackgroundMusic] = useState<string>("");
+  const {
+    exportPath,
+    setExportPath,
+    midPoster,
+    setMidPoster,
+    backgroundMusic,
+    setBackgroundMusic,
+    maxVideoTime,
+    setMaxVideoTime,
+  } = useContext(Context);
+
+  const maxTimeInput = useRef<HTMLInputElement>(null);
 
   const voices = [
     "AriaNeural",
@@ -36,6 +48,21 @@ const Settings: React.FC = () => {
   ];
 
   const [voice, setVoice] = useState(voices[0]);
+
+  const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+
+    if (!maxTimeInput.current) return;
+
+    const value = Number(maxTimeInput.current.value);
+
+    console.log(value);
+
+    if (value > 1 && value <= 100) {
+      localStorage.setItem("max-time", value + "");
+      setMaxVideoTime(value);
+    }
+  };
 
   const options: {
     icon?: JSX.Element;
@@ -71,6 +98,20 @@ const Settings: React.FC = () => {
             }}
             color="green"
           />
+        </>
+      ),
+    },
+
+    {
+      icon: <ClockIcon />,
+      title: "Max Video Time:",
+      body: (
+        <>
+          <form onSubmit={submit}>
+            <input type="number" min={1} max={100} ref={maxTimeInput} />
+
+            <Button icon={<SaveIcon />} type="submit" color="green" />
+          </form>
         </>
       ),
     },
@@ -176,6 +217,7 @@ const Settings: React.FC = () => {
     const midPath = localStorage.getItem("mid");
     const musicPath = localStorage.getItem("music");
     const voice = localStorage.getItem("voice");
+    const maxTime = localStorage.getItem("max-time");
 
     if (exportPath) setExportPath(exportPath);
 
@@ -184,6 +226,8 @@ const Settings: React.FC = () => {
     if (musicPath) setBackgroundMusic(musicPath);
 
     if (voice) setVoice(voice);
+
+    if (maxTime) setMaxVideoTime(Number(maxTime));
   }, []);
 
   return (

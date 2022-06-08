@@ -25,6 +25,14 @@ interface State {
   setSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
   queue: boolean;
   setQueue: React.Dispatch<React.SetStateAction<boolean>>;
+  exportPath: string;
+  setExportPath: React.Dispatch<React.SetStateAction<string>>;
+  midPoster: string;
+  setMidPoster: React.Dispatch<React.SetStateAction<string>>;
+  backgroundMusic: string;
+  setBackgroundMusic: React.Dispatch<React.SetStateAction<string>>;
+  maxVideoTime: number;
+  setMaxVideoTime: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Context = createContext<State>({
@@ -38,6 +46,14 @@ const Context = createContext<State>({
   setSettingsModal: () => null,
   queue: false,
   setQueue: () => null,
+  exportPath: "",
+  setExportPath: () => null,
+  midPoster: "",
+  setMidPoster: () => null,
+  backgroundMusic: "",
+  setBackgroundMusic: () => null,
+  maxVideoTime: 10,
+  setMaxVideoTime: () => null,
 });
 
 type Props = {
@@ -75,6 +91,11 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
   ]);
   const [loadingSetup, setLoadingSetup] = useState<boolean>(true);
 
+  const [exportPath, setExportPath] = useState<string>("");
+  const [midPoster, setMidPoster] = useState<string>("");
+  const [backgroundMusic, setBackgroundMusic] = useState<string>("");
+  const [maxVideoTime, setMaxVideoTime] = useState<number>(10);
+
   const context = {
     postList,
     setPostList,
@@ -86,6 +107,14 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
     setSettingsModal,
     queue,
     setQueue,
+    exportPath,
+    setExportPath,
+    midPoster,
+    setMidPoster,
+    backgroundMusic,
+    setBackgroundMusic,
+    maxVideoTime,
+    setMaxVideoTime,
   };
 
   const onLoad = async () => {
@@ -105,7 +134,7 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
     if (firstLoad.current) {
       firstLoad.current = false;
 
-      await setupRender();
+      // await setupRender();
 
       setLoadingSetup(false);
     }
@@ -116,12 +145,11 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (queue) {
-      for (const post of postList.filter(({ status }) => status === "queue")) {
-        render(post);
-      }
-    }
-
+    // if (queue) {
+    //   for (const post of postList.filter(({ status }) => status === "queue")) {
+    //     render(post);
+    //   }
+    // }
     // eslint-disable-next-line
   }, [queue]);
 

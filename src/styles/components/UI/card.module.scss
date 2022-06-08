@@ -9,7 +9,7 @@
     var(--transition-animation);
   background-color: white;
   position: relative;
-  overflow: hidden;
+  // overflow: hidden;
 
   &:hover {
     background-color: var(--gray-cool-100);

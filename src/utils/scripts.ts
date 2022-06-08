@@ -21,14 +21,14 @@ export const setupRender = async () => {
     ]);
 
     await command.execute();
-  }
 
-  await new Command(`npm`, [
-    "i",
-    "--prefix",
-    tmpRenderPath,
-    "--force",
-  ]).execute();
+    await new Command(`npm`, [
+      "i",
+      "--prefix",
+      tmpRenderPath,
+      "--force",
+    ]).execute();
+  }
 
   return;
 

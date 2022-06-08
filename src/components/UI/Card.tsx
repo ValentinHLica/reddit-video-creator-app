@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 
 import { RenderPost } from "@interface/post";
 
@@ -11,6 +11,9 @@ import {
   BatteryEmptyIcon,
   PlayIcon,
   ImageIcon,
+  ListIcon,
+  ArrowDownIcon,
+  VideoIcon,
 } from "@components/CustomIcons";
 
 import styles from "@styles/components/UI/card.module.scss";
@@ -18,6 +21,7 @@ import Checkbox from "./Checkbox";
 import Progress from "./Progress";
 import Switch from "./Switch";
 import Context from "@components/Context";
+import Dropdown from "./Dropdown";
 
 type Props = RenderPost & {
   onDelete: (index: number) => void;
@@ -35,7 +39,11 @@ const Card: React.FC<Props> = ({
   onCheck,
   index,
 }) => {
-  const { queue, setQueue } = useContext(Context);
+  const inputEl = useRef<HTMLInputElement>(null);
+
+  const { queue, setQueue, maxVideoTime } = useContext(Context);
+
+  const videoCount = Math.floor(duration / maxVideoTime);
 
   return (
     <div className={`${styles.card} `}>
@@ -55,17 +63,27 @@ const Card: React.FC<Props> = ({
 
       <ul className={styles.actions}>
         <li>
-          <ClockIcon />
+          <VideoIcon />
 
-          <p>Time</p>
+          <p>Videos</p>
 
           <div className={styles.input}>
             <input
               type="number"
               min={1}
-              max={100}
+              max={videoCount}
               placeholder="Duration"
-              defaultValue={duration}
+              defaultValue={1}
+              ref={inputEl}
+              onChange={(e) => {
+                if (
+                  (e.target.value === "" ||
+                    Number(e.target.value) > videoCount) &&
+                  inputEl.current
+                ) {
+                  inputEl.current.value = videoCount + "";
+                }
+              }}
             />
           </div>
         </li>
