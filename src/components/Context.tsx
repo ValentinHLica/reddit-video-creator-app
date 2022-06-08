@@ -3,6 +3,7 @@ import { render } from "@utils/render";
 import { setupRender } from "@utils/scripts";
 import { createContext, useState, useEffect, useRef } from "react";
 import SetupScreen from "./UI/SetupScreen";
+import voices from "../data/voices";
 
 interface State {
   postList: RenderPost[];
@@ -33,6 +34,8 @@ interface State {
   setBackgroundMusic: React.Dispatch<React.SetStateAction<string>>;
   maxVideoTime: number;
   setMaxVideoTime: React.Dispatch<React.SetStateAction<number>>;
+  voice: string;
+  setVoice: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Context = createContext<State>({
@@ -54,6 +57,8 @@ const Context = createContext<State>({
   setBackgroundMusic: () => null,
   maxVideoTime: 10,
   setMaxVideoTime: () => null,
+  voice: "",
+  setVoice: () => null,
 });
 
 type Props = {
@@ -96,6 +101,8 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
   const [backgroundMusic, setBackgroundMusic] = useState<string>("");
   const [maxVideoTime, setMaxVideoTime] = useState<number>(10);
 
+  const [voice, setVoice] = useState<string>(voices[0]);
+
   const context = {
     postList,
     setPostList,
@@ -115,6 +122,8 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
     setBackgroundMusic,
     maxVideoTime,
     setMaxVideoTime,
+    voice,
+    setVoice,
   };
 
   const onLoad = async () => {
@@ -134,7 +143,7 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
     if (firstLoad.current) {
       firstLoad.current = false;
 
-      // await setupRender();
+      await setupRender();
 
       setLoadingSetup(false);
     }
@@ -145,11 +154,12 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // if (queue) {
-    //   for (const post of postList.filter(({ status }) => status === "queue")) {
-    //     render(post);
-    //   }
-    // }
+    if (queue) {
+      render(postList[0]);
+      // for (const post of postList.filter(({ status }) => status === "queue")) {
+      //   render(post);
+      // }
+    }
     // eslint-disable-next-line
   }, [queue]);
 

@@ -16,6 +16,8 @@ import {
 import styles from "@styles/components/settings.module.scss";
 import Context from "@components/Context";
 
+import voices from "../../data/voices";
+
 const Settings: React.FC = () => {
   const {
     exportPath,
@@ -26,41 +28,22 @@ const Settings: React.FC = () => {
     setBackgroundMusic,
     maxVideoTime,
     setMaxVideoTime,
+    voice,
+    setVoice,
   } = useContext(Context);
 
   const maxTimeInput = useRef<HTMLInputElement>(null);
-
-  const voices = [
-    "AriaNeural",
-    "JennyNeural",
-    "GuyNeural",
-    "AmberNeural",
-    "AshleyNeural",
-    "CoraNeural",
-    "ElizabethNeural",
-    "MichelleNeural",
-    "MonicaNeural",
-    "AnaNeural",
-    "BrandonNeural",
-    "ChristopherNeural",
-    "JacobNeural",
-    "EricNeural",
-  ];
-
-  const [voice, setVoice] = useState(voices[0]);
 
   const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
     if (!maxTimeInput.current) return;
 
-    const value = Number(maxTimeInput.current.value);
-
-    console.log(value);
+    const value = Number(maxTimeInput.current.value) ?? 1;
 
     if (value > 1 && value <= 100) {
       localStorage.setItem("max-time", value + "");
-      setMaxVideoTime(value);
+      // setMaxVideoTime(value);
     }
   };
 
@@ -108,7 +91,14 @@ const Settings: React.FC = () => {
       body: (
         <>
           <form onSubmit={submit}>
-            <input type="number" min={1} max={100} ref={maxTimeInput} />
+            <input
+              type="number"
+              min={1}
+              max={100}
+              ref={maxTimeInput}
+              value={maxVideoTime}
+              onChange={(e) => setMaxVideoTime(Number(e.target.value) ?? 1)}
+            />
 
             <Button icon={<SaveIcon />} type="submit" color="green" />
           </form>

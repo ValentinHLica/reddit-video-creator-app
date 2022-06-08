@@ -18,8 +18,8 @@ const Header: React.FC = () => {
     setReusedPost,
     settingsModal,
     setSettingsModal,
-    queue,
-    setQueue,
+    maxVideoTime,
+    voice,
   } = useContext(Context);
 
   const submit: React.FormEventHandler<HTMLFormElement> = async (e) => {
@@ -54,6 +54,9 @@ const Header: React.FC = () => {
       status: "draft",
       url,
       subreddit: post.subreddit,
+      maxDuration: maxVideoTime,
+      videosCount: Math.floor(post.totalDuration / maxVideoTime),
+      voice,
     };
 
     try {
