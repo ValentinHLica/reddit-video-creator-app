@@ -19,37 +19,6 @@ const HomePage: React.FC = () => {
     setReusedPost,
   } = useContext(Context);
 
-  const onCheck = (index: number) => {
-    setPostList((state) => {
-      const newState: RenderPost[] = state.map((e, idx) =>
-        idx === index
-          ? {
-              ...e,
-              status: e.status === "draft" ? "queue" : "draft",
-            }
-          : e
-      );
-
-      try {
-        localStorage.setItem("local-posts", JSON.stringify(newState));
-      } catch (error) {}
-
-      return newState;
-    });
-  };
-
-  const onDelete = (index: number) => {
-    setPostList((state) => {
-      const newState = state.filter((_, idx) => idx !== index);
-
-      try {
-        localStorage.setItem("local-posts", JSON.stringify(newState));
-      } catch (error) {}
-
-      return newState;
-    });
-  };
-
   const filtredPosts = postList.filter(
     (e) =>
       e.status === postFilter.filter((e) => e.active)[0].text ||
@@ -113,12 +82,7 @@ const HomePage: React.FC = () => {
                   index === 0 && reusedPost ? styles.pulse : ""
                 }`}
               >
-                <Card
-                  {...post}
-                  index={index}
-                  onDelete={onDelete}
-                  onCheck={onCheck}
-                />
+                <Card {...post} index={index} />
               </li>
             ))}
           </ul>

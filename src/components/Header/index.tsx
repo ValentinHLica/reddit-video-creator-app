@@ -55,7 +55,7 @@ const Header: React.FC = () => {
       url,
       subreddit: post.subreddit,
       maxDuration: maxVideoTime,
-      videosCount: Math.floor(post.totalDuration / maxVideoTime),
+      videosCount: Math.floor(post.totalDuration / maxVideoTime) ?? 1,
       voice,
     };
 

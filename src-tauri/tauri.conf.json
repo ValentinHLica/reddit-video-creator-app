@@ -49,7 +49,7 @@
     "allowlist": {
       "fs": {
         "all": true,
-        "scope": ["$TEMP", "$TEMP/reddit-video-creator/src/data/posts.json"]
+        "scope": ["$APP", "$APP/reddit-video-creator/src/data/posts.json"]
       },
       "path": {
         "all": true

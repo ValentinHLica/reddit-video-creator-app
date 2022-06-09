@@ -155,10 +155,7 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (queue) {
-      render(postList[0]);
-      // for (const post of postList.filter(({ status }) => status === "queue")) {
-      //   render(post);
-      // }
+      render(postList);
     }
     // eslint-disable-next-line
   }, [queue]);

@@ -1,12 +1,11 @@
 import { readDir } from "@tauri-apps/api/fs";
-import { fetch } from "@tauri-apps/api/http";
-import { tempdir, type } from "@tauri-apps/api/os";
-import { join } from "@tauri-apps/api/path";
+import { type } from "@tauri-apps/api/os";
+import { join, appDir } from "@tauri-apps/api/path";
 import { Command } from "@tauri-apps/api/shell";
 
 export const setupRender = async () => {
   // Clone Reddit Video Creator
-  const tempDir = await tempdir();
+  const tempDir = await appDir();
   const renderFolderName = "reddit-video-creator";
 
   const tmpRenderPath = await join(tempDir, renderFolderName);
@@ -20,14 +19,44 @@ export const setupRender = async () => {
       tmpRenderPath,
     ]);
 
+    command.on("close", (data) => {
+      console.log(
+        `command finished with code ${data.code} and signal ${data.signal}`
+      );
+    });
+    command.on("error", (error) => console.error(`command error: "${error}"`));
+    command.stdout.on("data", (line) =>
+      console.log(`command stdout: "${line}"`)
+    );
+    command.stderr.on("data", (line) =>
+      console.log(`command stderr: "${line}"`)
+    );
+
     await command.execute();
 
-    await new Command(`npm`, [
+    const commandInstall = new Command(`npm`, [
       "i",
       "--prefix",
       tmpRenderPath,
       "--force",
-    ]).execute();
+    ]);
+
+    commandInstall.on("close", (data) => {
+      console.log(
+        `command finished with code ${data.code} and signal ${data.signal}`
+      );
+    });
+    commandInstall.on("error", (error) =>
+      console.error(`command error: "${error}"`)
+    );
+    commandInstall.stdout.on("data", (line) =>
+      console.log(`command stdout: "${line}"`)
+    );
+    commandInstall.stderr.on("data", (line) =>
+      console.log(`command stderr: "${line}"`)
+    );
+
+    commandInstall.execute();
   }
 
   return;

@@ -24,8 +24,6 @@ import Context from "@components/Context";
 import Dropdown from "./Dropdown";
 
 type Props = RenderPost & {
-  onDelete: (index: number) => void;
-  onCheck: (index: number) => void;
   index: number;
 };
 
@@ -35,15 +33,44 @@ const Card: React.FC<Props> = ({
   duration,
   status,
   subreddit,
-  onDelete,
-  onCheck,
   index,
 }) => {
+  const { queue, setQueue, maxVideoTime, setPostList } = useContext(Context);
+
   const inputEl = useRef<HTMLInputElement>(null);
 
-  const { queue, setQueue, maxVideoTime } = useContext(Context);
-
   const videoCount = Math.floor(duration / maxVideoTime);
+
+  const onDelete = (index: number) => {
+    setPostList((state) => {
+      const newState = state.filter((_, idx) => idx !== index);
+
+      try {
+        localStorage.setItem("local-posts", JSON.stringify(newState));
+      } catch (error) {}
+
+      return newState;
+    });
+  };
+
+  const onCheck = (index: number) => {
+    setPostList((state) => {
+      const newState: RenderPost[] = state.map((e, idx) =>
+        idx === index
+          ? {
+              ...e,
+              status: e.status === "draft" ? "queue" : "draft",
+            }
+          : e
+      );
+
+      try {
+        localStorage.setItem("local-posts", JSON.stringify(newState));
+      } catch (error) {}
+
+      return newState;
+    });
+  };
 
   return (
     <div className={`${styles.card} `}>
