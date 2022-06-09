@@ -1,23 +1,15 @@
 import React, { useContext, useEffect } from "react";
 
-import { RenderPost } from "@interface/post";
-
 import Layout from "@components/Layout";
-import { Card } from "@components/UI";
+import { Card } from "@ui";
 
-import styles from "@styles/pages/home.module.scss";
 import Context from "@components/Context";
-import { AlertCircleIcon } from "@components/CustomIcons";
+import { AlertCircleIcon } from "@icon";
+import styles from "@styles/pages/home.module.scss";
 
 const HomePage: React.FC = () => {
-  const {
-    postList,
-    setPostList,
-    postFilter,
-    setPostFilter,
-    reusedPost,
-    setReusedPost,
-  } = useContext(Context);
+  const { postList, postFilter, setPostFilter, reusedPost, setReusedPost } =
+    useContext(Context);
 
   const filtredPosts = postList.filter(
     (e) =>
@@ -82,7 +74,7 @@ const HomePage: React.FC = () => {
                   index === 0 && reusedPost ? styles.pulse : ""
                 }`}
               >
-                <Card {...post} index={index} />
+                <Card index={index} {...post} />
               </li>
             ))}
           </ul>

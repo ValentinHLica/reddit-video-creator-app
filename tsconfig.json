@@ -19,11 +19,11 @@
     "paths": {
       "@utils/*": ["utils/*"],
       "@interface/*": ["interface/*"],
+      "@ui": ["components/UI/index.tsx"],
+      "@icon": ["components/CustomIcons.tsx"],
       "@components/*": ["components/*"],
       "@styles/*": ["styles/*"],
-      "@pages/*": ["pages/*"],
-      "@ui": ["components/UI/index.tsx"],
-      "@icon": ["components/CustomIcons.tsx"]
+      "@pages/*": ["pages/*"]
     }
   },
   "include": ["src", "config-overrides.js"]

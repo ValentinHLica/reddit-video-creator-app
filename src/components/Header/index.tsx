@@ -1,7 +1,7 @@
 import React, { useRef, useState, useContext } from "react";
 
 import { AddIcon, LogoIcon, SettingsIcon, LoadingIcon } from "@icon";
-import { Button, Modal, Switch } from "@components/UI";
+import { Button, Modal, Switch } from "@ui";
 import Context from "@components/Context";
 import { RenderPost } from "@interface/post";
 import { fetchPostData } from "@utils/reddit";
@@ -32,10 +32,16 @@ const Header: React.FC = () => {
     if (postList.filter((data) => data.url === url).length > 0) {
       const reusedPost = postList.filter((data) => data.url === url)[0];
 
-      setPostList((state) => [
-        reusedPost,
-        ...state.filter((e) => e.url !== reusedPost.url),
-      ]);
+      setPostList((state) => {
+        const newState = [
+          reusedPost,
+          ...state.filter((e) => e.url !== reusedPost.url),
+        ];
+
+        localStorage.setItem("local-posts", JSON.stringify(newState));
+
+        return newState;
+      });
 
       setReusedPost(true);
 
@@ -55,22 +61,17 @@ const Header: React.FC = () => {
       url,
       subreddit: post.subreddit,
       maxDuration: maxVideoTime,
-      videosCount: Math.floor(post.totalDuration / maxVideoTime) ?? 1,
+      videosCount: 1,
       voice,
     };
 
-    try {
-      const localPosts = localStorage.getItem("local-posts");
+    setPostList((state) => {
+      const newState = [data, ...state];
 
-      if (!localPosts) return;
+      localStorage.setItem("local-posts", JSON.stringify(newState));
 
-      localStorage.setItem(
-        "local-posts",
-        JSON.stringify([data, ...(JSON.parse(localPosts) as RenderPost[])])
-      );
-    } catch (error) {}
-
-    setPostList((state) => [data, ...state]);
+      return newState;
+    });
 
     urlInput.current.value = "";
 

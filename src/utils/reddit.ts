@@ -58,41 +58,39 @@ export const fetchPostData = async (url: string) => {
 
   let totalDuration: number = 0;
 
+  const cleanUpComment = (commentDetails: CommentWrapper) => {
+    const {
+      data: { body, replies, depth, score },
+    } = commentDetails;
+
+    const content = body as string;
+
+    if (
+      depth > 2 ||
+      score < 1000 ||
+      content === "[deleted]" ||
+      content === "[removed]"
+    ) {
+      return;
+    }
+
+    totalDuration += countWords(content);
+
+    if (replies !== "") {
+      for (let i = 0; i < (replies as Replies).data.children.length; i++) {
+        const element = (replies as Replies).data.children[i] as CommentWrapper;
+
+        if (element.kind !== "more") {
+          cleanUpComment(element);
+        }
+      }
+    }
+  };
+
   for (const commentTree of data[1].data.children) {
     if (commentTree.kind === "more") {
       break;
     }
-
-    const cleanUpComment = (commentDetails: CommentWrapper) => {
-      const {
-        data: { body, replies, depth, score },
-      } = commentDetails;
-
-      const content = body as string;
-
-      if (
-        depth > 2 ||
-        score < 1000 ||
-        content === "[deleted]" ||
-        content === "[removed]"
-      ) {
-        return;
-      }
-
-      totalDuration += countWords(content);
-
-      if (replies !== "") {
-        for (let i = 0; i < (replies as Replies).data.children.length; i++) {
-          const element = (replies as Replies).data.children[
-            i
-          ] as CommentWrapper;
-
-          if (element.kind !== "more") {
-            cleanUpComment(element);
-          }
-        }
-      }
-    };
 
     cleanUpComment(commentTree);
   }
@@ -107,6 +105,6 @@ export const fetchPostData = async (url: string) => {
     created_utc,
     over_18,
     score,
-    totalDuration,
+    totalDuration: Math.ceil(totalDuration),
   };
 };

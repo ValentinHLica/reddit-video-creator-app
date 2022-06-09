@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import Button from "./Button";
 
 import styles from "@styles/components/UI/dropdown.module.scss";
-import { VolumeLoudIcon } from "@components/CustomIcons";
 
 type Props = {
   icon?: JSX.Element;

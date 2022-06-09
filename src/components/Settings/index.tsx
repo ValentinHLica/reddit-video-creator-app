@@ -2,16 +2,15 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { open } from "@tauri-apps/api/dialog";
 
-import { Button, Dropdown } from "@components/UI";
+import { Button, Dropdown } from "@ui";
 import {
   ArrowDownIcon,
   ClockIcon,
   FolderIcon,
   ImageIcon,
   MusicIcon,
-  SaveIcon,
   VolumeLoudIcon,
-} from "@components/CustomIcons";
+} from "@icon";
 
 import styles from "@styles/components/settings.module.scss";
 import Context from "@components/Context";
@@ -33,19 +32,6 @@ const Settings: React.FC = () => {
   } = useContext(Context);
 
   const maxTimeInput = useRef<HTMLInputElement>(null);
-
-  const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-
-    if (!maxTimeInput.current) return;
-
-    const value = Number(maxTimeInput.current.value) ?? 1;
-
-    if (value > 1 && value <= 100) {
-      localStorage.setItem("max-time", value + "");
-      // setMaxVideoTime(value);
-    }
-  };
 
   const options: {
     icon?: JSX.Element;
@@ -90,18 +76,21 @@ const Settings: React.FC = () => {
       title: "Max Video Time:",
       body: (
         <>
-          <form onSubmit={submit}>
-            <input
-              type="number"
-              min={1}
-              max={100}
-              ref={maxTimeInput}
-              value={maxVideoTime}
-              onChange={(e) => setMaxVideoTime(Number(e.target.value) ?? 1)}
-            />
+          <input
+            type="number"
+            min={1}
+            max={100}
+            ref={maxTimeInput}
+            onKeyDown={() => false}
+            value={maxVideoTime}
+            onChange={(e) => {
+              const value = Number(e.target.value);
 
-            <Button icon={<SaveIcon />} type="submit" color="green" />
-          </form>
+              localStorage.setItem("max-time", value + "");
+
+              setMaxVideoTime(value);
+            }}
+          />
         </>
       ),
     },

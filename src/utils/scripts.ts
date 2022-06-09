@@ -1,11 +1,11 @@
 import { readDir } from "@tauri-apps/api/fs";
 import { type } from "@tauri-apps/api/os";
-import { join, appDir } from "@tauri-apps/api/path";
+import { join, dataDir } from "@tauri-apps/api/path";
 import { Command } from "@tauri-apps/api/shell";
 
 export const setupRender = async () => {
   // Clone Reddit Video Creator
-  const tempDir = await appDir();
+  const tempDir = await dataDir();
   const renderFolderName = "reddit-video-creator";
 
   const tmpRenderPath = await join(tempDir, renderFolderName);

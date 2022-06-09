@@ -2,26 +2,22 @@ import React, { useContext, useRef } from "react";
 
 import { RenderPost } from "@interface/post";
 
+import Context from "@components/Context";
+import Checkbox from "./Checkbox";
+import Progress from "./Progress";
+import Switch from "./Switch";
 import {
   ClipboardIcon,
   ClipboardListIcon,
-  ClockIcon,
   BinIcon,
   ZapIcon,
   BatteryEmptyIcon,
   PlayIcon,
   ImageIcon,
-  ListIcon,
-  ArrowDownIcon,
   VideoIcon,
-} from "@components/CustomIcons";
+} from "@icon";
 
 import styles from "@styles/components/UI/card.module.scss";
-import Checkbox from "./Checkbox";
-import Progress from "./Progress";
-import Switch from "./Switch";
-import Context from "@components/Context";
-import Dropdown from "./Dropdown";
 
 type Props = RenderPost & {
   index: number;
@@ -34,6 +30,7 @@ const Card: React.FC<Props> = ({
   status,
   subreddit,
   index,
+  videosCount,
 }) => {
   const { queue, setQueue, maxVideoTime, setPostList } = useContext(Context);
 
@@ -45,9 +42,7 @@ const Card: React.FC<Props> = ({
     setPostList((state) => {
       const newState = state.filter((_, idx) => idx !== index);
 
-      try {
-        localStorage.setItem("local-posts", JSON.stringify(newState));
-      } catch (error) {}
+      localStorage.setItem("local-posts", JSON.stringify(newState));
 
       return newState;
     });
@@ -64,9 +59,7 @@ const Card: React.FC<Props> = ({
           : e
       );
 
-      try {
-        localStorage.setItem("local-posts", JSON.stringify(newState));
-      } catch (error) {}
+      localStorage.setItem("local-posts", JSON.stringify(newState));
 
       return newState;
     });
@@ -100,16 +93,22 @@ const Card: React.FC<Props> = ({
               min={1}
               max={videoCount}
               placeholder="Duration"
-              defaultValue={1}
+              value={videosCount}
               ref={inputEl}
-              onChange={(e) => {
-                if (
-                  (e.target.value === "" ||
-                    Number(e.target.value) > videoCount) &&
-                  inputEl.current
-                ) {
-                  inputEl.current.value = videoCount + "";
-                }
+              disabled={videoCount < 2}
+              onKeyDown={() => false}
+              onChange={(text) => {
+                setPostList((state) => {
+                  const newState = state.map((e, idx) => ({
+                    ...e,
+                    videosCount:
+                      idx === index ? Number(text.target.value) : e.videosCount,
+                  }));
+
+                  localStorage.setItem("local-posts", JSON.stringify(newState));
+
+                  return newState;
+                });
               }}
             />
           </div>
@@ -134,7 +133,7 @@ const Card: React.FC<Props> = ({
             </>
           )}
         </li>
-
+        {/* 
         <li className={styles.progress}>
           <BatteryEmptyIcon />
           <p>Render</p>
@@ -144,7 +143,7 @@ const Card: React.FC<Props> = ({
         <li className={styles.thumbail}>
           <ImageIcon />
           <p>Thumbnail</p>
-        </li>
+        </li> */}
 
         {index === 0 && (
           <li className={styles.queue}>

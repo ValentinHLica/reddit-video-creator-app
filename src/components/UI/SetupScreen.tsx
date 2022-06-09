@@ -1,5 +1,5 @@
 import React from "react";
-import { LoadingIcon } from "@components/CustomIcons";
+import { LoadingIcon } from "@icon";
 
 import styles from "@styles/components/UI/setup_screen.module.scss";
 

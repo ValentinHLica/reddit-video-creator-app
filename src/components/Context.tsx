@@ -155,7 +155,12 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (queue) {
-      render(postList);
+      render(
+        postList.map((e) => ({
+          ...e,
+          maxDuration: maxVideoTime,
+        }))
+      );
     }
     // eslint-disable-next-line
   }, [queue]);
