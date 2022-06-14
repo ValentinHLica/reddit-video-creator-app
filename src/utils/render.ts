@@ -5,7 +5,12 @@ import { Command } from "@tauri-apps/api/shell";
 
 import { RenderPost } from "@interface/post";
 
-export const render = async (post: RenderPost[]) => {
+export const render = async (
+  post: RenderPost[],
+  setLoadingRender: React.Dispatch<React.SetStateAction<boolean>>
+) => {
+  setLoadingRender(true);
+
   const path = await join(
     await dataDir(),
     "reddit-video-creator",
@@ -19,8 +24,6 @@ export const render = async (post: RenderPost[]) => {
     path,
   });
 
-  return;
-
   const command = new Command("npm", [
     "start",
     "--prefix",
@@ -29,11 +32,13 @@ export const render = async (post: RenderPost[]) => {
 
   command.on("close", (data) => {
     console.log(
-      `command finished with code ${data.code} and signal ${data.signal}`
+      // `command finished with code ${data.code} and signal ${data.signal}`
+      "Finished Rendering"
     );
+    setLoadingRender(false);
   });
 
-  command.on("error", (error) => console.error(`command error: "${error}"`));
+  command.on("error", (error) => console.error(`error: "${error}"`));
   command.stdout.on("data", (line) => console.log(`command stdout: "${line}"`));
   command.stderr.on("data", (line) => console.log(`command stderr: "${line}"`));
 

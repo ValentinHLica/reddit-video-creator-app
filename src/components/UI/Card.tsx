@@ -15,6 +15,7 @@ import {
   PlayIcon,
   ImageIcon,
   VideoIcon,
+  LoadingIcon,
 } from "@icon";
 
 import styles from "@styles/components/UI/card.module.scss";
@@ -32,7 +33,8 @@ const Card: React.FC<Props> = ({
   index,
   videosCount,
 }) => {
-  const { queue, setQueue, maxVideoTime, setPostList } = useContext(Context);
+  const { queue, setQueue, maxVideoTime, setPostList, loadingRender } =
+    useContext(Context);
 
   const inputEl = useRef<HTMLInputElement>(null);
 
@@ -150,6 +152,8 @@ const Card: React.FC<Props> = ({
             <PlayIcon />
             <p>Queue</p>
             <Switch state={queue} setState={setQueue} />
+
+            {loadingRender && <LoadingIcon />}
           </li>
         )}
 

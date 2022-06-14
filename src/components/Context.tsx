@@ -36,6 +36,8 @@ interface State {
   setMaxVideoTime: React.Dispatch<React.SetStateAction<number>>;
   voice: string;
   setVoice: React.Dispatch<React.SetStateAction<string>>;
+  loadingRender: boolean;
+  setLoadingRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Context = createContext<State>({
@@ -59,6 +61,8 @@ const Context = createContext<State>({
   setMaxVideoTime: () => null,
   voice: "",
   setVoice: () => null,
+  loadingRender: false,
+  setLoadingRender: () => null,
 });
 
 type Props = {
@@ -102,6 +106,7 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
   const [maxVideoTime, setMaxVideoTime] = useState<number>(10);
 
   const [voice, setVoice] = useState<string>(voices[0]);
+  const [loadingRender, setLoadingRender] = useState<boolean>(false);
 
   const context = {
     postList,
@@ -124,6 +129,8 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
     setMaxVideoTime,
     voice,
     setVoice,
+    loadingRender,
+    setLoadingRender,
   };
 
   const onLoad = async () => {
@@ -159,7 +166,8 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
         postList.map((e) => ({
           ...e,
           maxDuration: maxVideoTime,
-        }))
+        })),
+        setLoadingRender
       );
     }
     // eslint-disable-next-line
