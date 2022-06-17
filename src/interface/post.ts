@@ -86,3 +86,8 @@ export type RenderPost = {
   maxDuration?: number;
   videosCount?: number;
 };
+
+export type RenderLoading = {
+  id: string;
+  loading: number;
+};

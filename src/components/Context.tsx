@@ -4,6 +4,7 @@ import { setupRender } from "@utils/scripts";
 import { createContext, useState, useEffect, useRef } from "react";
 import SetupScreen from "./UI/SetupScreen";
 import voices from "../data/voices";
+import { RenderLoading } from "@interface/post";
 
 interface State {
   postList: RenderPost[];
@@ -36,8 +37,8 @@ interface State {
   setMaxVideoTime: React.Dispatch<React.SetStateAction<number>>;
   voice: string;
   setVoice: React.Dispatch<React.SetStateAction<string>>;
-  loadingRender: boolean;
-  setLoadingRender: React.Dispatch<React.SetStateAction<boolean>>;
+  loadingRender: RenderLoading | null;
+  setLoadingRender: React.Dispatch<React.SetStateAction<RenderLoading | null>>;
 }
 
 const Context = createContext<State>({
@@ -61,7 +62,7 @@ const Context = createContext<State>({
   setMaxVideoTime: () => null,
   voice: "",
   setVoice: () => null,
-  loadingRender: false,
+  loadingRender: null,
   setLoadingRender: () => null,
 });
 
@@ -106,7 +107,9 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
   const [maxVideoTime, setMaxVideoTime] = useState<number>(10);
 
   const [voice, setVoice] = useState<string>(voices[0]);
-  const [loadingRender, setLoadingRender] = useState<boolean>(false);
+  const [loadingRender, setLoadingRender] = useState<RenderLoading | null>(
+    null
+  );
 
   const context = {
     postList,
@@ -155,6 +158,29 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
       setLoadingSetup(false);
     }
   };
+
+  useEffect(() => {
+    if (loadingRender && loadingRender.loading === 100) {
+      setPostList((state) => {
+        const newPosts: RenderPost[] = state.map((post) => {
+          if (
+            post.url.split("/comments/")[1].split("/")[0] === loadingRender.id
+          ) {
+            return {
+              ...post,
+              status: "finish",
+            };
+          }
+
+          return post;
+        });
+
+        localStorage.setItem("local-posts", JSON.stringify(newPosts));
+
+        return newPosts;
+      });
+    }
+  }, [loadingRender]);
 
   useEffect(() => {
     onLoad();

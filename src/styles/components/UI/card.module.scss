@@ -54,7 +54,7 @@
             var(--transition-animation),
           color var(--transition-duration) var(--transition-animation);
 
-        &__finished {
+        &__finish {
           color: var(--green-900);
           background: var(--green-100);
         }

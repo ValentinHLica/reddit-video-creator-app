@@ -1,2 +1,0 @@
-[]. Setup
-    []. import ffmpeg, balcon and reddit-video-creator to packaged app

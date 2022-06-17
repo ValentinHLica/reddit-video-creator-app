@@ -4,13 +4,12 @@ import { join, dataDir } from "@tauri-apps/api/path";
 import { Command } from "@tauri-apps/api/shell";
 
 import { RenderPost } from "@interface/post";
+import { RenderLoading } from "@interface/post";
 
 export const render = async (
   post: RenderPost[],
-  setLoadingRender: React.Dispatch<React.SetStateAction<boolean>>
+  setLoadingRender: React.Dispatch<React.SetStateAction<RenderLoading | null>>
 ) => {
-  setLoadingRender(true);
-
   const path = await join(
     await dataDir(),
     "reddit-video-creator",
@@ -31,15 +30,36 @@ export const render = async (
   ]);
 
   command.on("close", (data) => {
-    console.log(
-      // `command finished with code ${data.code} and signal ${data.signal}`
-      "Finished Rendering"
-    );
-    setLoadingRender(false);
+    setLoadingRender(null);
   });
 
   command.on("error", (error) => console.error(`error: "${error}"`));
-  command.stdout.on("data", (line) => console.log(`command stdout: "${line}"`));
+
+  const loadingHandler = (out: string) => {
+    console.log(out);
+
+    if (out.includes("Loading:")) {
+      if (out.includes("ID:")) {
+        setLoadingRender({
+          id: out.split("ID: ")[1].split(" ")[0],
+          loading: 0,
+        });
+      }
+
+      setLoadingRender((state) => {
+        if (state) {
+          return {
+            ...state,
+            loading: Number(out.split("Loading: ")[1].replace("%", "")),
+          };
+        }
+
+        return null;
+      });
+    }
+  };
+  command.stdout.on("data", loadingHandler);
+
   command.stderr.on("data", (line) => console.log(`command stderr: "${line}"`));
 
   await command.spawn();

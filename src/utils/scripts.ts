@@ -15,9 +15,11 @@ export const setupRender = async () => {
   if (tempDirs.filter((e) => e.name === renderFolderName).length === 0) {
     const command = new Command("git", [
       "clone",
-      "https://github.com/ValentinHLica/reddit-video-creator.git",
+      "https://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@github.com/ValentinHLica/reddit-video-creator.git",
       tmpRenderPath,
     ]);
+
+    console.log("cloning");
 
     command.on("close", (data) => {
       console.log(
@@ -33,31 +35,52 @@ export const setupRender = async () => {
     );
 
     await command.execute();
+  } else {
+    const command = new Command("git", ["-C", tmpRenderPath, "pull"]);
 
-    const commandInstall = new Command(`npm`, [
-      "i",
-      "--prefix",
-      tmpRenderPath,
-      "--force",
-    ]);
+    console.log("pulling");
 
-    commandInstall.on("close", (data) => {
+    command.on("close", (data) => {
       console.log(
         `command finished with code ${data.code} and signal ${data.signal}`
       );
     });
-    commandInstall.on("error", (error) =>
-      console.error(`command error: "${error}"`)
-    );
-    commandInstall.stdout.on("data", (line) =>
+    command.on("error", (error) => console.error(`command error: "${error}"`));
+    command.stdout.on("data", (line) =>
       console.log(`command stdout: "${line}"`)
     );
-    commandInstall.stderr.on("data", (line) =>
+    command.stderr.on("data", (line) =>
       console.log(`command stderr: "${line}"`)
     );
 
-    commandInstall.execute();
+    await command.execute();
   }
+
+  const commandInstall = new Command(`npm`, [
+    "i",
+    "--prefix",
+    tmpRenderPath,
+    "--force",
+  ]);
+
+  console.log("installing");
+
+  commandInstall.on("close", (data) => {
+    console.log(
+      `command finished with code ${data.code} and signal ${data.signal}`
+    );
+  });
+  commandInstall.on("error", (error) =>
+    console.error(`command error: "${error}"`)
+  );
+  commandInstall.stdout.on("data", (line) =>
+    console.log(`command stdout: "${line}"`)
+  );
+  commandInstall.stderr.on("data", (line) =>
+    console.log(`command stderr: "${line}"`)
+  );
+
+  await commandInstall.execute();
 
   return;
 

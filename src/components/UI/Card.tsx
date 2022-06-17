@@ -116,32 +116,29 @@ const Card: React.FC<Props> = ({
           </div>
         </li>
 
-        <li className={styles.status}>
-          {status === "finish" ? (
-            <>
-              <p>Finished</p> <ZapIcon />
-            </>
-          ) : (
-            <>
-              {status !== "queue" ? <ClipboardIcon /> : <ClipboardListIcon />}
+        {status !== "finish" && (
+          <li className={styles.status}>
+            {status !== "queue" ? <ClipboardIcon /> : <ClipboardListIcon />}
 
-              <p onClick={onCheck.bind(this, index)}>Queue</p>
+            <p onClick={onCheck.bind(this, index)}>Queue</p>
 
-              <Checkbox
-                checked={status === "queue"}
-                onClick={onCheck.bind(this, index)}
-                color="green"
-              />
-            </>
-          )}
-        </li>
+            <Checkbox
+              checked={status === "queue"}
+              onClick={onCheck.bind(this, index)}
+              color="green"
+            />
+          </li>
+        )}
+
+        {loadingRender && url.split("/comments/")[1].split("/")[0] && (
+          <li className={styles.progress}>
+            <BatteryEmptyIcon />
+            <p>Render</p>
+            <Progress max={100} value={loadingRender.loading} />
+          </li>
+        )}
+
         {/* 
-        <li className={styles.progress}>
-          <BatteryEmptyIcon />
-          <p>Render</p>
-          <Progress max={100} value={30} />
-        </li>
-
         <li className={styles.thumbail}>
           <ImageIcon />
           <p>Thumbnail</p>
