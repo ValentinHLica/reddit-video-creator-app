@@ -1,5 +1,7 @@
 import React, { useContext, useRef } from "react";
 
+import { open } from "@tauri-apps/api/dialog";
+
 import { RenderPost } from "@interface/post";
 
 import Context from "@components/Context";
@@ -14,6 +16,7 @@ import {
   PlayIcon,
   VideoIcon,
   LoadingIcon,
+  ImageIcon,
 } from "@icon";
 
 import styles from "@styles/components/UI/card.module.scss";
@@ -30,6 +33,7 @@ const Card: React.FC<Props> = ({
   subreddit,
   index,
   videosCount,
+  image,
 }) => {
   const { queue, setQueue, maxVideoTime, setPostList, loadingRender } =
     useContext(Context);
@@ -136,11 +140,36 @@ const Card: React.FC<Props> = ({
           </li>
         )}
 
-        {/* 
-        <li className={styles.thumbail}>
+        <li
+          className={styles.background}
+          onClick={async () => {
+            const path = (await open({
+              directory: false,
+              multiple: false,
+              filters: [{ name: "Images", extensions: ["png", "jpg"] }],
+            })) as string | null;
+
+            setPostList((state) => {
+              const newState = state.map((post, idx) => {
+                if (idx === index) {
+                  return {
+                    ...post,
+                    image: path ?? undefined,
+                  };
+                }
+
+                return post;
+              });
+
+              localStorage.setItem("local-posts", JSON.stringify(newState));
+
+              return newState;
+            });
+          }}
+        >
           <ImageIcon />
-          <p>Thumbnail</p>
-        </li> */}
+          <p>{image ? "Change" : "Background"}</p>
+        </li>
 
         {index === 0 && (
           <li className={styles.queue}>

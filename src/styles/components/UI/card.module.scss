@@ -124,8 +124,9 @@
         column-gap: 10px;
       }
 
-      &.thumbnail {
+      &.background {
         display: flex;
+        cursor: pointer;
       }
 
       &.delete {

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef } from "react";
 
 import { open } from "@tauri-apps/api/dialog";
+import { writeFile } from "@tauri-apps/api/fs";
 
 import { Button, Dropdown } from "@ui";
 import {
@@ -16,6 +17,7 @@ import styles from "@styles/components/settings.module.scss";
 import Context from "@components/Context";
 
 import voices from "../../data/voices";
+import { dataDir, join, localDataDir } from "@tauri-apps/api/path";
 
 const Settings: React.FC = () => {
   const {
@@ -170,11 +172,6 @@ const Settings: React.FC = () => {
         <>
           <input type="text" disabled value={voice} />
 
-          {/* 
-          <Button icon={<SpeakerIcon />} color="light">
-            Listen
-          </Button> */}
-
           <Dropdown
             icon={<ArrowDownIcon />}
             items={voices.map((name) => ({
@@ -190,6 +187,30 @@ const Settings: React.FC = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    const localSettings = async () => {
+      const path = await join(
+        await dataDir(),
+        "reddit-video-creator",
+        "src",
+        "data",
+        "settings.json"
+      );
+
+      await writeFile({
+        path,
+        contents: JSON.stringify({
+          exportPath,
+          midPoster,
+          backgroundMusic,
+          voice,
+        }),
+      });
+    };
+
+    localSettings();
+  }, [exportPath, midPoster, backgroundMusic, voice]);
 
   useEffect(() => {
     const exportPath = localStorage.getItem("export");

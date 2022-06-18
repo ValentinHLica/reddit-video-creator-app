@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useRef } from "react";
 
 // import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
 // import { relaunch } from "@tauri-apps/api/process";
+// import { readBinaryFile } from "@tauri-apps/api/fs";
 
 import { RenderLoading } from "@interface/post";
 import { RenderPost } from "@interface/post";
@@ -166,7 +167,18 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
         return;
       }
 
-      const data = JSON.parse(localPosts) as RenderPost[];
+      const data = (JSON.parse(localPosts) as RenderPost[]).map((post) => {
+        // todo check if image exits in machine
+
+        // if (post.image && !(await readBinaryFile(post.image))) {
+        //   return {
+        //     ...post,
+        //     image: undefined,
+        //   };
+        // }
+
+        return post;
+      });
 
       setPostList(data);
     } catch (error) {}

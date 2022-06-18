@@ -85,6 +85,7 @@ export type RenderPost = {
   voice?: string;
   maxDuration?: number;
   videosCount?: number;
+  image?: string;
 };
 
 export type RenderLoading = {
