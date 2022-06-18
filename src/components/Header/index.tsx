@@ -1,7 +1,7 @@
 import React, { useRef, useState, useContext } from "react";
 
 import { AddIcon, LogoIcon, SettingsIcon, LoadingIcon } from "@icon";
-import { Button, Modal, Switch } from "@ui";
+import { Button, Modal } from "@ui";
 import Context from "@components/Context";
 import { RenderPost } from "@interface/post";
 import { fetchPostData } from "@utils/reddit";

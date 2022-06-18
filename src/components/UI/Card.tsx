@@ -10,10 +10,8 @@ import {
   ClipboardIcon,
   ClipboardListIcon,
   BinIcon,
-  ZapIcon,
   BatteryEmptyIcon,
   PlayIcon,
-  ImageIcon,
   VideoIcon,
   LoadingIcon,
 } from "@icon";

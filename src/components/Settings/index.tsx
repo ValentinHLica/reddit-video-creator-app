@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 
 import { open } from "@tauri-apps/api/dialog";
 
@@ -207,6 +207,8 @@ const Settings: React.FC = () => {
     if (voice) setVoice(voice);
 
     if (maxTime) setMaxVideoTime(Number(maxTime));
+
+    // eslint-disable-next-line
   }, []);
 
   return (

@@ -1,10 +1,16 @@
+import { createContext, useState, useEffect, useRef } from "react";
+
+// import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
+// import { relaunch } from "@tauri-apps/api/process";
+
+import { RenderLoading } from "@interface/post";
 import { RenderPost } from "@interface/post";
+
 import { render } from "@utils/render";
 import { setupRender } from "@utils/scripts";
-import { createContext, useState, useEffect, useRef } from "react";
-import SetupScreen from "./UI/SetupScreen";
 import voices from "../data/voices";
-import { RenderLoading } from "@interface/post";
+
+import SetupScreen from "./UI/SetupScreen";
 
 interface State {
   postList: RenderPost[];
@@ -137,6 +143,21 @@ export const ContextProvider: React.FC<Props> = ({ children }) => {
   };
 
   const onLoad = async () => {
+    // const { shouldUpdate } = await checkUpdate();
+
+    // try {
+    //   if (shouldUpdate) {
+    //     // display dialog
+    //     await installUpdate();
+    //     // install complete, restart app
+    //     await relaunch();
+
+    //     return;
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
     try {
       const localPosts = localStorage.getItem("local-posts");
 

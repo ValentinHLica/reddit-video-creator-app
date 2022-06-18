@@ -1,4 +1,4 @@
-export default [
+const voices = [
   "AriaNeural",
   "JennyNeural",
   "GuyNeural",
@@ -14,3 +14,5 @@ export default [
   "JacobNeural",
   "EricNeural",
 ];
+
+export default voices;

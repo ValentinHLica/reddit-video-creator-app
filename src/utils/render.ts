@@ -1,5 +1,4 @@
-import { readDir, readTextFile, writeFile } from "@tauri-apps/api/fs";
-import { type } from "@tauri-apps/api/os";
+import { writeFile } from "@tauri-apps/api/fs";
 import { join, dataDir } from "@tauri-apps/api/path";
 import { Command } from "@tauri-apps/api/shell";
 
