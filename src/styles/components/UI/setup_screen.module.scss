@@ -2,35 +2,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  row-gap: 30px;
   height: 100vh;
   width: 100vw;
 
-  .wrapper {
-    border-radius: var(--border-radius);
-    border: 1px solid var(--gray-cool-300);
-    background-color: white;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    row-gap: 40px;
-
-    .branding {
-      display: flex;
-      align-items: center;
-      column-gap: 10px;
-      align-self: flex-start;
-      flex: 1;
-
-      svg {
-        path {
-          fill: var(--green-600);
-        }
-      }
-    }
-
-    svg {
-      font-size: 2em;
-    }
+  svg {
+    font-size: 2em;
   }
 }
