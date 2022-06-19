@@ -9,7 +9,7 @@
 ### Todo
 
 - [ ] Create custom thumbnail
-- [ ] Store settings into .json to be used in backend
+- [x] Store settings into .json to be used in backend
 - [ ] Create custom thumbnails
 - [ ] Set background image for post
 - [ ] Refactor

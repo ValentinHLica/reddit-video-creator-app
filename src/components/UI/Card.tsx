@@ -20,6 +20,8 @@ import {
 } from "@icon";
 
 import styles from "@styles/components/UI/card.module.scss";
+import { copyFile } from "@tauri-apps/api/fs";
+import { dataDir, join, sep } from "@tauri-apps/api/path";
 
 type Props = RenderPost & {
   index: number;
@@ -149,12 +151,31 @@ const Card: React.FC<Props> = ({
               filters: [{ name: "Images", extensions: ["png", "jpg"] }],
             })) as string | null;
 
+            const backgroundFolderPath = await join(
+              await dataDir(),
+              "reddit-video-creator",
+              "public",
+              "backgrounds"
+            );
+
+            if (path) {
+              await copyFile(
+                path,
+                await join(
+                  backgroundFolderPath,
+                  path.split(sep).at(-1) as string
+                )
+              );
+            }
+
             setPostList((state) => {
               const newState = state.map((post, idx) => {
                 if (idx === index) {
                   return {
                     ...post,
-                    image: path ?? undefined,
+                    image: path
+                      ? `/backgrounds/${path.split(sep).at(-1) as string}`
+                      : undefined,
                   };
                 }
 

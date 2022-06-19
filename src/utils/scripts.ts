@@ -15,7 +15,7 @@ export const setupRender = async () => {
   if (tempDirs.filter((e) => e.name === renderFolderName).length === 0) {
     const command = new Command("git", [
       "clone",
-      "https://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@github.com/ValentinHLica/reddit-video-creator.git",
+      "https://github.com/ValentinHLica/reddit-video-creator.git",
       tmpRenderPath,
     ]);
 
