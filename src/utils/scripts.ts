@@ -12,7 +12,7 @@ export const setupRender = async () => {
   const tempDirs = await readDir(tempDir);
 
   if (tempDirs.filter((e) => e.name === renderFolderName).length === 0) {
-    const command = new Command("git", [
+    const command = new Command("run-git", [
       "clone",
       "https://github.com/ValentinHLica/reddit-video-creator.git",
       tmpRenderPath,
@@ -35,7 +35,7 @@ export const setupRender = async () => {
 
     await command.execute();
   } else {
-    const command = new Command("git", ["-C", tmpRenderPath, "pull"]);
+    const command = new Command("run-git", ["-C", tmpRenderPath, "pull"]);
 
     console.log("pulling");
 
@@ -58,7 +58,11 @@ export const setupRender = async () => {
   console.log("installing");
 
   try {
-    const commandInstall = new Command("npm", ["i", "--prefix", tmpRenderPath]);
+    const commandInstall = new Command("run-npm", [
+      "i",
+      "--prefix",
+      tmpRenderPath,
+    ]);
 
     commandInstall.on("close", (data) => {
       console.log(

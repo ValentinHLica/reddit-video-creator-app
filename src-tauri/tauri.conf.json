@@ -1,6 +1,6 @@
 {
   "package": {
-    "productName": "reddit-pc-app",
+    "productName": "reddit-video-creator",
     "version": "0.1.0"
   },
   "build": {
@@ -13,7 +13,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.reddit-creator.dev",
+      "identifier": "com.reddit-video-creator.dev",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -61,13 +61,13 @@
         "all": true,
         "scope": [
           {
-            "name": "git",
-            "cmd": "git",
+            "name": "run-npm",
+            "cmd": "npm",
             "args": true
           },
           {
-            "name": "npm",
-            "cmd": "npm",
+            "name": "run-git",
+            "cmd": "git",
             "args": true
           }
         ]

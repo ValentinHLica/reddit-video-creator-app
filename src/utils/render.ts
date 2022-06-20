@@ -22,7 +22,7 @@ export const render = async (
     path,
   });
 
-  const command = new Command("npm", [
+  const command = new Command("run-npm", [
     "start",
     "--prefix",
     await join(await dataDir(), "reddit-video-creator"),
