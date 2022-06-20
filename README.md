@@ -9,6 +9,7 @@
 ### Todo
 
 - [ ] Create custom thumbnail
+- [x] Package with git actions
 - [x] Store settings into .json to be used in backend
 - [ ] Create custom thumbnails
 - [ ] Set background image for post
