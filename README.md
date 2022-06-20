@@ -17,14 +17,21 @@ For any problems please check [References](#references)
 ### 💀 Windows
 
 1. Download [FFMPEG](https://ffmpeg.org/), [BAL4WEB](http://www.cross-plus-a.com/bweb.htm), [BALCON](http://www.cross-plus-a.com/bconsole.htm) and [NodeJs](https://nodejs.org/). Save them in a folder that you wont touch.
-2. Store .exe path for ffmpeg, bal4web and balcon as environment variables [Tutorial](https://www.youtube.com/watch?v=hD9bQE4R6eA) (same tutorial method for bal4web and balcon)
+2. Store .exe path for ffmpeg, bal4web and balcon as environment variables [Tutorial](https://www.youtube.com/watch?v=hD9bQE4R6eA) **(same for bal4web and balcon)**
 
 ### 💀 Linux
 
-Start by updating the packages list and installing ffmpeg:
+Start by updating the packages list and installing FFmpeg:
 
 ```
-sudo apt update && sudo apt install ffmpeg
+sudo apt update
+sudo apt install ffmpeg
+```
+
+Install Wine **(used for balcon and bal4web)**
+
+```
+sudo apt install wine64
 ```
 
 ### 💀 MaxOS
@@ -32,13 +39,14 @@ sudo apt update && sudo apt install ffmpeg
 Install ffmpeg:
 
 ```
-brew install ffmpeg
+brew install FFmpeg
 ```
 
-Install wine **(used for balcon and bal4web)**:
+Install Wine **(used for balcon and bal4web)**:
 
 ```
-brew tap homebrew/cask-versions && brew install --cask --no-quarantine wine-stable
+brew tap homebrew/cask-versions
+brew install --cask --no-quarantine wine-stable
 ```
 
 ## 🧰 Todo
@@ -59,4 +67,4 @@ brew tap homebrew/cask-versions && brew install --cask --no-quarantine wine-stab
 
 - [Installing Node.js with nvm to Linux & macOS & WSL](https://gist.github.com/d2s/372b5943bce17b964a79)
 - [How to Install and Use FFmpeg on Debian](https://linuxize.com/post/how-to-install-ffmpeg-on-debian-9/)
-- [How to Install Wine on Ubuntu 20.04 LTS](https://vitux.com/how-to-install-wine-on-ubuntu/)
+- [How to Install Wine on Linux](https://www.maketecheasier.com/install-wine-on-linux/)
