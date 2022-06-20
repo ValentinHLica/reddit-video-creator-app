@@ -8,24 +8,16 @@ Reddit Video Creator App
 
 # ⚠️ Under Construction
 
-## 💻 [Download](https://github.com/ValentinHLica/reddit-video-creator-app/releases)
-
-## 🍿 [Example](https://youtu.be/xTjnCoePU18)
-
-<br/>
+## 💻 [Download](https://github.com/ValentinHLica/reddit-video-creator-app/releases) - 🍿 [Example](https://youtu.be/xTjnCoePU18)
 
 ## 🚀 Setup
 
 For any problems please check [References](#references)
 
-<br/>
-
 ### 💀 Windows
 
 1. Download [FFMPEG](https://ffmpeg.org/), [BAL4WEB](http://www.cross-plus-a.com/bweb.htm), [BALCON](http://www.cross-plus-a.com/bconsole.htm) and [NodeJs](https://nodejs.org/). Save them in a folder that you wont touch.
 2. Store .exe path for ffmpeg, bal4web and balcon as environment variables [Tutorial](https://www.youtube.com/watch?v=hD9bQE4R6eA) (same tutorial method for bal4web and balcon)
-
-<br/>
 
 ### 💀 Linux
 
@@ -34,8 +26,6 @@ Start by updating the packages list and installing ffmpeg:
 ```
 sudo apt update && sudo apt install ffmpeg
 ```
-
-<br/>
 
 ### 💀 MaxOS
 
@@ -51,8 +41,6 @@ Install wine **(used for balcon and bal4web)**:
 brew tap homebrew/cask-versions && brew install --cask --no-quarantine wine-stable
 ```
 
-<br/>
-
 ## 🧰 Todo
 
 - [x] Package with git actions
@@ -65,7 +53,7 @@ brew tap homebrew/cask-versions && brew install --cask --no-quarantine wine-stab
 - [ ] Improve README.md
 - [ ] Change logo icon color
 
-<br id="references"/>
+<span id="references"></span>
 
 ## 📑 References
 
