@@ -83,28 +83,4 @@ export const setupRender = async () => {
       path: await join(tmpRenderPath, "test.txt"),
     });
   }
-
-  return;
-
-  // Set up FFmpeg
-  switch (await type()) {
-    case "Darwin":
-      await new Command("brew", ["install", "ffmpeg"]).execute();
-      await new Command("brew", ["tap", "homebrew/cask-versions"]).execute();
-      await new Command("brew", [
-        "install",
-        "--cask",
-        "--no-quarantine",
-        "wine-stable",
-      ]).execute();
-      break;
-
-    case "Linux":
-      await new Command("sudo", ["apt", "install", "ffmpeg"]).execute();
-      // await new Command("sudo", ["apt", "install", "wine32"]).execute();
-      break;
-
-    case "Windows_NT":
-      break;
-  }
 };

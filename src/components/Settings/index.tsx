@@ -17,7 +17,7 @@ import styles from "@styles/components/settings.module.scss";
 import Context from "@components/Context";
 
 import voices from "../../data/voices";
-import { dataDir, join, localDataDir } from "@tauri-apps/api/path";
+import { dataDir, join } from "@tauri-apps/api/path";
 
 const Settings: React.FC = () => {
   const {
