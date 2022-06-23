@@ -60,6 +60,7 @@ brew install --cask --no-quarantine wine-stable
 - [ ] Refactor
 - [ ] Improve README.md
 - [ ] Change logo icon color
+- [ ] Create setup script
 
 <span id="references"></span>
 
