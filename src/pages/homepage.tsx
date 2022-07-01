@@ -1,5 +1,7 @@
 import React, { useContext, useEffect } from "react";
 
+import { invoke } from "@tauri-apps/api/tauri";
+
 import Layout from "@components/Layout";
 import { Card } from "@ui";
 
@@ -29,6 +31,12 @@ const HomePage: React.FC = () => {
 
   return (
     <Layout>
+      <div
+        onClick={() => {
+          invoke("my_custom_command");
+        }}
+      ></div>
+
       <div className={styles.home}>
         <div className={styles.filter}>
           <p>
